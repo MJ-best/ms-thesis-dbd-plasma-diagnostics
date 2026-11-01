@@ -9,6 +9,7 @@
 **Basis.**
 - Each item refers to an entry of the [verification report](thesis-review.md), given by its ID (A1, C5, …).
 - "Re-analysis" values come from device m2 (40 normal and 120 degraded captures).
+- Items 59–65, and the revised items 2, 4 and 47, are based on the complete raw-data archive with the undamaged device M3 as a control ([raw-data verification](raw-data-verification.md); review section J).
 
 **Page numbers.** These are the numbers printed on the thesis pages. The thesis is written in Korean, so the original wording is quoted in Korean only in the [Korean version](erratum.ko.md).
 
@@ -27,7 +28,7 @@
 | # | Location | Correction | Type · ref |
 |---|---|---|---|
 | 1, 3 | KO and EN abstract | Replace "discharge energy per second" with "**discharge energy per cycle**". | Correction · C1 |
-| 2, 4 | KO and EN abstract, sentence on changes due to damage | Replace with: "Surface damage decreased the effective voltage, effective current, discharge-onset voltage and burning voltage, and increased the capacitances (C_total, C_gas). The discharge energy, number of discharges and electron density did not change significantly." | Correction · D1 |
+| 2, 4 | KO and EN abstract, sentence on changes due to damage | Replace with: "Surface damage lowered the effective voltage. Compared with an undamaged device measured in the same sessions, the damage-specific decrease was about 3 % (≈ 48 V); about half of the raw decrease was a supply variation common to all devices. The capacitances and the discharge charge tended to increase, but not significantly against the control. The effective current, the number of discharges and the electron density depended on the oscilloscope settings and showed no significant damage-specific change." | Correction · D1, J |
 
 ## Chapter 1
 
@@ -45,6 +46,9 @@
 |---|---|---|---|
 | 10–11 | 11 | The HV probe is the **P6015A**; the current probe is the **P6021A**. | Correction · B1 |
 | 12 | 11–12 | Add the measurement limits: sampling 10 ns (some captures 20 ns), 5000 points (≈ 2.3 periods), 8 bit (40 V/LSB; 1.6–8 mA/LSB), current-probe bandwidth 60 MHz. As a result, pulse counts and peak currents are lower bounds. | Addition · B2 |
+| 59 | 12 | Add to Sec. 2.1.3: a third device (M3) was operated in parallel for 60 h and measured in the same sessions, without visible damage. It serves as a control for supply and environmental variations. | Addition · J |
+| 60 | 11–12 | Add: the current scale (0.04–0.4 A/div) and the sampling interval (10 / 20 ns) changed between and within sessions. Within a session, I_rms rises by 3.5 mA per doubling of A/div, and 20 ns sampling gives 6.6 fewer pulses. Compare I_rms, peak current, number of discharges and n_e only at fixed settings. | Addition · J |
+| 61 | 13 | Fig. 7, "the discharge current rose from about 100 mA to 250 mA": state that Fig. 7 is a single example. At the same current scale (0.1 A/div) the peak currents are 251 → 272 mA (M2, not significant) and 252 → 213 mA (M1). | Correction · J |
 
 ## Chapter 3
 
@@ -52,6 +56,7 @@
 |---|---|---|---|
 | 13 | 16 | V_min is ≈ 300–700 V (mean 504.5 ± 168.8 V), not "300–500 V". | Notation · C3 |
 | 14, 16 | 16–17 | "Energy per second" → "**energy per cycle**": 0.13 ± 0.022 mJ (normal) and 0.13 ± 0.024 mJ (degraded). Add the mean power P = E·f ≈ **6.0 W**. | Correction · C1 |
+| 62 | 16 | V_rms "1.5 kV → 1.4 kV": add that the undamaged device M3 dropped in the same sessions (e.g. 1502 → 1369 V from 10 to 15 h). The damage-specific decrease is ≈ 48 V. | Addition · J |
 | 15, 34 | 16, 32–33 | Write mean ± SD in a single unit: 1.50 ± 0.017 kV, 20.8 ± 4.0 mA, 34.2 ± 4.9 pF, 11.3 ± 1.2 pF, 17.3 ± 2.8 pF, 59.4 ± 9.0 nC, etc. | Notation · C10 |
 | 17 | 17 | Eq. (11) → **E = ∫₀ᵀ v i dt** [J/cycle] and P = E/T [W]. | Correction · C1 |
 | 18–20 | 19–21 | Replace Eqs. (13)–(15) with **text A** below. 55.6 nC / 30.5 pF = 1.82 kV, not 1.5 kV. The original Eq. (15) evaluates to V_max (2.1/2.0 kV). The burning voltage is U_b = 860 ± 68 V (normal) and 811 ± 75 V (degraded). | Correction · C4, C5 |
@@ -80,6 +85,8 @@
 | # | Page | Correction | Type · ref |
 |---|---|---|---|
 | 36 | 40 | "Degradaion" → "Degradation". | Notation |
+| 63 | 36, 46 | Add to Sec. 4.2 and Fig. 27 / Table 5: the M1 micrographs taken after 5 h (before the 10 h measurement) already show a melted blister at an electrode end. The M1 5 h and 10 h data labelled normal may contain a damaged cell. | Addition · J |
+| 64 | 38–40 | Figs. 23–24 "(a) normal discharge electrode" → "(a) reference sample (Ref)". Table 3: "[%]" → "**[at.%]**"; add that each column is a single 10,000× map, and give the range over all maps (damaged sites 1.3–13.9 at.% Ag, intact dielectric 0.0–0.7 at.%). | Correction · J |
 | 37 | 43 | "Freqency" → "Frequency"; the unit of the electron-density SD is cm⁻³. | Notation |
 | 38 | 43 | Add: the features are not independent. C_gas follows from C_d and C_total; T_e and n_e follow from the breakdown voltage. | Addition · D9 |
 | 39 | 44–45 | Remove the references to a DNN (no results are reported). | Notation · D9 |
@@ -88,7 +95,8 @@
 | 42–44 | 49–50 | Precision = fraction of samples predicted *degraded* that are degraded. Recall = fraction of truly degraded samples that are predicted degraded. TP, TN, FP, FN refer to the classes degraded (positive) and normal (negative); **FN = degraded predicted as normal**. | Correction · D3 |
 | 45 | 51 | Table 6: precision and recall are **macro averages**; F1 is the **binary F1** of the degraded class. | Correction · D2 |
 | 46 | 51 | Add: on the validation set, LR and SVM reach AUC 0.99 but only 76.4 % accuracy. This is a threshold shift between devices, which per-device baseline normalisation removes. | Addition · D4 |
-| 47 | 52 | Add: V_rms alone almost separates the classes (AUC ≈ 1.0); the classifier mainly detects the drop of the applied voltage. | Addition · D6 |
+| 47 | 52 | Add: V_rms alone almost separates the classes (AUC ≈ 1.0); the classifier mainly detects the drop of the applied voltage. About half of that drop also occurs in the undamaged device M3 measured in the same sessions. | Addition · D6, J |
+| 65 | 51–52 | Add: classifiers trained on M2 call 95–100 % of the undamaged M3's captures "degraded" in sessions with a low supply voltage. Report the false-positive rate on a control device together with the scores of Table 6. | Addition · J |
 | 48 | 53 | A random forest **averages** the votes of all 1000 trees; it does not select the best tree. Fig. 29 shows one tree. | Correction · D7 |
 | 49 | 55 | Tables 7–8 show no drop of the "normal" probability before damage (0.886 / 0.909; 0.816 / 0.818). The "≥ 10 % drop" precursor criterion is therefore not supported and should be stated as future work. | Correction · D8 |
 | 50 | 56 | "Fig. 32 (a)/(b)" → "Fig. 30 (a)/(b)". | Notation |
@@ -97,7 +105,7 @@
 
 | # | Correction | Type · ref |
 |---|---|---|
-| 51–52 | Same changes as items 1–2 (energy per cycle; the list of significant and non-significant changes). | Correction · D1 |
+| 51–52 | Same changes as items 1–2 (energy per cycle; the list of significant and non-significant changes). | Correction · D1, J |
 
 ## References
 

@@ -75,7 +75,7 @@ The thesis proposes to diagnose and predict this damage **from the voltage and c
 
 > This study employed electrical measurements and artificial intelligence algorithms to diagnose and predict dielectric surface damage influencing the stable discharge of atmospheric pressure dielectric barrier discharge (DBD) plasma. Plasma discharge characteristics, including effective voltage, effective current, discharge energy per second, discharge initiation voltage, discharge voltage, number of discharges, electron density, electron temperature, capacitance, and discharge charge were calculated through electrical measurements of DBD plasma. Changes in plasma discharge characteristics before and after surface damage were observed. Surface damage led to a decrease in effective voltage, effective current, discharge initiation voltage, discharge voltage, and electron temperature, while increasing number of discharges, electron density, capacitance, and discharge charge. The damage to the dielectric on the electrode surface was confirmed through optical microscopy, scanning electron microscopy (SEM), and energy-dispersive X-ray spectroscopy (EDS) analysis. Machine learning models were trained to learn the variations in plasma discharge characteristics due to surface damage. Using logistic regression, decision tree, random forest, support vector machine, and k-nearest neighbors algorithms, the study classified and predicted surface damage based on plasma discharge characteristic parameters. This research introduces a method to predict and diagnose dielectric surface damage, referring to damage on the dielectric, which influences the lifespan of atmospheric pressure dielectric barrier discharge plasma devices in physics-related contexts.
 
-Some statements in this abstract are corrected in the [verification report](docs/thesis-review.md): the "energy per second", the values of the discharge voltage and electron temperature, and the claimed changes in the number of discharges, n_e and I_rms. See [section 4](#4-key-results-and-verification).
+Some statements in this abstract are corrected in the [verification report](docs/thesis-review.md): the "energy per second", the values of the discharge voltage and electron temperature, and the claimed changes in the number of discharges, n_e and I_rms. The V_rms change is about half as large once a control device is used. See [section 4](#4-key-results-and-verification).
 
 ## 3. Pipeline
 
@@ -105,7 +105,7 @@ All equations are in [docs/methods.md](docs/methods.md).
 
 ## 4. Key results and verification
 
-The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. Full details are in the **[verification report](docs/thesis-review.md)**.
+The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. The complete raw-data archive was then checked against a third device, m3, which ran in parallel without visible damage and serves as a control. Full details are in the **[verification report](docs/thesis-review.md)** and the **[raw-data verification](docs/raw-data-verification.md)**.
 
 | | Thesis | Re-analysis / correction |
 |---|---|---|
@@ -113,15 +113,17 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 | Energy | "0.13 mJ per second" | **0.13 mJ per cycle**, i.e. a mean power of **≈ 6 W** |
 | Breakdown voltage | V_min + Q/C_d = 2.1 kV | That formula equals V_max. The burning voltage is **U_b ≈ 0.81–0.86 kV**, consistent with Paschen (0.72–0.87 kV). |
 | Electron temperature | 13 eV, at E/N = 814 Td (extrapolated) | **≈ 6 eV**, at E/N ≈ 330 Td (inside the data range) |
-| Changes after damage | Number of discharges ↑, n_e ↑, I_rms ↓ | Number of discharges and n_e are not significant on the thesis' own numbers (p = 0.89, 0.78). I_rms is not significant in the re-analysis (p = 0.27). The V_rms decrease and C_total increase are significant. |
-| Classification | RF: 96.9 % on the validation device | Cross-device evaluation: DT/RF/GB 95–99 %. Random splits are optimistic (100 %). **V_rms alone gives AUC ≈ 1.0.** |
+| Changes after damage | Number of discharges ↑, n_e ↑, I_rms ↓ | Number of discharges and n_e are not significant on the thesis' own numbers (p = 0.89, 0.78). I_rms is not significant in the re-analysis (p = 0.27) and depends on the oscilloscope's A/div setting. Against the undamaged control m3, only the V_rms decrease (≈ −48 V, about half of the raw drop) holds for both damaged devices. |
+| Classification | RF: 96.9 % on the validation device | Cross-device evaluation: DT/RF/GB 95–99 %. Random splits are optimistic (100 %). **V_rms alone gives AUC ≈ 1.0.** But the models call 95–100 % of the undamaged m3's captures in its low-voltage sessions "degraded"; referenced to m3, cross-device accuracy is 65–78 % (DT/RF/GB; 64–89 % over all six models). |
 | Precursor (Sec. 5.7) | A ≥ 10 % drop of the normal probability signals impending damage | Not supported: Tables 7–8 show 0.886 → 0.909 and 0.816 → 0.818. |
+| EDS (Table 3) | Ag 0.57 → 13.86 % | Reproduced exactly; the values are **at.%** from single 10,000× maps (normal = Ref sample). Over all maps, damaged sites give 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. |
 
-**Bottom line.** The core conclusion stands: electrical diagnostics plus ML can detect dielectric surface damage. Four points need correction:
+**Bottom line.** The damage is real and leaves a measurable electrical trace, but a weaker one than the thesis reports: about half of the V_rms drop is a supply variation shared with an undamaged device, so an alarm needs a control device or a same-session reference. Five points need correction:
 - the interpretation of V_b, T_e and n_e;
 - the precursor claim;
 - the statistical wording;
-- the evaluation protocol.
+- the evaluation protocol;
+- the separation of damage from session and oscilloscope-setting effects.
 
 ## 5. Installation and usage
 
@@ -129,7 +131,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 24 tests
+pytest                      # 26 tests
 ```
 
 Command-line tool:
@@ -161,7 +163,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report.
+`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md).
 
 Training and prediction on your own labelled data:
 
@@ -201,6 +203,7 @@ src/dbd_diagnostics/
   waveform.py    period detection, integer-period windows
   electrical.py  RMS, energy per cycle, power, offset-free charge integration
   lissajous.py   Q-V analysis, equivalent circuit, burning voltage, Manley energy
+  circuit_fit.py inverse fit of a multi-cell equivalent circuit (C_d, C_g, U_b, threshold spread)
   discharge.py   pulse detection (thesis + noise-referenced), number of discharges, onset voltage
   plasma.py      Townsend/Paschen, E/N, mobility, n_e, T_e
   features.py    one-call feature extraction (thesis + corrected features)
@@ -211,8 +214,10 @@ src/dbd_diagnostics/
   data/          D/mu table digitised from thesis Fig. 15
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
-examples/        synthetic demo, re-analysis script for the original data
-tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+examples/        synthetic demo, re-analysis and raw-archive verification scripts
+paper/           draft manuscript and figure script
+portfolio/       data-science case study (Korean) and figure script
+tests/           26 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation
@@ -221,6 +226,7 @@ tests/           24 tests: known-answer equivalent-circuit tests of every formul
 |---|---|
 | [docs/methods.md](docs/methods.md) · [KO](docs/methods.ko.md) | Every equation, its assumptions and the thesis equation it corresponds to |
 | [docs/thesis-review.md](docs/thesis-review.md) · [KO](docs/thesis-review.ko.md) | Verification report: Eqs. (1)–(32), numbers, measurement chain, statistics, ML, references, audit of the original code, re-analysis |
+| [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, session effects, oscilloscope settings, micrographs, EDS sources |
 | [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |
@@ -273,7 +279,7 @@ Where to find each draft:
 
 ## 9. Data
 
-The raw oscilloscope captures are not included. Every function can be run on synthetic waveforms from `dbd_diagnostics.simulate`. The original data are in the private repository `Plasma_diagnosis_with_ML`.
+The raw oscilloscope captures are not included. Every function can be run on synthetic waveforms from `dbd_diagnostics.simulate`. The original data are in the private repository `Plasma_diagnosis_with_ML`. The complete archive of the July 2020 experiment (devices M1–M3 with all sessions, voltage sweeps, micrographs, SEM/EDS reports and the 2020 MATLAB summaries) is kept by the author; its layout is described in [docs/raw-data-verification.md](docs/raw-data-verification.md).
 
 ## 10. Citation
 

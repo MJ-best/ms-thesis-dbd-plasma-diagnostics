@@ -80,7 +80,7 @@
 > 표면의 손상으로 인해 달라지는 플라즈마 방전 특성을 머신러닝 모델로 학습하였다. 로지스틱 회귀, 결정 트리, 랜덤 포레스트, 서포트 벡터 머신, k-최근접이웃모델 알고리즘을 통해 플라즈마의 방전 특성 파라미터를 입력하여 표면의 손상 여부를 분류하고 예측했다.
 > 본 연구를 통해 대기압 유전 장벽 플라즈마 기기 수명에 영향을 미치는 유전체 표면 손상을 예측하고 진단할 수 있는 하나의 방법을 제시하였다.
 
-※ 초록의 일부 서술은 [검증 보고서](docs/thesis-review.ko.md)에서 정정되었습니다. 해당 서술은 "초당 방전 에너지", 방전전압·전자온도의 값, 그리고 방전 횟수·전자밀도·전류 실효값의 변화입니다. 자세한 내용은 [4절](#4-주요-결과와-검증-요약)을 참고하세요.
+※ 초록의 일부 서술은 [검증 보고서](docs/thesis-review.ko.md)에서 정정되었습니다. 해당 서술은 "초당 방전 에너지", 방전전압·전자온도의 값, 그리고 방전 횟수·전자밀도·전류 실효값의 변화입니다. 전압 실효값의 변화도 대조 장치와 비교하면 약 절반으로 줄어듭니다. 자세한 내용은 [4절](#4-주요-결과와-검증-요약)을 참고하세요.
 
 ## 3. 분석 파이프라인
 
@@ -110,7 +110,7 @@
 
 ## 4. 주요 결과와 검증 요약
 
-논문의 수식, 수치, 통계, 머신러닝 평가, 참고문헌을 모두 다시 확인했습니다. 원본 데이터(장치 m1·m2)도 새 패키지로 다시 분석했습니다. 전체 내용은 **[검증 보고서](docs/thesis-review.ko.md)** 에 있습니다.
+논문의 수식, 수치, 통계, 머신러닝 평가, 참고문헌을 모두 다시 확인했습니다. 원본 데이터(장치 m1·m2)도 새 패키지로 다시 분석했습니다. 이어서 원본 아카이브 전체를, 손상 없이 병렬로 운전한 세 번째 장치 m3를 대조군으로 삼아 점검했습니다. 전체 내용은 **[검증 보고서](docs/thesis-review.ko.md)** 와 **[원본 데이터 검증](docs/raw-data-verification.ko.md)** 에 있습니다.
 
 | 항목 | 논문 | 재분석·보정 결과 |
 |---|---|---|
@@ -118,16 +118,18 @@
 | 에너지 | "초당 방전 에너지 0.13 mJ" | **1주기당 0.13 mJ**이며, 평균 전력은 **≈ 6 W** |
 | 방전전압 | V_min + Q/C_d = 2.1 kV | 이 식은 등가회로에서 V_max와 같아짐. 실제 burning voltage는 **U_b ≈ 0.81–0.86 kV**로 Paschen 값(0.72–0.87 kV)과 일치 |
 | 전자온도 | 13 eV (E/N = 814 Td, 외삽 영역) | **≈ 6 eV** (E/N ≈ 330 Td, 데이터 범위 안) |
-| 손상에 따른 변화 | 방전 횟수·전자밀도 증가, I_rms 감소 | 논문 수치로 검정하면 방전 횟수와 전자밀도는 유의하지 않음(p = 0.89, 0.78). 재분석에서도 I_rms는 유의하지 않음(p = 0.27). V_rms 감소와 C_total 증가는 유의함 |
-| 손상 분류 | RF 검증 정확도 96.9% | 장치 간 교차 평가(한 장치로 학습, 다른 장치로 시험)에서 DT·RF·GB 95–99%. 무작위 분할은 100%로 낙관적. **V_rms 하나만으로도 AUC ≈ 1.0** |
+| 손상에 따른 변화 | 방전 횟수·전자밀도 증가, I_rms 감소 | 논문 수치로 검정하면 방전 횟수와 전자밀도는 유의하지 않음(p = 0.89, 0.78). 재분석에서도 I_rms는 유의하지 않고(p = 0.27) 오실로스코프 A/div 설정에 따라 달라짐. 손상 없는 대조 장치 m3 대비로 두 손상 장치 모두에서 유지되는 것은 V_rms 감소(≈ −48 V, 단순 하락의 약 절반)뿐임 |
+| 손상 분류 | RF 검증 정확도 96.9% | 장치 간 교차 평가(한 장치로 학습, 다른 장치로 시험)에서 DT·RF·GB 95–99%. 무작위 분할은 100%로 낙관적. **V_rms 하나만으로도 AUC ≈ 1.0**. 그러나 손상 없는 m3의 저전압 세션 캡처를 95–100 % "손상"으로 판정하며, m3 기준으로 보정하면 장치 간 정확도는 65–78 %(DT·RF·GB; 6개 모델 전체 64–89 %) |
 | 전조증상 (5.7절) | 정상 확률이 10% 이상 감소하면 전조 | 표 7·8에서 확률이 0.886 → 0.909, 0.816 → 0.818로 변해 근거가 없음 |
+| EDS (표 3) | Ag 0.57 → 13.86 % | 정확히 재현됨. 값은 단일 10,000배 맵의 **원자 %**이며 정상 열은 Ref 시료. 전체 맵에서 손상부 1.3–13.9 at.%, 온전한 유전체 0.0–0.7 at.% |
 
-**결론**: "전기적 진단과 머신러닝으로 표면 손상을 판별할 수 있다"는 핵심 결론은 유지됩니다. 다만 다음 네 가지는 수정이 필요합니다.
+**결론**: 표면 손상은 실제로 일어났고 측정 가능한 전기적 흔적을 남깁니다. 다만 그 흔적은 논문이 보고한 것보다 약합니다. V_rms 하락의 약 절반은 손상 없는 장치와 공통인 전원 변동이므로, 경보에는 대조 장치나 같은 세션의 기준값이 필요합니다. 다음 다섯 가지는 수정이 필요합니다.
 
 - 물리량(V_b, T_e, n_e)의 해석
 - 전조증상 주장
 - 통계 서술
 - 평가 방법
+- 손상 효과와 세션·오실로스코프 설정 효과의 분리
 
 ## 5. 설치와 사용법
 
@@ -135,7 +137,7 @@
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 24개
+pytest                      # 테스트 26개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -168,7 +170,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다.
+**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다.
 
 **모델 학습과 예측**: 직접 라벨을 붙인 데이터로 분류기를 학습하고, 저장한 모델로 새 캡처를 판별합니다.
 
@@ -209,6 +211,7 @@ src/dbd_diagnostics/
   waveform.py    주기 검출, 정수 주기 구간
   electrical.py  실효값, 1주기 에너지, 전력, 오프셋을 제거한 전하 적분
   lissajous.py   리사주 분석, 등가회로, burning voltage, Manley 에너지
+  circuit_fit.py 다중 셀 등가회로 역추정 (C_d, C_g, U_b, 문턱 산포)
   discharge.py   펄스 검출(논문 방식 + 잡음 기준), 방전 횟수, 개시 전압
   plasma.py      Townsend/Paschen, E/N, 이동도, n_e, T_e
   features.py    특성 일괄 추출 (논문 특성 + 보정 특성)
@@ -219,8 +222,10 @@ src/dbd_diagnostics/
   data/          D/μ 표 (논문 그림 15를 디지타이즈)
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
-examples/        합성 데모, 원본 데이터 재분석 스크립트
-tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
+examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증 스크립트
+paper/           논문 초안과 그림 스크립트
+portfolio/       데이터과학 사례 연구와 그림 스크립트
+tests/           테스트 26개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 
 ## 7. 문서
@@ -229,6 +234,7 @@ tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 �
 |---|---|
 | [docs/methods.ko.md](docs/methods.ko.md) · [EN](docs/methods.md) | 단계별 수식, 가정, 논문 식 번호와의 대응 |
 | [docs/thesis-review.ko.md](docs/thesis-review.ko.md) · [EN](docs/thesis-review.md) | 학위논문 검증 보고서. 수식 (1)–(32), 수치, 측정 체인, 통계, 머신러닝, 참고문헌, 원본 코드 감사, 재분석 결과 |
+| [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 세션 효과, 오실로스코프 설정, 현미경 사진, EDS 출처 |
 | [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |
@@ -286,7 +292,7 @@ tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 �
 
 ## 9. 데이터
 
-원본 오실로스코프 데이터는 이 저장소에 포함하지 않았습니다. 데이터가 없어도 내장 시뮬레이터(`dbd_diagnostics.simulate`)로 모든 기능을 실행해 볼 수 있습니다. 원본 데이터는 비공개 저장소 `Plasma_diagnosis_with_ML`에 있습니다.
+원본 오실로스코프 데이터는 이 저장소에 포함하지 않았습니다. 데이터가 없어도 내장 시뮬레이터(`dbd_diagnostics.simulate`)로 모든 기능을 실행해 볼 수 있습니다. 원본 데이터는 비공개 저장소 `Plasma_diagnosis_with_ML`에 있습니다. 2020년 7월 실험의 원본 아카이브 전체(M1–M3 전 세션, 전압 스윕, 현미경 사진, SEM/EDS 보고서, 2020년 MATLAB 요약표)는 저자가 보관하며, 구성은 [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md)에 정리했습니다.
 
 ## 10. 인용
 

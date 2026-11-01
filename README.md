@@ -112,7 +112,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 | Measured quantities | E 0.13 mJ, C_d 34.2 pF, Q_max 59.4 nC | 0.131 mJ, 34.5 pF, 59.5 nC — **reproduced** |
 | Energy | "0.13 mJ per second" | **0.13 mJ per cycle**, i.e. a mean power of **≈ 6 W** |
 | Breakdown voltage | V_min + Q/C_d = 2.1 kV | That formula equals V_max. The burning voltage is **U_b ≈ 0.81–0.86 kV**, consistent with Paschen (0.72–0.87 kV). |
-| Electron temperature | 13 eV, at E/N = 814 Td (extrapolated) | **≈ 6 eV**, at E/N ≈ 330 Td (inside the data range) |
+| Electron temperature | 13 eV, at E/N = 814 Td (OriginLab extrapolation of data that end at 175 Td) | **≈ 6 eV**, at E/N ≈ 330 Td (just beyond the end of the source curve, 300 Td) |
 | Changes after damage | Number of discharges ↑, n_e ↑, I_rms ↓ | Number of discharges and n_e are not significant on the thesis' own numbers (p = 0.89, 0.78). I_rms is not significant in the re-analysis (p = 0.27) and depends on the oscilloscope's A/div setting. Against the undamaged control m3, only the V_rms decrease (≈ −48 V, about half of the raw drop) holds for both damaged devices. |
 | Classification | RF: 96.9 % on the validation device | Cross-device evaluation: DT/RF/GB 95–99 %. Random splits are optimistic (100 %). **V_rms alone gives AUC ≈ 1.0.** But the models call 95–100 % of the undamaged m3's captures in its low-voltage sessions "degraded"; referenced to m3, cross-device accuracy is 65–78 % (DT/RF/GB; 64–89 % over all six models). |
 | Precursor (Sec. 5.7) | A ≥ 10 % drop of the normal probability signals impending damage | Not supported: Tables 7–8 show 0.886 → 0.909 and 0.816 → 0.818. |
@@ -274,6 +274,8 @@ Where to find each draft:
 - `20230226_m2_{system,positive,negative}_data.csv`
 - `m1_data_final.csv`, `m2_data_final.csv`
 - `rf_clf.pkl`
+
+The electron temperature of the thesis was not computed in code either: the D/μ curve of a figure in Raizer's book was digitised up to 175 Td (Engauge Digitizer) and fitted and extrapolated to 814 Td in OriginLab. The digitised points are kept by the author; the Origin project has not been found.
 
 **Bugs fixed relative to the old code** include the peak-index offset, the V_min polarity mapping, the missing ×f in the Manley value, and using only the last period. The full list is in [docs/legacy-code-map.md](docs/legacy-code-map.md) and in section G of the verification report.
 

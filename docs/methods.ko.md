@@ -103,9 +103,9 @@
 | 환산 전기장 (논문 22) | $E/N=U/(dN)$ | 1 Td = 10⁻¹⁷ V cm² |
 | 이동도 (논문 19) | $\mu_e=(\mu_ep)/p$ | 저전계 값 592 cm²/Vs |
 | 전자밀도 (논문 20) | $n_e=\dfrac{i\,d}{\mu_e e A U}$ | $U=U_b$, $i=i_{dis}$ 권장 |
-| 전자온도 (논문 21) | $k_BT_e/e=D_e/\mu_e(E/N)$ | 논문 그림 15를 디지타이즈한 표 사용. 1–390 Td 범위 밖에서는 NaN을 반환하며, `extrapolate=True`일 때만 외삽합니다 |
+| 전자온도 (논문 21) | $k_BT_e/e=D_e/\mu_e(E/N)$ | 논문 그림 15를 디지타이즈한 표 사용(출처: 175 Td까지 디지타이즈한 Raizer 곡선, 175 Td 이후는 논문의 OriginLab 외삽). 1–390 Td 범위 밖에서는 NaN을 반환하며, `extrapolate=True`일 때만 외삽합니다 |
 
-> **D/μ 표에 대하여**: 이 표는 논문 그림 15(Raja Rao & Govinda Raju 1971, Raizer 1991)를 디지타이즈한 것입니다. 정량 분석에는 BOLSIG+와 LXCat 공기 단면적 데이터로 계산한 표를 쓰는 것을 권장합니다.
+> **D/μ 표에 대하여**: 이 표는 논문 그림 15를 디지타이즈한 것입니다. 그림 15는 Raizer 책 그래프의 곡선을 175 Td까지 디지타이즈하고 OriginLab으로 외삽한 것이므로, 표의 175 Td 이후 값은 측정값이 아닙니다. Raja Rao & Govinda Raju(1971)는 3–77 Td만 측정했습니다. 정량 분석에는 BOLSIG+와 LXCat 공기 단면적 데이터로 계산한 표를 쓰는 것을 권장합니다.
 >
 > 또한 D/μ는 엄밀히 말해 *특성 에너지(characteristic energy)* 이며, 전자 에너지 분포가 Maxwell 분포일 때만 $k_BT_e/e$와 같습니다.
 
@@ -119,7 +119,7 @@
   | `power` | 평균 전력 |
   | `u_b`, `u_b_energy`, `u_b_geometry` | 세 가지 방법으로 구한 burning voltage |
   | `en_td` | 환산 전기장 [Td] |
-  | `te_corrected` | $U_b$로 구한 전자온도 (표 범위 안에서만 계산) |
+  | `te_corrected` | $U_b$로 구한 전자온도 (표 범위 ≤ 390 Td 안에서 계산, 175 Td 이후는 논문 외삽에 의존) |
   | `ne_corrected_mean` | $i_{dis}$와 $U_b$로 구한 전자밀도 |
   | `v_max` | 인가전압 최댓값 |
   | `c_*_r2` | 커패시턴스 적합의 $R^2$ |

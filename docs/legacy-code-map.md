@@ -32,6 +32,6 @@ This repository replaces six private working repositories (2020–2025). Their o
 | V_min | `max(V[peaks][V<0])`, **polarity swapped** when `sig_sine` is true | `discharge.pulse_statistics` | Taken per half cycle, by polarity |
 | Manley | `4*Cd*Vmin*(Vmax-Vmin)/(1+Cg/Cd)`, J per half cycle mislabelled as power | `lissajous.manley_energy` | Correct per-cycle formula |
 | n_e | Applied voltage, area π(0.01 cm)², offset bug | `plasma.electron_density`, `features` | Uses U_b and i_dis; area is configurable |
-| T_e | Not implemented (hard-coded D/μ stub) | `plasma.electron_temperature_from_field` | Digitised D/μ table; extrapolation off by default |
+| T_e | Not implemented (hard-coded D/μ stub); the thesis values came from an OriginLab fit and extrapolation of the D/μ curve | `plasma.electron_temperature_from_field` | Digitised D/μ table; extrapolation off by default |
 | ML | No scaler, random split, 10,000 trees, macro/binary metrics mixed | `ml` | Scaler inside the Pipeline, grouped evaluation, explicit metrics |
 | App | Gradio (`gr.inputs`, hard-coded paths) | `cli.py` (`dbd-diag`) | Command-line interface; can be wrapped in a GUI if needed |

@@ -101,7 +101,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
 | Reduced field (Th. 22) | $E/N=U/(dN)$ | 1 Td = 10⁻¹⁷ V cm² |
 | Mobility (Th. 19) | $\mu_e=(\mu_ep)/p$, $(\mu_ep)=0.45\times10^6$ cm² Torr V⁻¹ s⁻¹ | Low-field value, 592 cm²/Vs |
 | Electron density (Th. 20) | $n_e=\dfrac{i\,d}{\mu_e\,e\,A\,U}$ | Use $U=U_b$ and $i=i_{dis}$; $A$ = channel cross-section |
-| Electron temperature (Th. 21) | $k_BT_e/e = D_e/\mu_e\,(E/N)$ | Table digitised from thesis Fig. 15; NaN outside 1–390 Td unless `extrapolate=True` |
+| Electron temperature (Th. 21) | $k_BT_e/e = D_e/\mu_e\,(E/N)$ | Table digitised from thesis Fig. 15 (source: Raizer's curve, digitised to 175 Td; table points above 175 Td are the thesis' OriginLab extrapolation); NaN outside 1–390 Td unless `extrapolate=True` |
 
 > The $D/\mu$ table (`data/dmu_air_thesis_fig15.csv`) is a digitisation of the thesis figure, which compiles Raja Rao & Govinda Raju 1971 and Raizer 1991. For quantitative work, replace it with a Boltzmann-solver table, e.g. BOLSIG+ with LXCat cross sections for air. Strictly, $D/\mu$ is the *characteristic energy*; it equals $k_BT_e/e$ only for a Maxwellian distribution.
 
@@ -116,7 +116,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
 | `power` | Mean power [W] |
 | `u_b`, `u_b_energy`, `u_b_geometry` | Burning voltage by three estimators |
 | `en_td` | E/N from $U_b$ [Td] |
-| `te_corrected` | T_e from $U_b$, inside the table only |
+| `te_corrected` | T_e from $U_b$, within the table (≤ 390 Td; above 175 Td it relies on the thesis extrapolation) |
 | `ne_corrected_mean` | n_e from $i_{dis}$ and $U_b$ |
 | `v_max` | Peak applied voltage |
 | `c_*_r2` | Fit quality |

@@ -2,7 +2,9 @@
 # Digitised (automated pixel trace, +-3 % in D/mu) from Fig. 15 of the thesis
 # (M. Kim, Kwangwoon Univ., 2023), which compiles Raja Rao & Govinda Raju,
 # J. Phys. D 4, 769 (1971) and Raizer, Gas Discharge Physics (1991).
-# Valid (non-extrapolated) range: 1e-17 ... 3.9e-15 V cm^2 (1 ... 390 Td).
+# Fig. 15 itself is Raizer's curve digitised by the thesis author up to 1.75e-15 V cm^2 (175 Td) and
+# extrapolated in OriginLab; Raizer's curve ends near 3e-15 (300 Td). Points above 175 Td below are
+# therefore the thesis' extrapolation, not data. The table stops at 3.9e-15 V cm^2 (390 Td).
 # For quantitative work prefer a Boltzmann-solver table (e.g. BOLSIG+ with LXCat air cross sections).
 E_over_N_Vcm2,D_over_mu_V
 1.000e-17,0.193

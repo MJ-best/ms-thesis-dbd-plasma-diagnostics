@@ -9,8 +9,8 @@ Two families of features are returned:
   definitions (incl. V_breakdown = V_min + Q_max/C_d, which equals V_max, and
   the E/N -> D/mu -> T_e chain with N = 2.8e19 cm^-3 and extrapolation);
 * ``corrected`` – physically consistent counterparts: mean power, burning
-  voltage U_b from the Lissajous figure, E/N in Td, T_e inside the data range
-  of the D/mu table, n_e from the displacement-free discharge current and U_b.
+  voltage U_b from the Lissajous figure, E/N in Td, T_e within the D/mu table
+  (<= 390 Td; above 175 Td the table is the thesis' extrapolation), n_e from the displacement-free discharge current and U_b.
 """
 from __future__ import annotations
 

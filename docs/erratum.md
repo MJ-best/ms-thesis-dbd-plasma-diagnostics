@@ -66,7 +66,7 @@
 | 24 | 24 | The area 4.5×10⁻⁴ cm² is the pad top area, used as an approximation of the current cross-section. n_e is therefore a cell-averaged relative index. | Addition · C7 |
 | 26 | 26 | Use N = p/(k_BT) = 2.50×10¹⁹ cm⁻³ (1 atm, 20 °C). This is the gas number density, not "Avogadro's number". | Correction · C6 |
 | 27 | 26 | E/N ≈ 34×10⁻¹⁶ V cm² (≈ 340 Td) with U_b. Note that even the original inputs give 75.0, not 81.38. | Correction · C6 |
-| 28 | 27 | Within the data range of Fig. 15, D/μ ≈ 6 V, so T_e ≈ **6 eV**. Re-analysis: 6.2 ± 0.3 eV (normal), 6.0 ± 0.4 eV (degraded). The original 13 eV was read from the extrapolated part of the curve. | Correction · C6 |
+| 28 | 27 | At E/N ≈ 340 Td, just beyond the end of the source curve (Raizer, ≈ 300 Td), D/μ ≈ 6 V, so T_e ≈ **6 eV**. Re-analysis: 6.2 ± 0.3 eV (normal), 6.0 ± 0.4 eV (degraded). The original 13 eV is an OriginLab extrapolation to 814 Td of data digitised only up to 175 Td; depending on the fitted function, the value at 814 Td ranges from about 5 to 20 V. | Correction · C6 |
 | 29 | 26 | Add: D/μ is the characteristic energy; it equals k_BT_e/e only for a Maxwellian distribution. | Addition · C6 |
 | 30 | 28 | Eq. (23) → **Q(t) = ∫₀ᵗ i dt′ + Q₀**, after removing the current offset. | Correction · C2 |
 | 31–33 | 32 | Table 2: the C_total fitting error is 7.63×10⁻¹⁴ F. Write p < 10⁻¹⁵ instead of 1.11×10⁻¹⁶. Add R² ≈ 0.98 and note the autocorrelation of the fitted points. | Correction · C8 |

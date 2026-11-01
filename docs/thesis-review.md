@@ -34,7 +34,7 @@
 | # | Finding | Severity |
 |---|---|---|
 | 1 | Under the thesis' own equivalent circuit, Q_max = C_d (V_max − V_min). So the "breakdown voltage" of Eq. (15), V_b = V_min + Q_max/C_dielectric, is **identically V_max**, the peak applied voltage. The actual gas burning voltage is U_b ≈ **0.8–1.1 kV**, consistent with Paschen (0.72–0.87 kV for a 100 µm air gap). The thesis reports 2.1 kV. E/N, T_e and n_e inherit this error. | Major |
-| 2 | The thesis T_e of 13 eV is read at E/N = 81.38×10⁻¹⁶ V cm² (= **814 Td**), in the **extrapolated** part of Fig. 15; the data end at ≈ 390 Td. Using U_b instead gives E/N ≈ 340 Td and T_e ≈ **6 eV**. The thesis T_e is also a deterministic function of V_b (r = 0.9995), so it is not an independent observation. | Major |
+| 2 | The thesis T_e of 13 eV is read at E/N = 81.38×10⁻¹⁶ V cm² (= **814 Td**), far beyond its source data: the D/μ curve in Raizer's book ends at ≈ 300 Td, and the thesis digitised it only up to 175 Td before extrapolating it in OriginLab. Depending on the fitted function, the same data give 4.5–20 V at 814 Td. Using U_b instead gives E/N ≈ 340 Td, just beyond the end of Raizer's curve, and T_e ≈ **6 eV**. The thesis T_e is also a deterministic function of V_b (r = 0.9995), so it is not an independent observation. | Major |
 | 3 | The "discharge energy per second, 0.13 mJ" is the **energy per cycle**. The mean power is 0.13 mJ × 46.5 kHz ≈ **6.0 W** (power factor ≈ 0.19). Eq. (11), with its 1/T factor, defines power in W, which does not match the reported unit. | Major |
 | 4 | Sec. 5.7 concludes that a ≥ 10 % drop of the "normal" probability is a precursor of damage. Tables 7–8 do not support this. Table 7 shows 0.886 → 0.909 (an **increase**); Table 8 shows 0.816 → 0.818 (**no change**). | Major |
 | 5 | The abstract and conclusion claim that the number of discharges and n_e increase and that I_rms decreases, but give no statistical test. Testing the thesis' own mean ± SD gives p = 0.89 for the number of discharges and p = 0.78 for n_e, i.e. **not significant**. | Major |
@@ -189,11 +189,13 @@
    - 81.38 would require V_b = 2.28 kV, or N = 2.58×10¹⁹.
 3. **Units and extrapolation.**
    - 81.38×10⁻¹⁶ V cm² = 814 Td.
-   - Digitising Fig. 15 shows that the data end at ≈ 39×10⁻¹⁶ V cm² (≈ 390 Td).
-   - The extrapolated curve gives D/μ ≈ 13.3 V at 81.4×10⁻¹⁶ V cm², so the reported 13.2 eV is an **extrapolated value**.
-   - Ref. [48] covers slow electrons only.
+   - **Source of Fig. 15** (reported by the author): the D_e/μ_e curve of a figure in Raizer's book (curve 1, spanning 0.1–30×10⁻¹⁶ V cm², i.e. 1–300 Td) was digitised with Engauge Digitizer up to 17.5×10⁻¹⁶ V cm² (175 Td; 56 points, D/μ = 0.95–3.80 V). These points were fitted and extrapolated in OriginLab, and Fig. 15 plots the extrapolated curve. The Origin project has not been found.
+   - The extrapolated curve gives D/μ ≈ 13.3 V at 81.4×10⁻¹⁶ V cm², so the reported 13.2 eV is an **extrapolated value**: 4.6× beyond the digitised data and 2.7× beyond the end of Raizer's curve.
+   - The extrapolation is not constrained by the data. Fitting the same 56 points gives, at 814 Td, 4.5 V with a logarithmic fit, 6.7–11.5 V with a power law, 14.9–15.4 V with a straight line and 20 V with a quadratic; continuing Raizer's own end slope gives 10.9 V. The reported value is one choice within this spread.
+   - The package table (`data/dmu_air_thesis_fig15.csv`, digitised from thesis Fig. 15) matches the 56 source points to within 5 % between 9 and 175 Td; its points above 175 Td reproduce the thesis' extrapolation. Its log–log extrapolation reproduces the thesis T_e to within ≈ 0.7 eV (12.3 / 11.7 vs 13.0 / 12.5 eV, section H).
+   - Ref. [48] (Raja Rao & Govinda Raju 1971) measured D/μ only between 3 and 77 Td.
 4. **Corrected values.**
-   - With U_b ≈ 0.86 kV and N = 2.50×10¹⁹: E/N ≈ 340 Td (inside the data), D/μ ≈ 6 V, T_e ≈ **6 eV**.
+   - With U_b ≈ 0.86 kV and N = 2.50×10¹⁹: E/N ≈ 340 Td. This is 8–15 % beyond the end of Raizer's curve (≈ 5.4 V at 300 Td), so it is a short extrapolation, not a point inside the data. Continuing Raizer's curve with its end slope gives D/μ ≈ 5.7–5.9 V and the package table 6.0–6.2 V, so T_e ≈ **6 eV**.
    - Re-analysis: 6.2 ± 0.3 eV (normal) and 6.0 ± 0.4 eV (degraded).
 5. **Interpretation.**
    - The Einstein relation assumes a Maxwellian distribution, so "characteristic energy D/μ" is the accurate term.
@@ -364,7 +366,7 @@ Report confusion matrices and confidence intervals. Examples (Wilson 95 % CI):
 | # | Topic | Finding |
 |---|---|---|
 | G1 | Eq. (15) | Not in the final Python code. The code instead computes `Vbd = 1.4*(Cdiel/Cgas)**2/np.log(Freq)`, which does not have units of voltage (values range from 0.005 to 2178). The 2020 MATLAB code intersected two Lissajous edge lines. |
-| G2 | T_e | No E/N table or D/μ interpolation exists in any repository. |
+| G2 | T_e | No E/N table or D/μ interpolation exists in any repository. The author reports that Raizer's curve was digitised up to 175 Td and fitted and extrapolated in OriginLab (see C6). |
 | G3 | Index-offset bug | Peak indices relative to the slice `x[T0:T1]` are applied to the full-cycle arrays, so the second half-cycle's V, n_e and pulse energy are wrong. Example: M2 5 h, ALL0001 uses −80 V where the true value is 840 V. |
 | G4 | V_min polarity | The `sig_sine` logic swaps the polarity pairing: 75 of 160 rows of `m2_final_data.csv` have V_min_p < 0. |
 | G5 | Manley "power" | There is no ×f (the result is J/cycle), and the full-cycle factor 4 is applied per half-cycle. |
@@ -395,7 +397,7 @@ Device m2: the 5 h and 10 h captures are normal (n = 40) and the 15–40 h captu
 | **U_b (burning voltage)** | – | **860 / 811 V** | 2×10⁻⁴ |
 | E/N | 814 Td | 344 / 324 Td | – |
 | T_e (thesis chain, extrapolated) | 13.0 / 12.5 eV | 12.3 / 11.7 eV | 4×10⁻⁹ |
-| **T_e (U_b, inside the table)** | – | **6.2 / 6.0 eV** | 8×10⁻⁵ |
+| **T_e (U_b, just beyond Raizer's curve)** | – | **6.2 / 6.0 eV** | 8×10⁻⁵ |
 | Number of discharges | 50.1 / 50.5 (per ¼ period) | 9.7 / 13.4 (per half period, MAD 5σ) | 6×10⁻⁴ |
 
 ML re-evaluation, using the thesis hyper-parameters with the scaler inside the Pipeline and the thesis 14-feature set:

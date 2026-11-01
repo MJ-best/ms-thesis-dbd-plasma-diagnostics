@@ -96,7 +96,8 @@ def characteristic_energy(EN_vcm2: float, table_EN: np.ndarray, table_Dmu: np.nd
 
     Returns NaN outside the table unless ``extrapolate=True`` (the thesis
     operating point E/N ~ 8e-15 V cm^2 = 800 Td lies in the extrapolated region of
-    its Fig. 15; values there are not supported by the cited data).
+    its Fig. 15; values there are not supported by the cited data). Table points
+    above 175 Td are already the thesis' OriginLab extrapolation of Raizer's curve.
     """
     x = np.log(np.asarray(table_EN, float))
     y = np.log(np.asarray(table_Dmu, float))

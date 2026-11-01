@@ -57,7 +57,7 @@
   | Q_max | 59.4 nC | 59.5 nC |
   | V_rms (normal) | 1.5 kV | 1489 V |
 
-- With strict cross-device evaluation (train on one device, test on the other), DT, GB and RF still detect damage with 95–99 % accuracy. Part of this is a session effect common to all devices: after referencing the features to the control m3, the accuracy is 65–89 % (section J).
+- With strict cross-device evaluation (train on one device, test on the other), DT, GB and RF still detect damage with 95–99 % accuracy. Part of this is a session effect common to all devices: after referencing the features to the control m3, the accuracy is 65–78 % (DT/RF/GB; 64–89 % over all six models) (section J).
 - The damage itself is real (micrographs, EDS), and both damaged devices lose about 48 V more V_rms than the control.
 - The central claim, that electrical diagnostics plus ML can detect dielectric surface damage, stands.
 - What must change is the physical interpretation of V_b, T_e and n_e, the precursor claim, the statistical wording, the evaluation protocol, and the separation of damage from session and measurement-setting effects.
@@ -408,7 +408,7 @@ ML re-evaluation, using the thesis hyper-parameters with the scaler inside the P
 
 V_rms alone gives AUC 0.996 on m2 and 1.000 on m1.
 
-Section J repeats these comparisons against the undamaged control m3. The U_b and pulse-count changes also occur in m3, and the cross-device accuracy falls to 65–89 % after referencing the features to m3.
+Section J repeats these comparisons against the undamaged control m3. The U_b and pulse-count changes also occur in m3, and the cross-device accuracy falls to 65–78 % (DT/RF/GB; 64–89 % over all six models) after referencing the features to m3.
 
 ---
 

@@ -137,7 +137,7 @@
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 24개
+pytest                      # 테스트 26개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -211,6 +211,7 @@ src/dbd_diagnostics/
   waveform.py    주기 검출, 정수 주기 구간
   electrical.py  실효값, 1주기 에너지, 전력, 오프셋을 제거한 전하 적분
   lissajous.py   리사주 분석, 등가회로, burning voltage, Manley 에너지
+  circuit_fit.py 다중 셀 등가회로 역추정 (C_d, C_g, U_b, 문턱 산포)
   discharge.py   펄스 검출(논문 방식 + 잡음 기준), 방전 횟수, 개시 전압
   plasma.py      Townsend/Paschen, E/N, 이동도, n_e, T_e
   features.py    특성 일괄 추출 (논문 특성 + 보정 특성)
@@ -222,7 +223,9 @@ src/dbd_diagnostics/
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
 examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증 스크립트
-tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
+paper/           논문 초안과 그림 스크립트
+portfolio/       데이터과학 사례 연구와 그림 스크립트
+tests/           테스트 26개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 
 ## 7. 문서

@@ -131,7 +131,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 24 tests
+pytest                      # 26 tests
 ```
 
 Command-line tool:
@@ -203,6 +203,7 @@ src/dbd_diagnostics/
   waveform.py    period detection, integer-period windows
   electrical.py  RMS, energy per cycle, power, offset-free charge integration
   lissajous.py   Q-V analysis, equivalent circuit, burning voltage, Manley energy
+  circuit_fit.py inverse fit of a multi-cell equivalent circuit (C_d, C_g, U_b, threshold spread)
   discharge.py   pulse detection (thesis + noise-referenced), number of discharges, onset voltage
   plasma.py      Townsend/Paschen, E/N, mobility, n_e, T_e
   features.py    one-call feature extraction (thesis + corrected features)
@@ -214,7 +215,9 @@ src/dbd_diagnostics/
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
 examples/        synthetic demo, re-analysis and raw-archive verification scripts
-tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+paper/           draft manuscript and figure script
+portfolio/       data-science case study (Korean) and figure script
+tests/           26 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation

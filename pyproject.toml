@@ -18,6 +18,7 @@ Thesis = "https://www.dbpia.co.kr/journal/detail?nodeId=T16940279"
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.6"]
+app = ["streamlit>=1.48", "matplotlib>=3.6"]
 dev = ["pytest>=7", "matplotlib>=3.6"]
 
 [project.scripts]

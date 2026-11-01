@@ -6,11 +6,13 @@
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![code: MIT](https://img.shields.io/badge/code-MIT-green)
 ![docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-lightgrey)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MJ-best/ms-thesis-dbd-plasma-diagnostics/blob/main/notebooks/tutorial.ipynb)
 
 This repository is the **open re-implementation of every computation in the M.S. thesis below**. It contains:
 
-- the full thesis PDF;
+- the full thesis PDF and an erratum;
 - a verification report on the thesis;
+- a tutorial notebook (runs in Colab) and a web demo app;
 - the Python package `dbd_diagnostics`, which consolidates the MATLAB, Python and notebook code written in 2020–2023 and previously spread over several repositories.
 
 | | |
@@ -21,6 +23,7 @@ This repository is the **open re-implementation of every computation in the M.S.
 | Degree | M.S. (Master of Science), Dept. of Electrical and Biological Physics, Graduate School, Kwangwoon University, Seoul; approved December 2023 |
 | Advisor | Prof. Eun Ha Choi |
 | Full text | [thesis/Kim_2023_MS_thesis_DBD_surface_damage_ML.pdf](thesis/Kim_2023_MS_thesis_DBD_surface_damage_ML.pdf) (in Korean) · [DBpia](https://www.dbpia.co.kr/journal/detail?nodeId=T16940279) |
+| Erratum | [docs/erratum.md](docs/erratum.md) · [PDF (EN)](thesis/Kim_2023_MS_thesis_erratum_en.pdf) · [PDF (KO)](thesis/Kim_2023_MS_thesis_erratum_ko.pdf) |
 
 ---
 
@@ -126,7 +129,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 21 tests
+pytest                      # 24 tests
 ```
 
 Command-line tool:
@@ -160,10 +163,39 @@ print(ml.results_table(res))
 
 `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report.
 
+Training and prediction on your own labelled data:
+
+```bash
+dbd-diag extract captures/ -o features.csv      # 1) extract features
+# 2) add a `label` column (0 normal / 1 degraded) and a `device` column
+dbd-diag train features.csv -o model.joblib     # 3) prints leave-one-device-out results, then fits on all rows
+dbd-diag predict model.joblib new_captures/     # 4) classify new captures
+```
+
+### Tutorial notebook
+
+[`notebooks/tutorial.ipynb`](notebooks/tutorial.ipynb) walks through the whole chain step by step: waveform, Lissajous figure, U_b, pulses, E/N and T_e, and cross-device ML. Use the **Open in Colab** badge at the top to run it in the browser without installing anything.
+
+### Web demo app
+
+```bash
+pip install -e ".[app]"
+streamlit run app/streamlit_app.py
+```
+
+The app offers:
+- Upload of oscilloscope CSVs, or generation of a synthetic capture with sliders for the equivalent-circuit parameters.
+- Waveform, gas-gap voltage, Lissajous figure and a table of all quantities, downloadable as CSV.
+- A **health check** against the same device's healthy baseline: ΔV_rms, ΔC_dielectric and ΔU_b, with an alarm on a V_rms drop.
+- Classification with a model trained by `dbd-diag train`.
+
+To host it, select this repository on [Streamlit Community Cloud](https://streamlit.io/cloud) and set the main file to `app/streamlit_app.py`. The dependencies are listed in `app/requirements.txt`.
+
 ## 6. Repository layout
 
 ```
-thesis/                         full thesis PDF (CC BY-NC-ND 4.0)
+thesis/                         full thesis PDF (CC BY-NC-ND 4.0), erratum PDFs (EN/KO)
+app/                            Streamlit web demo
 src/dbd_diagnostics/
   io.py          oscilloscope CSV reader
   waveform.py    period detection, integer-period windows
@@ -174,11 +206,13 @@ src/dbd_diagnostics/
   features.py    one-call feature extraction (thesis + corrected features)
   ml.py          classifiers, explicit metrics, group hold-out, baseline normalisation
   simulate.py    synthetic waveforms (ideal Manley model, 126-cell stochastic model)
-  cli.py         `dbd-diag` command
+  plots.py       waveform and Lissajous figures
+  cli.py         `dbd-diag` command (extract, analyse, simulate, train, predict)
   data/          D/mu table digitised from thesis Fig. 15
-docs/            methods, verification report (EN/KO), legacy-code map, figures
+docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
+notebooks/       step-by-step tutorial (Colab)
 examples/        synthetic demo, re-analysis script for the original data
-tests/           21 tests, incl. known-answer equivalent-circuit tests of every formula
+tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation
@@ -187,6 +221,8 @@ tests/           21 tests, incl. known-answer equivalent-circuit tests of every 
 |---|---|
 | [docs/methods.md](docs/methods.md) · [KO](docs/methods.ko.md) | Every equation, its assumptions and the thesis equation it corresponds to |
 | [docs/thesis-review.md](docs/thesis-review.md) · [KO](docs/thesis-review.ko.md) | Verification report: Eqs. (1)–(32), numbers, measurement chain, statistics, ML, references, audit of the original code, re-analysis |
+| [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
+| [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |
 
 ## 8. Provenance: original repositories and drafts
@@ -259,8 +295,8 @@ Please cite the thesis if you use this code, these methods or the thesis content
 
 | Part | License | You may |
 |---|---|---|
-| Code (`src/`, `tests/`, `examples/`) | [MIT](LICENSE) | Use, modify and redistribute it, including commercially, if you keep the copyright notice. |
+| Code (`src/`, `tests/`, `examples/`, `app/`, `notebooks/`) | [MIT](LICENSE) | Use, modify and redistribute it, including commercially, if you keep the copyright notice. |
 | Documentation and figures (`README*`, `docs/`) | [CC BY 4.0](LICENSE-docs.md) | Share and adapt them with attribution. |
-| Thesis PDF (`thesis/`) | [CC BY-NC-ND 4.0](thesis/README.md) | Share it with attribution, for non-commercial purposes, without modification. Third-party figures inside the thesis (e.g. the source data of Figs. 1 and 15) remain under their original rights. |
+| Thesis and erratum PDFs (`thesis/`) | [CC BY-NC-ND 4.0](thesis/README.md) | Share it with attribution, for non-commercial purposes, without modification. Third-party figures inside the thesis (e.g. the source data of Figs. 1 and 15) remain under their original rights. |
 
 © 2020–2026 Minjun Kim (김민준). Kwangwoon University, Dept. of Electrical and Biological Physics. Advisor: Prof. Eun Ha Choi.

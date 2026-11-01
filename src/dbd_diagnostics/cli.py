@@ -3,6 +3,8 @@
     dbd-diag extract  <csv-or-dir> ... -o features.csv   # batch feature extraction
     dbd-diag simulate -o demo.csv [--ideal]               # synthetic capture
     dbd-diag analyse  <csv>                               # print one capture's results
+    dbd-diag train    features.csv -o model.joblib [--group device]   # fit (and cross-validate) a model
+    dbd-diag predict  model.joblib <csv-or-dir> ...       # classify captures with a saved model
 """
 from __future__ import annotations
 
@@ -12,7 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import features, io, simulate
+from . import features, io, ml, simulate
 
 
 def _iter_csv(paths):
@@ -63,6 +65,41 @@ def cmd_analyse(args) -> int:
     return 0
 
 
+def cmd_train(args) -> int:
+    df = pd.read_csv(args.features)
+    feats = args.columns.split(",") if args.columns else ml.THESIS_FEATURES
+    if args.group and args.group in df.columns and df[args.group].nunique() > 1:
+        models = {args.model: ml.thesis_models()[args.model]}
+        res = ml.results_table(ml.group_holdout(df.dropna(subset=feats), feats, args.label, args.group, models))
+        cols = ["model", "test_group", "n", "tn", "fp", "fn", "tp", "accuracy", "f1_binary", "auc"]
+        print("leave-one-group-out evaluation:")
+        print(res[[c for c in cols if c in res]].round(3).to_string(index=False))
+    bundle = ml.train_bundle(df, feats, args.label, args.model)
+    ml.save_bundle(bundle, args.output)
+    print(f"trained {args.model} on {bundle['n_train']} rows {bundle['class_counts']} -> {args.output}")
+    return 0
+
+
+def cmd_predict(args) -> int:
+    bundle = ml.load_bundle(args.model)
+    cfg = features.DeviceConfig(peak_method=args.peaks)
+    rows = []
+    for f in _iter_csv(args.inputs):
+        try:
+            r = features.extract(io.load_csv(f), cfg)
+            r["file"] = str(f)
+            rows.append(r)
+        except Exception as exc:
+            print(f"error {f}: {exc}", file=sys.stderr)
+    df = pd.DataFrame(rows)
+    pred = ml.predict_bundle(bundle, df)
+    out = pd.concat([df[["file"]], pred], axis=1)
+    print(out.to_string(index=False))
+    if args.output:
+        out.to_csv(args.output, index=False)
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dbd-diag", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -83,6 +120,20 @@ def main(argv=None) -> int:
     a.add_argument("input")
     a.add_argument("--peaks", choices=["robust", "thesis"], default="robust")
     a.set_defaults(func=cmd_analyse)
+    t = sub.add_parser("train", help="train a classifier on a feature table")
+    t.add_argument("features", help="CSV from `dbd-diag extract` with a label column added")
+    t.add_argument("-o", "--output", default="model.joblib")
+    t.add_argument("--label", default="label", help="0 = normal, 1 = degraded")
+    t.add_argument("--group", default="device", help="column for leave-one-group-out evaluation")
+    t.add_argument("--model", choices=["LR", "DT", "RF", "GB", "SVM", "kNN"], default="RF")
+    t.add_argument("--columns", help="comma-separated feature columns (default: the 14 thesis features)")
+    t.set_defaults(func=cmd_train)
+    p = sub.add_parser("predict", help="classify captures with a saved model")
+    p.add_argument("model")
+    p.add_argument("inputs", nargs="+")
+    p.add_argument("-o", "--output")
+    p.add_argument("--peaks", choices=["robust", "thesis"], default="robust")
+    p.set_defaults(func=cmd_predict)
     args = ap.parse_args(argv)
     return args.func(args)
 

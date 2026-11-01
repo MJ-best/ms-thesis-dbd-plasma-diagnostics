@@ -47,9 +47,19 @@ def thesis_models(random_state: int = 42) -> dict:
         "DT": pipe(DecisionTreeClassifier(max_depth=3, min_samples_split=4, random_state=random_state)),
         "RF": pipe(RandomForestClassifier(n_estimators=1000, random_state=random_state, n_jobs=-1)),
         "GB": pipe(GradientBoostingClassifier(learning_rate=0.01, n_estimators=1000, random_state=random_state)),
-        "SVM": pipe(SVC(kernel="linear", probability=True, random_state=random_state)),
+        "SVM": pipe(SVC(kernel="linear", random_state=random_state)),
         "kNN": pipe(KNeighborsClassifier(n_neighbors=3)),
     }
+
+
+def scores(estimator, X) -> np.ndarray:
+    """Continuous score for ROC/AUC: P(degraded) if available, else the decision function."""
+    if hasattr(estimator, "predict_proba"):
+        try:
+            return estimator.predict_proba(X)[:, 1]
+        except AttributeError:
+            pass
+    return estimator.decision_function(X)
 
 
 def evaluate(y_true, y_pred, y_score=None) -> dict:
@@ -107,12 +117,57 @@ def group_holdout(df: pd.DataFrame, features: list[str], label: str, group: str,
         for name, m in models.items():
             est = clone(m).fit(tr[features], tr[label])
             pred = est.predict(te[features])
-            score = est.predict_proba(te[features])[:, 1] if hasattr(est, "predict_proba") else None
             results.append(GroupResult(name, tuple(x for x in groups if x != g), (g,),
-                                       evaluate(te[label].to_numpy(), pred, score)))
+                                       evaluate(te[label].to_numpy(), pred, scores(est, te[features]))))
     return results
 
 
 def results_table(results: list[GroupResult]) -> pd.DataFrame:
     rows = [{"model": r.model, "test_group": ",".join(map(str, r.test_groups)), **r.metrics} for r in results]
     return pd.DataFrame(rows)
+
+
+# --------------------------------------------------------------------------- #
+# Model bundles (train once, reuse in the CLI / web app)
+# --------------------------------------------------------------------------- #
+def train_bundle(df: pd.DataFrame, features: list[str] | None = None, label: str = "label",
+                 model: str = "RF", random_state: int = 42) -> dict:
+    """Fit one of :func:`thesis_models` on all rows and return a serialisable bundle."""
+    from . import __version__
+
+    features = list(features or THESIS_FEATURES)
+    data = df.dropna(subset=features + [label])
+    est = clone(thesis_models(random_state)[model]).fit(data[features], data[label].astype(int))
+    return {"model": est, "features": features, "label": label, "model_name": model,
+            "n_train": int(len(data)), "class_counts": data[label].astype(int).value_counts().to_dict(),
+            "package_version": __version__}
+
+
+def save_bundle(bundle: dict, path) -> None:
+    import joblib
+
+    joblib.dump(bundle, path)
+
+
+def load_bundle(path) -> dict:
+    """Load a bundle written by :func:`save_bundle`.
+
+    .. warning:: joblib/pickle files can execute code when loaded. Only load
+       model files that you created yourself or fully trust.
+    """
+    import joblib
+
+    bundle = joblib.load(path)
+    if not isinstance(bundle, dict) or "model" not in bundle or "features" not in bundle:
+        raise ValueError("not a dbd-diagnostics model bundle")
+    return bundle
+
+
+def predict_bundle(bundle: dict, rows: pd.DataFrame) -> pd.DataFrame:
+    """Predicted label and score (P(degraded) or decision value) for feature rows."""
+    X = rows[bundle["features"]]
+    est = bundle["model"]
+    out = pd.DataFrame(index=rows.index)
+    out["predicted_label"] = est.predict(X)
+    out["score_degraded"] = scores(est, X)
+    return out

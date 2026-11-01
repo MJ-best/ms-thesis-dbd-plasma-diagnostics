@@ -6,11 +6,13 @@
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![code: MIT](https://img.shields.io/badge/code-MIT-green)
 ![docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-lightgrey)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MJ-best/ms-thesis-dbd-plasma-diagnostics/blob/main/notebooks/tutorial.ipynb)
 
 이 저장소는 아래 석사학위논문의 **계산 방법 전체를 다시 구현해 공개**한 것입니다. 저장소에 들어 있는 것은 다음과 같습니다.
 
-- 학위논문 원문 PDF
+- 학위논문 원문 PDF와 정오표
 - 논문을 다시 검증한 보고서
+- 설치 없이 실행하는 튜토리얼 노트북(Colab)과 웹 데모 앱
 - 2020–2023년에 여러 저장소에 흩어져 있던 MATLAB·Python·노트북 코드를 하나로 정리한 Python 패키지 `dbd_diagnostics`
 
 | 항목 | 내용 |
@@ -22,6 +24,7 @@
 | 지도교수 | 최은하 |
 | 심사위원 | 권기청(위원장), 최은하, 홍영준 |
 | 원문 | [thesis/Kim_2023_MS_thesis_DBD_surface_damage_ML.pdf](thesis/Kim_2023_MS_thesis_DBD_surface_damage_ML.pdf) · [DBpia](https://www.dbpia.co.kr/journal/detail?nodeId=T16940279) |
+| 정오표 | [docs/erratum.ko.md](docs/erratum.ko.md) · [PDF](thesis/Kim_2023_MS_thesis_erratum_ko.pdf) · [English](thesis/Kim_2023_MS_thesis_erratum_en.pdf) |
 
 ---
 
@@ -132,7 +135,7 @@
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 21개
+pytest                      # 테스트 24개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -167,10 +170,40 @@ print(ml.results_table(res))
 
 **원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다.
 
+**모델 학습과 예측**: 직접 라벨을 붙인 데이터로 분류기를 학습하고, 저장한 모델로 새 캡처를 판별합니다.
+
+```bash
+dbd-diag extract 측정폴더/ -o features.csv     # 1) 특성 추출
+# 2) features.csv에 label(0 정상 / 1 손상)과 device(장치 ID) 열을 추가
+dbd-diag train features.csv -o model.joblib   # 3) 장치 단위 교차검증 결과를 출력한 뒤 전체 데이터로 학습
+dbd-diag predict model.joblib 새캡처/          # 4) 새 캡처 판별
+```
+
+### 튜토리얼 노트북
+
+[`notebooks/tutorial.ipynb`](notebooks/tutorial.ipynb)는 파형 → 리사주 → U_b → 펄스 → E/N·T_e → 장치 간 머신러닝까지 한 단계씩 따라가는 노트북입니다. README 위쪽의 **Open in Colab** 배지를 누르면 설치 없이 브라우저에서 실행할 수 있습니다.
+
+### 웹 데모 앱
+
+```bash
+pip install -e ".[app]"
+streamlit run app/streamlit_app.py
+```
+
+브라우저에서 다음 기능을 쓸 수 있습니다.
+
+- 오실로스코프 CSV를 올리거나 합성 파형을 만들 수 있습니다(등가회로 변수를 슬라이더로 조절).
+- 파형, 기체 갭 전압, 리사주 그래프, 전체 물리량 표를 보여 줍니다. 표는 CSV로 내려받을 수 있습니다.
+- **상태 점검**: 같은 장치의 초기 정상 상태(기준값) 대비 V_rms, C_dielectric, U_b 변화를 보여 주고, V_rms 감소가 임계값을 넘으면 경고합니다.
+- **모델 예측**: `dbd-diag train`으로 만든 모델 파일을 불러와 손상 여부를 판별합니다.
+
+인터넷에 공개하려면 [Streamlit Community Cloud](https://streamlit.io/cloud)에서 이 저장소를 선택하고, main file을 `app/streamlit_app.py`로 지정하면 됩니다. 필요한 패키지는 `app/requirements.txt`에 적혀 있습니다.
+
 ## 6. 저장소 구성
 
 ```
-thesis/                         학위논문 원문 PDF (CC BY-NC-ND 4.0)
+thesis/                         학위논문 원문 PDF (CC BY-NC-ND 4.0), 정오표 PDF (한/영)
+app/                            Streamlit 웹 데모 앱
 src/dbd_diagnostics/
   io.py          오실로스코프 CSV 읽기
   waveform.py    주기 검출, 정수 주기 구간
@@ -181,11 +214,13 @@ src/dbd_diagnostics/
   features.py    특성 일괄 추출 (논문 특성 + 보정 특성)
   ml.py          분류기, 명시적 지표, 장치 단위 검증, 기준값 정규화
   simulate.py    합성 파형 (이상 Manley 모델, 126셀 확률 모델)
-  cli.py         명령줄 도구 dbd-diag
+  plots.py       파형·리사주 그림
+  cli.py         명령줄 도구 dbd-diag (extract, analyse, simulate, train, predict)
   data/          D/μ 표 (논문 그림 15를 디지타이즈)
-docs/            계산 방법·검증 보고서 (한/영), 기존 코드 대응표, 그림
+docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
+notebooks/       단계별 튜토리얼 (Colab)
 examples/        합성 데모, 원본 데이터 재분석 스크립트
-tests/           정답을 아는 등가회로로 각 식을 검증하는 테스트 21개
+tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 
 ## 7. 문서
@@ -194,6 +229,8 @@ tests/           정답을 아는 등가회로로 각 식을 검증하는 테스
 |---|---|
 | [docs/methods.ko.md](docs/methods.ko.md) · [EN](docs/methods.md) | 단계별 수식, 가정, 논문 식 번호와의 대응 |
 | [docs/thesis-review.ko.md](docs/thesis-review.ko.md) · [EN](docs/thesis-review.md) | 학위논문 검증 보고서. 수식 (1)–(32), 수치, 측정 체인, 통계, 머신러닝, 참고문헌, 원본 코드 감사, 재분석 결과 |
+| [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
+| [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |
 
 ## 8. 출처: 기존 저장소와 초안 위치
@@ -273,8 +310,8 @@ tests/           정답을 아는 등가회로로 각 식을 검증하는 테스
 
 | 대상 | 라이선스 | 허용 범위 |
 |---|---|---|
-| 코드 (`src/`, `tests/`, `examples/`) | [MIT](LICENSE) | 상업적 이용을 포함해 자유롭게 사용·수정·배포할 수 있습니다. 단, 저작권 고지를 유지해야 합니다. |
+| 코드 (`src/`, `tests/`, `examples/`, `app/`, `notebooks/`) | [MIT](LICENSE) | 상업적 이용을 포함해 자유롭게 사용·수정·배포할 수 있습니다. 단, 저작권 고지를 유지해야 합니다. |
 | 문서·그림 (`README*`, `docs/`) | [CC BY 4.0](LICENSE-docs.md) | 저작자와 출처를 표시하면 자유롭게 공유·변형할 수 있습니다. |
-| 학위논문 PDF (`thesis/`) | [CC BY-NC-ND 4.0](thesis/README.md) | 저작자를 표시하고, 비영리 목적으로, 내용을 바꾸지 않는 조건에서 공유할 수 있습니다. 논문 안의 제3자 그림(예: 그림 1, 15의 원 데이터)은 각 원저작자의 권리를 따릅니다. |
+| 학위논문 PDF·정오표 PDF (`thesis/`) | [CC BY-NC-ND 4.0](thesis/README.md) | 저작자를 표시하고, 비영리 목적으로, 내용을 바꾸지 않는 조건에서 공유할 수 있습니다. 논문 안의 제3자 그림(예: 그림 1, 15의 원 데이터)은 각 원저작자의 권리를 따릅니다. |
 
 © 2020–2026 김민준 (Minjun Kim). 광운대학교 전자바이오물리학과, 지도교수 최은하.

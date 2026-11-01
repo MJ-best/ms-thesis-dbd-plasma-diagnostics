@@ -11,6 +11,8 @@
 | 지도교수 / Advisor | 최은하 (Prof. Eun Ha Choi) |
 | DBpia | https://www.dbpia.co.kr/journal/detail?nodeId=T16940279 |
 
+**Erratum / 정오표**: [`Kim_2023_MS_thesis_erratum_ko.pdf`](Kim_2023_MS_thesis_erratum_ko.pdf) (한국어) · [`Kim_2023_MS_thesis_erratum_en.pdf`](Kim_2023_MS_thesis_erratum_en.pdf) (English) — source: [`../docs/erratum.ko.md`](../docs/erratum.ko.md)
+
 This is the thesis as submitted. Corrections found during the 2026 verification are listed in
 [../docs/thesis-review.md](../docs/thesis-review.md) / [../docs/thesis-review.ko.md](../docs/thesis-review.ko.md);
 the PDF itself is not modified.
@@ -19,7 +21,7 @@ the PDF itself is not modified.
 
 ## License / 라이선스
 
-© 2023 Minjun Kim (김민준). The thesis PDF is shared under the
+© 2023–2026 Minjun Kim (김민준). The thesis PDF and the erratum PDFs are shared under the
 **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International licence (CC BY-NC-ND 4.0)**,
 <https://creativecommons.org/licenses/by-nc-nd/4.0/>:
 you may copy and redistribute it for non-commercial purposes, unmodified, with attribution.

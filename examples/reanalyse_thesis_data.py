@@ -64,7 +64,7 @@ def main(m1_dir, m2_dir):
         for setting, (a, b) in splits.items():
             for name, m in models.items():
                 est = clone(m).fit(a[feats], a.label)
-                r = ml.evaluate(b.label.to_numpy(), est.predict(b[feats]), est.predict_proba(b[feats])[:, 1])
+                r = ml.evaluate(b.label.to_numpy(), est.predict(b[feats]), ml.scores(est, b[feats]))
                 rows.append({"features": fs_name, "setting": setting, "model": name, **r})
     res = pd.DataFrame(rows)
     pd.set_option("display.width", 200)

@@ -1,0 +1,4 @@
+# Requirements for hosting the demo (e.g. Streamlit Community Cloud, main file: app/streamlit_app.py)
+streamlit>=1.48
+matplotlib>=3.6
+dbd-diagnostics @ git+https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics

@@ -5,8 +5,8 @@ Copyright © 2023-2026 Minjun Kim (김민준).
 | Material | Licence |
 |---|---|
 | Documentation, text, equation write-ups and figures: `README*.md`, `docs/`, `CITATION.cff` | **CC BY 4.0** — <https://creativecommons.org/licenses/by/4.0/legalcode> |
-| Thesis PDF: `thesis/` | **CC BY-NC-ND 4.0** — <https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode> (see `thesis/README.md`) |
-| Source code: `src/`, `tests/`, `examples/`, `.github/` | **MIT** — see `LICENSE` |
+| Thesis and erratum PDFs: `thesis/` | **CC BY-NC-ND 4.0** — <https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode> (see `thesis/README.md`) |
+| Source code: `src/`, `tests/`, `examples/`, `app/`, `notebooks/`, `.github/` | **MIT** — see `LICENSE` |
 
 **CC BY 4.0**: you may share and adapt the documentation for any purpose, including commercially,
 provided you give appropriate credit, link to the licence and indicate whether changes were made.

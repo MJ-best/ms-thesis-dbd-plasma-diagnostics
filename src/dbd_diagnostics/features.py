@@ -14,6 +14,7 @@ Two families of features are returned:
 """
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 
 import numpy as np
@@ -108,7 +109,9 @@ def extract(wf: Waveform, cfg: DeviceConfig = DeviceConfig()) -> dict:
         ne_c = plasma.electron_density(idp, cfg.gap_cm, cfg.cell_area_cm2, L.U_b_onset, cfg.mobility_cm2_Vs)
         r["ne_corrected_mean"] = float(np.mean(ne_c))
         rows.append(r)
-    out = {k: float(np.nanmean([row[k] for row in rows])) for k in rows[0]}
+    with warnings.catch_warnings():  # all-NaN columns (e.g. no pulses in an ideal waveform) stay NaN
+        warnings.simplefilter("ignore", RuntimeWarning)
+        out = {k: float(np.nanmean([row[k] for row in rows])) for k in rows[0]}
     out["n_periods"] = len(rows)
     for key in ("Time", "Vertical Scale", "Sampling Period"):
         if key in wf.meta:

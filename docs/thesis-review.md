@@ -12,6 +12,7 @@
 - The references.
 - Whether the six original code repositories match the thesis.
 - A re-analysis of the original oscilloscope captures (devices m1, m2).
+- A check against the complete raw-data archive, using a third device (m3) that ran in parallel without visible damage as a control (section J).
 
 **Methods.**
 1. Re-derivation of each equation.
@@ -19,6 +20,7 @@
 3. Equivalent-circuit simulations with a known ground truth (`tests/test_lissajous.py`).
 4. Re-analysis of the raw data with this package (`examples/reanalyse_thesis_data.py`).
 5. Reverse-engineering of the confusion matrices behind Table 6.
+6. Comparison with the undamaged control device m3 measured in the same sessions (`examples/verify_raw_archive.py`).
 
 **Severity levels.**
 - **[Major]**: affects a conclusion or a headline number.
@@ -38,9 +40,12 @@
 | 5 | The abstract and conclusion claim that the number of discharges and n_e increase and that I_rms decreases, but give no statistical test. Testing the thesis' own mean ± SD gives p = 0.89 for the number of discharges and p = 0.78 for n_e, i.e. **not significant**. | Major |
 | 6 | Data splitting has two problems. First, both half-cycles of one capture appear to enter as separate rows (inferred from the row arithmetic). Second, the label is constant per session, yet rows were split at random. Test scores are therefore optimistic: in the re-analysis, a random split gives 100 % for 5 of 6 models. | Major |
 | 7 | In Table 6, precision and recall are **macro** averages, while F1 is the **binary** F1 of the degraded class. All 12 entries can be reproduced exactly from integer confusion matrices. This mixing contradicts Eqs. (30)–(32). | Moderate |
-| 8 | Most of the classification power comes from **V_rms alone**: its single-feature AUC is 0.996 / 1.000. The classifier detects the sag of the applied voltage after damage. | Moderate |
+| 8 | Most of the classification power comes from **V_rms alone**: its single-feature AUC is 0.996 / 1.000. The classifier detects the sag of the applied voltage after damage. About half of that sag is common to an undamaged device measured in the same sessions (#11). | Moderate |
 | 9 | Eq. (14) contains an arithmetic slip: 55.6 nC / 30.5 pF = **1.82 kV**, not 1.5 kV. The representative C_d also differs in three places (30.5 / 34.9 / 34.2 pF). | Moderate |
 | 10 | The probe models are swapped. The P6015A is the 1000× HV probe and the P6021A is the current probe, as the CSV headers confirm. | Minor |
+| 11 | ★ The undamaged device m3, measured in the same sessions, shows the same V_rms drop (−133 V at 15 h). Within that session the applied voltage jumps between discrete levels, i.e. the supply switches mode. Against m3, the damage-specific V_rms change is **≈ −48 V**, about half of the naive drop. Classifiers trained on m2 call **95–100 %** of m3's captures in its low-voltage sessions "degraded". | Major |
+| 12 | Within one session, the oscilloscope settings change the features: doubling the current A/div adds 3.5 mA to I_rms, and 20 ns sampling (instead of 10 ns) removes 6.6 pulses and adds 3.0 pF to C_d. I_rms, the pulse count and n_e are therefore confounded with the settings, which differ between the groups. | Major |
+| 13 | Table 3 gives **atomic %** from single 10,000× maps; its "Normal" column is the Ref sample. The 100 → 250 mA current increase of Fig. 7 is not reproduced when captures at the same current scale are compared. | Minor |
 
 **What holds.**
 - Re-analysing the raw captures reproduces the thesis' measured quantities:
@@ -52,9 +57,10 @@
   | Q_max | 59.4 nC | 59.5 nC |
   | V_rms (normal) | 1.5 kV | 1489 V |
 
-- With strict cross-device evaluation (train on one device, test on the other), DT, GB and RF still detect damage with 95–99 % accuracy.
+- With strict cross-device evaluation (train on one device, test on the other), DT, GB and RF still detect damage with 95–99 % accuracy. Part of this is a session effect common to all devices: after referencing the features to the control m3, the accuracy is 65–89 % (section J).
+- The damage itself is real (micrographs, EDS), and both damaged devices lose about 48 V more V_rms than the control.
 - The central claim, that electrical diagnostics plus ML can detect dielectric surface damage, stands.
-- What must change is the physical interpretation of V_b, T_e and n_e, the precursor claim, the statistical wording and the evaluation protocol.
+- What must change is the physical interpretation of V_b, T_e and n_e, the precursor claim, the statistical wording, the evaluation protocol, and the separation of damage from session and measurement-setting effects.
 
 ---
 
@@ -171,7 +177,7 @@
 
 - **Consequences.**
   - E/N, T_e and n_e must be recomputed.
-  - The decrease of U_b with damage (p = 2×10⁻⁴) is itself a meaningful new indicator.
+  - U_b decreases after damage (p = 2×10⁻⁴), but the undamaged control m3 decreases by a similar amount over the same sessions (−38 V, p = 0.05), and U_b depends on the sampling setting (+35 V at 20 ns). U_b is therefore not established as a damage indicator (section J).
 
 **C6. E/N, N and T_e [Major].**
 
@@ -257,6 +263,8 @@ Re-analysis (m2: 40 normal, 120 degraded captures):
 | Number of discharges (MAD 5σ detector) | 6×10⁻⁴ | up |
 | U_b | 2×10⁻⁴ | down |
 
+Control check (section J): over the same sessions, the undamaged m3 also gains discharges (+2.7, p = 4×10⁻⁶) and loses U_b (−38 V, p = 0.05), and I_rms and the pulse count depend on the oscilloscope settings. None of the changes in this table is therefore established as an effect of damage. Against m3, only the V_rms decrease (≈ −48 V) is consistent in both damaged devices.
+
 The abstract and conclusion should be revised, and effect sizes reported.
 
 **D2. Table 6 metrics [Moderate].** All 12 entries are reproduced exactly by these confusion matrices (`tests/test_ml.py`). The test set has 16 normal and 42 degraded samples; the validation set has 80 and 81. PRE and REC turn out to be macro averages, while F1 is binary.
@@ -295,7 +303,7 @@ Report confusion matrices and confidence intervals. Examples (Wilson 95 % CI):
    - Cross-device evaluation gives LR 81–95 %, SVM 86–92 % and kNN 69–75 %.
 3. **Confounding with time.**
    - Label 0 always precedes label 1 in time.
-   - The current-probe scale changed between sessions (0.04 / 0.1 / 0.2 A/div), so resolution and noise floor encode session identity.
+   - The current-probe scale changed between sessions (0.04 / 0.1 / 0.2 A/div), so resolution and noise floor encode session identity. Section J quantifies this: within one session, doubling the A/div adds 3.5 mA to I_rms.
 4. **Few devices.** With only two devices, generalisation claims are limited.
 5. **Code mismatch.**
    - The final notebook in the repositories has no scaler (LR predicts all zeros), uses 10,000 trees and a random split.
@@ -305,7 +313,8 @@ Report confusion matrices and confidence intervals. Examples (Wilson 95 % CI):
 - Single-feature AUC is **0.996 (m2) and 1.000 (m1) for V_rms**, versus 0.909 and 0.935 for V_max.
 - Figs. 28 and 29 show the same thing.
 - The classifier detects "damage → load (capacitance and current) change → sag of the resonant supply's output voltage".
-- This is a useful practical indicator. Separating it from changes in supply setting or slow drift needs a control experiment with fixed supply input.
+- This is a useful practical indicator. Separating it from changes in supply setting or slow drift needs a control experiment.
+- The raw-data archive contains such a control: device m3 ran in parallel and shows no erosion. Its V_rms falls in the same sessions (−133 V at 15 h), so about half of the drop is a common-mode supply effect. The damage-specific part is ≈ −48 V, and classifiers trained on m2 call 95–100 % of m3's captures in its low-voltage sessions "degraded" (section J).
 
 **D7. Random forest [Minor].**
 - RF does not "select the best of 1000 trees"; it averages the votes or probabilities of all trees (Sec. 5.4 states this correctly).
@@ -399,6 +408,8 @@ ML re-evaluation, using the thesis hyper-parameters with the scaler inside the P
 
 V_rms alone gives AUC 0.996 on m2 and 1.000 on m1.
 
+Section J repeats these comparisons against the undamaged control m3. The U_b and pulse-count changes also occur in m3, and the cross-device accuracy falls to 65–89 % after referencing the features to m3.
+
 ---
 
 ## I. Recommended erratum and follow-up
@@ -416,3 +427,22 @@ V_rms alone gives AUC 0.996 on m2 and 1.000 on m1.
    - measure Q–V with a monitor capacitor;
    - run a control experiment with fixed supply input.
 8. Test more devices and use per-device baseline normalisation.
+9. Run a control device in parallel and measure it in the same sessions (as m3 was). Report the false-positive rate on it, fix the oscilloscope settings, and log the supply input.
+
+---
+
+## J. Control device m3 and the complete raw-data archive
+
+The full archive of the July 2020 experiment contains a third device, m3. It ran in parallel with m1 and m2 for 60 h, was measured in every session 10–33 min after m1, and shows no erosion in the micrographs. The thesis did not use it. With m3 as a control, the following holds. Details, tables and limitations are in **[raw-data-verification.md](raw-data-verification.md)**; `examples/verify_raw_archive.py` reproduces the numbers.
+
+| # | Finding | Severity |
+|---|---|---|
+| J1 | The archive is the thesis dataset: section H is reproduced to the last digit, and the 2020 MATLAB summaries agree (23/26 sessions within 1 % for V_rms). The 2020 summaries label the energy "Energy per period", confirming C1. | Confirmed |
+| J2 | The m3 V_rms drops with m1 and m2 (15 h: 1273 / 1312 / 1369 V after 1501 / 1496 / 1502 V at 10 h). Within the 15 h session the voltage of m2 and m3 jumps between ≈1150/1270, 1360 and 1460 V from capture to capture. Against m3, the damage-specific V_rms change is ≈ −48 V for both damaged devices. | Major |
+| J3 | Classifiers trained on m2 call 95–100 % of m3's captures at 15, 25 and 40 h, and 100 % at 45–60 h, "degraded" (mean over 15–40 h: 57–86 %). | Major |
+| J4 | Number of discharges (+2.7), U_b (−38 V) and V_min (−98 V) also change in m3. They are not established as damage indicators. | Major |
+| J5 | Within a session: I_rms +3.5 mA per doubling of A/div; 20 ns sampling gives 6.6 fewer pulses, +3.0 pF C_d and +35 V U_b. The m2 degraded group has more 0.04 A/div captures (42 % vs 20 %). | Major |
+| J6 | In the supply-voltage sweep at 20 h, the thesis V_b follows V_max with slope 0.87–1.08, while U_b moves with slope 0.23–0.33. Experimental confirmation of C5. | Confirmed |
+| J7 | The m1 micrographs filed as "5h" (taken before the 10 h measurement) show a large melted blister at an electrode end, so the m1 "normal" sessions may contain a damaged cell. The m2 labels match the micrographs. | Moderate |
+| J8 | Table 3 = atomic %; "Normal" is the Ref sample's `0-X10000-2` map and "Degradation" the m2 site-2-1 map `2-1-1X10000-1`. Over all maps, damaged sites give Ag 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. | Minor |
+| J9 | Fig. 7 (100 → 250 mA): at the same current scale, m2 gives 251 → 272 mA (p = 0.25) and m1 252 → 213 mA. | Moderate |

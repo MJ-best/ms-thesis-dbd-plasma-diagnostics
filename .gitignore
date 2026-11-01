@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+build/
+dist/
+.venv/
+# raw measurement data is not distributed with this repository
+data/raw/
+*.CSV
+!examples/*.csv
+outputs/
+.ruff_cache/

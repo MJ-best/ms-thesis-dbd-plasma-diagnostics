@@ -1,0 +1,34 @@
+# Characteristic energy D_e/mu_e of electrons in air vs reduced field E/N.
+# Digitised (automated pixel trace, +-3 % in D/mu) from Fig. 15 of the thesis
+# (M. Kim, Kwangwoon Univ., 2023), which compiles Raja Rao & Govinda Raju,
+# J. Phys. D 4, 769 (1971) and Raizer, Gas Discharge Physics (1991).
+# Valid (non-extrapolated) range: 1e-17 ... 3.9e-15 V cm^2 (1 ... 390 Td).
+# For quantitative work prefer a Boltzmann-solver table (e.g. BOLSIG+ with LXCat air cross sections).
+E_over_N_Vcm2,D_over_mu_V
+1.000e-17,0.193
+1.259e-17,0.231
+1.585e-17,0.277
+1.995e-17,0.338
+2.512e-17,0.408
+3.162e-17,0.475
+3.981e-17,0.556
+5.012e-17,0.651
+6.310e-17,0.773
+7.943e-17,0.883
+1.000e-16,0.977
+1.259e-16,1.059
+1.585e-16,1.123
+1.995e-16,1.166
+2.512e-16,1.198
+3.162e-16,1.242
+3.981e-16,1.349
+5.012e-16,1.548
+6.310e-16,1.838
+7.943e-16,2.166
+1.000e-15,2.563
+1.259e-15,3.042
+1.585e-15,3.557
+1.995e-15,4.169
+2.512e-15,4.932
+3.162e-15,5.887
+3.880e-15,6.920

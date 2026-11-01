@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software or its methods, please cite the thesis below."
+title: "ms-thesis-dbd-plasma-diagnostics (dbd-diagnostics): electrical diagnostics and ML prediction of dielectric surface damage in atmospheric-pressure surface DBD plasma"
+type: software
+authors:
+  - family-names: Kim
+    given-names: Minjun
+    affiliation: "Department of Electrical and Biological Physics, Kwangwoon University"
+license: MIT
+repository-code: "https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics"
+url: "https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics"
+keywords:
+  - dielectric barrier discharge
+  - atmospheric pressure plasma
+  - Lissajous figure
+  - electrical diagnostics
+  - machine learning
+  - surface degradation
+preferred-citation:
+  type: thesis
+  thesis-type: "Master's thesis"
+  title: "저온 대기압 방전 플라즈마의 유전 장벽 표면 손상에 대한 전기적 측정과 머신러닝 분석 기반 손상 예측 (Electrical measurements and prediction of dielectric barrier surface damage in nonthermal atmospheric pressure dielectric barrier discharge plasma based on machine learning)"
+  authors:
+    - family-names: Kim
+      given-names: Minjun
+  institution:
+    name: "Kwangwoon University, Graduate School, Department of Electrical and Biological Physics"
+    city: Seoul
+    country: KR
+  year: 2023
+  url: "https://www.dbpia.co.kr/journal/detail?nodeId=T16940279"

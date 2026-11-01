@@ -12,3 +12,8 @@ data/raw/
 !examples/*.csv
 outputs/
 .ruff_cache/
+# local working data (never commit measurement data or trained models)
+/data/
+/figures/verification/
+*.joblib
+*.pkl

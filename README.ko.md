@@ -157,7 +157,7 @@ python examples/demo_synthetic.py
 **Python에서 사용하기**
 
 ```python
-from dbd_diagnostics import io, features, lissajous, ml
+from dbd_diagnostics import io, features, ml
 
 wf = io.load_csv("ALL0001.CSV")          # GW Instek CSV 또는 t,v,i 형식 CSV
 r = features.extract(wf)                  # 완전 주기 평균
@@ -246,7 +246,7 @@ tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 �
 | [`Atmospheric_Plasma_Diagnosis`](https://github.com/MJ-best/Atmospheric_Plasma_Diagnosis) | 2020-12 – 2023-02 | 10 | `master` @ `980cc2c` | MATLAB 코드 전체(plasma-calc를 포함), 2021년 Python 자동화 |
 | [`Plamsa_diagnosis_with_ML`](https://github.com/MJ-best/Plamsa_diagnosis_with_ML) | 2022-11 – 2023-06 | 44 | `main` @ `3e8a5ef` | 논문 시기의 노트북 32개: 특성 계산, 머신러닝, FFT 연구, 앱 |
 | [`Plasma_diagnosis_with_ML`](https://github.com/MJ-best/Plasma_diagnosis_with_ML) | 2023-03 | 1 | `master` @ `3252884` | 원본 측정 데이터(CSV 약 650개, 181 MB) |
-| [`oscilloscope-calc`](https://github.com/MJ-best/oscilloscope-calc) | 2025-10 | 14 | `master` @ `a9b23b2` | 최신 노트북 2종과 Flutter 앱(Dart 포팅) |
+| [`oscilloscope-calc`](https://github.com/MJ-best/oscilloscope-calc) | 2025-10 – 2026-11 | 14 | `master` @ `a9b23b2` | 최신 노트북 2종과 Flutter 앱(Dart 포팅). 이후 PR #2에서 계산 코드를 이 저장소 방식으로 정정(`master` @ `9b76a80`) |
 
 이 공개 저장소를 정리하기 직전의 중간본(`legacy/` 폴더 포함)은 `Atmospheric_Plasma_Diagnosis`의 `claude/thesis-automation-review-3wo35l` 브랜치(커밋 `09233c0`)에 있습니다.
 

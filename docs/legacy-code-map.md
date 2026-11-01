@@ -13,7 +13,7 @@ This repository replaces six private working repositories (2020–2025). Their o
 | `Atmospheric_Plasma_Diagnosis` | 2020-12 – 2023-02 | Superset of the `plasma-calc` MATLAB code; Python `Electrical_Diagnosis_20211007.py`; 2021 notebooks | Superseded; interim reorganisation with `legacy/` on branch `claude/thesis-automation-review-3wo35l` |
 | `Plamsa_diagnosis_with_ML` | 2022-11 – 2023-06 | 32 dated notebooks: feature calculation, ML models, FFT/displacement-current research, Gradio app | Superseded by `features.py`, `ml.py`, `cli.py` |
 | `Plasma_diagnosis_with_ML` | 2023-03 | Raw oscilloscope CSVs (m1, m2, m3, Kapton, µDBD), about 181 MB | Data only; not redistributed here |
-| `oscilloscope-calc` | 2025-10 | Flutter/Dart port of the 2023 notebook, plus the newest notebooks (`[Function]…20230613`, `[App]…20230425`) | Separate app. Its Dart calculator was aligned with this package on branch `claude/thesis-automation-review-3wo35l` (commit `c4406b0`): U_b, transferred charge, Manley power in W, n_e; cross-checked by `test/plasma_calculator_physics_test.dart` |
+| `oscilloscope-calc` | 2025-10 | Flutter/Dart port of the 2023 notebook, plus the newest notebooks (`[Function]…20230613`, `[App]…20230425`) | Separate app. Its Dart calculator was aligned with this package in PR #2 (merged into `master` as `9b76a80`): U_b, transferred charge, Manley power in W, n_e; cross-checked by `test/plasma_calculator_physics_test.dart` |
 
 ## Algorithm mapping / 알고리즘 대응
 

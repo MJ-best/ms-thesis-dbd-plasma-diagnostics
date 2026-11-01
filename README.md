@@ -236,7 +236,7 @@ This repository consolidates the six repositories below. They are **private** an
 | [`Atmospheric_Plasma_Diagnosis`](https://github.com/MJ-best/Atmospheric_Plasma_Diagnosis) | 2020-12 – 2023-02 | 10 | `master` @ `980cc2c` | All MATLAB code (a superset of plasma-calc), 2021 Python automation |
 | [`Plamsa_diagnosis_with_ML`](https://github.com/MJ-best/Plamsa_diagnosis_with_ML) | 2022-11 – 2023-06 | 44 | `main` @ `3e8a5ef` | 32 notebooks from the thesis period: features, ML, FFT research, app |
 | [`Plasma_diagnosis_with_ML`](https://github.com/MJ-best/Plasma_diagnosis_with_ML) | 2023-03 | 1 | `master` @ `3252884` | Raw captures (about 650 CSVs, 181 MB) |
-| [`oscilloscope-calc`](https://github.com/MJ-best/oscilloscope-calc) | 2025-10 | 14 | `master` @ `a9b23b2` | Newest notebooks and a Flutter app (Dart port) |
+| [`oscilloscope-calc`](https://github.com/MJ-best/oscilloscope-calc) | 2025-10 – 2026-11 | 14 | `master` @ `a9b23b2` | Newest notebooks and a Flutter app (Dart port). Its calculator was later aligned with this package in PR #2 (`master` @ `9b76a80`) |
 
 The intermediate reorganisation, which still includes a `legacy/` folder, is on branch `claude/thesis-automation-review-3wo35l` of `Atmospheric_Plasma_Diagnosis` (commit `09233c0`).
 

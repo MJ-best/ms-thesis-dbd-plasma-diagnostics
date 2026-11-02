@@ -21,7 +21,7 @@
 3. Every composition table in the EDS reports, compared with Table 3.
 4. **M3**, which the thesis did not use, serves as an **undamaged control device**. In every session it was measured on the same day as M1 and M2, 10–33 min after M1.
 
-Reproduce with `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"`, which prints the numbers of sections 1–6. Values read from photographs and EDS reports are recorded in the tables of this document.
+Reproduce with `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"`, which prints the numbers of sections 1–6. The numbers and the figure of section 10 are reproduced by `python examples/consistency_check.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산" docs/img` (about 8 min). Values read from photographs and EDS reports are recorded in the tables of this document.
 
 Severity levels follow the [verification report](thesis-review.md): **[Major]** affects a conclusion or a headline number; **[Moderate]** the method or wording must change; **[Minor]** notation or wording.
 
@@ -40,6 +40,7 @@ Severity levels follow the [verification report](thesis-review.md): **[Major]** 
 | 7 | Table 3 (EDS) is traced. The "Normal" column is the `0-X10000-2` map of the **Ref sample**; the "Degradation" column is the `2-1-1X10000-1` map of the **M2 damaged site**. Both columns are **atomic %**. The 12 damaged-site maps give Ag 1.3–13.9 at.%; the 41 intact-dielectric maps give 0.0–0.7 at.% (one map 1.44). The conclusion is robust; the unit and the choice of map should be stated. | Minor |
 | 8 | Fig. 7, "discharge current from ~100 mA to ~250 mA", is not reproduced when captures at the same current scale (0.1 A/div) are compared: M2 251 → 272 mA (p = 0.25), M1 252 → 213 mA (a decrease). | Moderate |
 | 9 | Some statements of the earlier verification report must be revised. The U_b decrease (p = 2×10⁻⁴) and the increase in the number of discharges (p = 6×10⁻⁴) also occur in M3, in the same direction (−38 V, p = 0.05; +2.7, p = 4×10⁻⁶), so they are not supported as damage indicators. See section 9. | Report revision |
+| 10 | The physics assumptions (Manley equivalent circuit, Paschen/Townsend breakdown) agree with the data. The discharge-phase slope C_d grows with the supply voltage, so it is an effective capacitance set by the discharging area, not the dielectric capacitance. The only independent damage signal is the V_rms drop against M3; eleven models, five of them newer than the thesis, do not beat V_rms alone, also with single periods and every capture weighted equally. See section 10. | Confirmed |
 
 **What holds.**
 - The surface damage itself is real. The burn marks in the M1 and M2 micrographs and the Ag increase in EDS agree.
@@ -341,7 +342,113 @@ These revisions have been applied to the [verification report](thesis-review.md)
 
 ---
 
-## 10. Recommendations
+## 10. Do the physics, the statistics and the ML agree? [Confirmed]
+
+Without new experiments, this archive alone was used to check whether the physical assumptions, the measured results and the machine-learning results of the thesis point the same way. How many of the 126 pairs discharge is unknown, so every comparison is a statistical comparison over many captures and sessions. Two captures whose period detection failed (M1 10 h, M3 10 h; half or double the period) are left out.
+
+- Every feature is computed for each full period of a capture and then averaged. A 10 ns capture holds 2 periods and a 20 ns capture 4, so the 498 endurance captures give 1,493 periods.
+- The three devices ran from the same mains (KEPCO) on separate power strips, each with its own DC power supply and source (confirmed by the experimenter). Each device's voltage therefore follows its own load, and the session effects common to all three come from the shared mains or the room environment.
+
+![Consistency of physics, statistics and ML](img/consistency_check.png)
+
+*(a) The two slopes of a Q–V loop (b) Discharge-phase slope against supply voltage (c) U_b against the Paschen range, and the thesis V_b (d) Damage effect against M3 (e) Thesis protocol: accuracy and false alarms on M3 (f) Cross-device AUC with features referenced to M3 (g) Single periods: shuffled, a session held out, relative to M3 on the other device*
+
+### 10.1 Physical assumptions and the data
+
+| Assumption | Data | Verdict |
+|---|---|---|
+| During the discharge the gas voltage is clamped at U_b (Manley equivalent circuit) | In all 498 captures from 5 h on, the discharge-phase slope exceeds the no-discharge slope (Fig. a). Two independent U_b estimates agree within 3 % (onset 828–860 V, geometry 842–882 V). The measured energy per cycle is 1.17 times the ideal Manley value | Agrees |
+| Breakdown follows Paschen's law | The Paschen voltage of a 100 µm air gap is 718–865 V (γ = 0.1–0.01); the interquartile range of the measured U_b is 773–888 V (Fig. c) | Agrees |
+| Mechanism: Townsend or streamer | At the measured U_b, αd = 3.2–5.0, far below the streamer (Meek) criterion αd ≈ 18–20. The Townsend condition γ(e^{αd} − 1) = 1 then needs γ = 0.007–0.045, typical of dielectric surfaces | Townsend suffices |
+| Not all 126 pairs discharge | In the 20 h supply sweep the discharge-phase slope rises from 8.5 V to 14 V input: M1 37.6 → 48.9, M2 41.4 → 56.7, M3 39.6 → 58.3 pF (Fig. b). A fixed dielectric capacitance would not change. The discharging area grows with voltage (partial surface discharging; Peeters & van de Sanden, *Plasma Sources Sci. Technol.* 24, 015016, 2015) | Agrees |
+| Thesis V_b and T_e | V_b/V_max = 0.984 ± 0.033; the correlation of T_e with V_b is 0.9999 | Not independent quantities |
+| Number of discharges | Within the same sessions, 10 ns → 20 ns sampling gives M1 12.9 → 6.0, M2 15.4 → 6.6, M3 12.8 → 9.6 | Set by the instrument's resolution |
+
+- The thesis' C_dielectric is not the dielectric's own capacitance but an **effective capacitance set by the discharging area**.
+- Where the applied voltage changes at the same time, changes in C_dielectric, ΔQ and energy cannot be attributed to damage.
+
+### 10.2 Damage and the electrical features (against M3, per session)
+
+The change from before (5–10 h) to after (15 h to the end) minus M3's change over the same sessions. Values are differences of session means of the logarithm (%); p is a Welch test on the session means (2 before, 3–6 after).
+
+| Feature | M1 | M2 | Verdict |
+|---|---|---|---|
+| V_rms | −3.5 % (p 0.19) | −3.5 % (p 0.017) | Same size in both devices |
+| Applied voltage at discharge onset, V_on | −33 % (p 0.020) | −23 % (p 0.38) | Same direction |
+| ΔQ | +1.2 % (p 0.95) | +2.0 % (p 0.75) | Direction only |
+| C_total | +2.3 % (p 0.83) | +1.0 % (p 0.66) | Direction only |
+| C_d (discharge-phase slope) | −3.6 % (p 0.87) | +4.6 % (p 0.54) | Opposite directions |
+| Energy per cycle | −15.2 % (p 0.56) | +4.0 % (p 0.52) | Opposite directions |
+| I_rms | −22.2 % (p 0.16) | −12.4 % (p 0.30) | Affected by scope settings (10.3) |
+| Number of discharges | −26.4 % (p 0.42) | −14.0 % (p 0.37) | Affected by scope settings |
+
+- After removing the dependence on V_max found in the healthy captures (all of M3, and M1 and M2 at 5–10 h), no feature remains significant (all p ≥ 0.14).
+- The only independent electrical signal of damage is, in effect, the applied voltage.
+- The V_on decrease points the way expected if damaged cells ignite first, but it is not significant once its voltage dependence is removed.
+
+### 10.3 ML re-check: the six thesis models and five newer ones
+
+- **Thesis models**: LR, DT, RF, GB, linear SVM, kNN (k = 3).
+- **Newer models**: L1-regularised LR, RBF-SVM, ExtraTrees, HistGradientBoosting (the LightGBM family), MLP.
+  - XGBoost and LightGBM could not run here because the OpenMP library was missing; HistGradientBoosting, from the same family, stands in for them.
+- **Features**: the 14 of the thesis.
+
+| Protocol | Result |
+|---|---|
+| (a) Thesis protocol: raw features, train on M2, test on M1 | Accuracy on M1 0.90–0.99 (kNN 0.75), AUC 0.93–1.00 (kNN 0.78). The same models call 68–92 % of the healthy M3's captures at 15–60 h "degraded" (Fig. e) |
+| (b) Log ratios to each device's own 5–10 h, M3 in training as healthy, leave one session out | Within a session, damaged devices and M3 are separated with AUC 0.73–0.89 (best GB 0.89, HistGB 0.88). But the models also call 39–97 % of M1 and M2 in the pre-damage sessions (5 and 10 h) "degraded" |
+| (b′) Same, with the 9 features that do not depend on scope settings | Within-session AUC 0.64–0.81; false alarms in the pre-damage sessions 40–98 % |
+| (c) Features relative to M3 in the same session, train on one damaged device, test on the other | AUC of the 11 models: 0.38–0.84 (M2 → M1) and 0.59–0.74 (M1 → M2). **Logistic regression on V_rms alone gives 0.94 / 0.75**, equal to or better than every model (Fig. f) |
+
+- **The important features in (b) are traces of the scope settings.**
+  - The top permutation importances are V_rms, I_rms and the number of discharges for RF, and I_rms, V_rms and the number of discharges for HistGB.
+  - I_rms and the number of discharges change with the scope settings (section 5).
+  - The share of 0.04 A/div captures, which raise I_rms, grows in the damaged period (M1 10 → 33 %, M2 20 → 42 %, M3 0 → 15 %).
+- **The false alarms in the pre-damage sessions of (b) mean that the models partly learned "M1 or M2 versus M3".** With M3 as the only healthy device, damage cannot be fully separated from device differences, including the measurement order.
+- **In (c), the more flexible the model, the more it overfits the training device** (RF, boosting, MLP, RBF-SVM).
+- **The newer models do not change the conclusion.** What recent ML practice changes is the evaluation rather than the model: grouped validation, a healthy control, checks for confounders and permutation importance. With these, the high thesis accuracy is seen to come from session effects and scope settings.
+
+#### Single periods, every capture weighted equally
+
+- The checks above use, for each capture, the mean of its full periods computed one by one.
+- Here **one period is one row**, and **two periods are drawn from every capture** (498 captures, 996 periods).
+  - Every capture, session and sampling setting (10/20 ns) therefore weighs the same.
+  - Class sizes are handled by balanced accuracy and AUC.
+  - The draw was repeated three times; the standard deviation of the results is at most 0.09.
+- Each device had its own DC power supply and source, so the drive frequency differs between devices (M1 46.99, M2 46.54, M3 46.30 kHz).
+
+| Protocol | Guards against | 11 models | V_rms alone |
+|---|---|---|---|
+| E1. Periods shuffled at random, 5-fold cross-validation | Nothing | Balanced accuracy 0.83–0.95, AUC 0.88–0.99. False alarms 3–10 % on M3, 1–17 % in the pre-damage sessions | AUC 0.70 |
+| E2. A whole session held out | Leakage of the session's state | Within-session AUC 0.72–0.93. False alarms in the pre-damage sessions 5–43 % (RF 5 %, GB 6 %) | Within-session AUC 0.77 |
+| E4. Features relative to M3 in the same session, train on one damaged device, test on the other | Session effects and device differences | AUC 0.49–0.70 (M1), 0.57–0.72 (M2) | **AUC 0.80 (M1), 0.74 (M2)** |
+
+- **The high E1 scores come from leakage.** The other periods of the same capture, and about 32 periods of the same session, are in the training set, so the model has already seen the state of the test session. This is the structure of the thesis split (half periods as separate rows, split at random; verification report D5) (Fig. g).
+- **In E2 the models use V_rms and the drive frequency.**
+  - The top permutation importances are V_rms 0.175 and frequency 0.045 for RF, and V_rms 0.191 and frequency 0.074 for GB.
+  - V_rms and frequency alone give a within-session AUC of 0.59–0.83 (RBF-SVM 0.83, with 4 % false alarms in the pre-damage sessions).
+  - The frequency is a fingerprint of each device's own source, so the models learn "V_rms drop, and not M3".
+- **In E4, V_rms alone is the best.** Its AUC averaged over both directions is 0.77, above the 0.58–0.68 of the 11 models.
+- **A single period is noisier than a capture mean.** The AUC of V_rms alone is lower than at the capture level (0.94 / 0.75); averaging periods makes the damage signal clearer.
+- **The conclusion does not change.** With single periods and every capture weighted equally, the only damage information that generalises is the V_rms drop relative to a healthy device in the same session.
+
+### 10.4 Do the three lines of evidence agree?
+
+| | Physics | Statistics (against M3) | ML (confounders controlled) |
+|---|---|---|---|
+| Discharge present, Paschen/Townsend breakdown | Agrees | — | — |
+| Partial surface discharging (C_d is effective) | Agrees (sweep) | — | — |
+| **V_rms drop of about 3.5 %** | Consistent with a damaged load pulling the supply voltage down | Same size in both devices (M2 p = 0.017) | The only information that carries over to another device |
+| V_on decrease | Consistent with damaged cells igniting first | Direction only | Small contribution |
+| I_rms, number of discharges, n_e, T_e, V_b | Problems of settings, resolution or definition | Not significant | Used as confounders |
+
+- The one damage indicator that physics, statistics and ML point to together is the **V_rms drop relative to a healthy device in the same session**.
+- With two damaged devices, and with possibly damaged cells already in M1's pre-damage period (section 2.2), this is the most consistent clue, not an established result.
+- Limitations of this section: there is only one healthy device, and within a session the devices were measured in the order M1 → M2 → M3, 10–33 min apart.
+
+---
+
+## 11. Recommendations
 
 **Thesis and erratum.**
 1. State that about half of the V_rms change is a supply variation common to all three devices, and report the DiD against M3.
@@ -350,6 +457,7 @@ These revisions have been applied to the [verification report](thesis-review.md)
 4. Give Table 3 in at.%, with per-map ranges, and identify the Ref sample.
 5. Review the melted blister in the M1 5 h micrographs, and redefine or state the M1 labels of the validation set.
 6. Replace Fig. 7 with representative values (mean ± SD at one scale), or mark it as a single example.
+7. Describe C_dielectric as the discharge-phase slope, an effective capacitance set by the discharging area, and compare it only between captures at the same applied voltage (section 10.1).
 
 **Future experiments.**
 1. Fix the oscilloscope settings (V/div, A/div, sampling) for all sessions.
@@ -359,7 +467,7 @@ These revisions have been applied to the [verification report](thesis-review.md)
 
 ---
 
-## 11. Limitations
+## 12. Limitations
 
 - **One healthy comparison device.** M3 was discharged alongside M1 and M2 under the same conditions and was not damaged (confirmed by the experimenter; consistent with the micrographs and with 12 of 13 EDS maps ≤ 0.25 at.%). Every change of M3, including the V_rms drop at 45–60 h, is therefore a supply or environmental change. With only one healthy device, however, the spread between two healthy devices in the same session is unknown.
 - **Power.** The DiD works at the session level (2 sessions before, 3–6 after), so its power is low. "Not significant" does not mean "no effect".

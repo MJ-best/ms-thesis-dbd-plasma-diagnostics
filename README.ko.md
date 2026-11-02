@@ -68,7 +68,7 @@
   - 5시간마다 약 20개의 파형을 캡처했습니다.
   - 표면이 손상된 사실은 광학현미경, SEM, EDS로 확인했습니다(Ag 0.57% → 13.86%).
 - **분석**:
-  - 파형에서 14개 특성을 계산했습니다(V_rms, I_rms, 에너지, 리사주 커패시턴스, 방전 전하, 방전 개시·방전전압, 방전 횟수, 전자밀도, 전자온도 등).
+  - 파형에서 14개 특성을 계산했습니다(V_rms, I_rms, 에너지, 리사주 커패시턴스, 방전 전하, 방전개시전압·방전전압, 방전 횟수, 전자밀도, 전자온도 등).
   - 이 특성으로 LR, DT, RF, GB, SVM, kNN 분류기를 학습해 표면 상태를 **정상** 또는 **손상**으로 판별했습니다.
 
 ## 2. 논문 초록 (원문)
@@ -92,8 +92,8 @@
  │
  ├─ 전기량                  V_rms, I_rms, 1주기 에너지 E = ∫v·i dt, 평균 전력 P = E·f
  ├─ 리사주(Q–V) 분석         lissajous: C_total, C_dielectric, C_gas, 이동 전하 ΔQ,
- │                            방전 개시점, burning voltage U_b, Manley 에너지
- ├─ 방전 펄스                discharge: 방전 횟수, 방전 개시 전압 (논문 방식 + 잡음 기준 방식)
+ │                            방전개시점, 방전 유지 전압 U_b, Manley 에너지
+ ├─ 방전 펄스                discharge: 방전 횟수, 방전개시전압 (논문 방식 + 잡음 기준 방식)
  └─ 플라즈마 변수            plasma: Paschen, E/N, 이동도, n_e, T_e (D/μ 표)
  ▼
 특성표 (features.extract)  논문 14개 특성 + 보정 특성
@@ -170,7 +170,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다. 같은 두 폴더와 `docs/img`로 `python examples/consistency_check.py`를 실행하면 그 문서의 10절, 즉 물리 가정·통계·ML(논문 모델 6개와 새 모델 5개, 캡처 평균과 주기 단위)이 같은 곳을 가리키는지에 대한 검증이 재현됩니다.
+**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다. 같은 두 폴더와 `docs/img`로 `python examples/consistency_check.py`를 실행하면 그 문서의 10절, 즉 물리 가정·통계·ML(논문 모델 6개와 새 모델 5개, 캡처 평균과 주기 단위)이 같은 곳을 가리키는지, 그리고 왜 V_rms 감소가 가장 뚜렷한 손상 지표인지에 대한 검증이 재현됩니다. `python examples/vrms_simulation.py docs/img`는 원본 데이터 없이 그 가설을 회로 시뮬레이션으로 검증합니다(10.6절).
 
 **모델 학습과 예측**: 직접 라벨을 붙인 데이터로 분류기를 학습하고, 저장한 모델로 새 캡처를 판별합니다.
 
@@ -211,7 +211,7 @@ src/dbd_diagnostics/
   waveform.py    주기 검출, 정수 주기 구간
   electrical.py  실효값, 1주기 에너지, 전력, 오프셋을 제거한 전하 적분
   lissajous.py   리사주 분석, 등가회로, burning voltage, Manley 에너지
-  discharge.py   펄스 검출(논문 방식 + 잡음 기준), 방전 횟수, 개시 전압
+  discharge.py   펄스 검출(논문 방식 + 잡음 기준), 방전 횟수, 방전개시전압
   plasma.py      Townsend/Paschen, E/N, 이동도, n_e, T_e
   features.py    특성 일괄 추출 (논문 특성 + 보정 특성)
   ml.py          분류기, 명시적 지표, 장치 단위 검증, 기준값 정규화
@@ -221,7 +221,7 @@ src/dbd_diagnostics/
   data/          D/μ 표 (논문 그림 15를 디지타이즈)
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
-examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증·일관성 검증 스크립트
+examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증·일관성 검증·회로 시뮬레이션 스크립트
 tests/           테스트 25개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 

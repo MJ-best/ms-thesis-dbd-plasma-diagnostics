@@ -54,7 +54,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
 - One period is split at the voltage extrema into a rising branch (−V_max → +V_max) and a falling branch.
 - Each branch is fitted by two straight lines with an optimal breakpoint (least squares).
 - The first slope is $C_{total}$ and the second slope is $C_{dielectric}$.
-- The breakpoint is the discharge onset $(V_{on}, Q_{on})$.
+- The breakpoint is the discharge initiation point $(V_{on}, Q_{on})$.
 - Slope standard errors and $R^2$ are reported. For a simple regression, $F=(\text{slope}/SE)^2$.
 - The gas capacitance is $C_g=C_dC_{total}/(C_d-C_{total})$ (Th. 24).
 
@@ -88,7 +88,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
   - Because the threshold refers to the noise level, counts can be compared across captures.
 - **Outputs**
   - Number of discharges: mean count per half cycle.
-  - $V_{min}$: mean $|v|$ at the first pulse of each half cycle (the thesis' onset voltage).
+  - $V_{min}$: mean $|v|$ at the first pulse of each half cycle (the thesis' discharge initiation voltage).
 - **Limits.** At 10 ns sampling with a 60 MHz probe, ns-scale micro-discharges are under-sampled. Counts are lower bounds and peak currents are attenuated.
 
 ## 5. Plasma parameters (`plasma`)

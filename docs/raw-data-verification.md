@@ -21,7 +21,7 @@
 3. Every composition table in the EDS reports, compared with Table 3.
 4. **M3**, which the thesis did not use, serves as an **undamaged control device**. In every session it was measured on the same day as M1 and M2, 10–33 min after M1.
 
-Reproduce with `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"`, which prints the numbers of sections 1–6. The numbers and the figure of section 10 are reproduced by `python examples/consistency_check.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산" docs/img` (about 8 min). Values read from photographs and EDS reports are recorded in the tables of this document.
+Reproduce with `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"`, which prints the numbers of sections 1–6. The numbers and the figure of section 10 are reproduced by `python examples/consistency_check.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산" docs/img` (about 8 min), which also writes the figure of section 10.5, `docs/img/vrms_mechanism.png`. The equivalent-circuit simulation of section 10.6 is reproduced by `python examples/vrms_simulation.py docs/img` (no raw data needed, about 11 min). Values read from photographs and EDS reports are recorded in the tables of this document.
 
 Severity levels follow the [verification report](thesis-review.md): **[Major]** affects a conclusion or a headline number; **[Moderate]** the method or wording must change; **[Minor]** notation or wording.
 
@@ -40,7 +40,7 @@ Severity levels follow the [verification report](thesis-review.md): **[Major]** 
 | 7 | Table 3 (EDS) is traced. The "Normal" column is the `0-X10000-2` map of the **Ref sample**; the "Degradation" column is the `2-1-1X10000-1` map of the **M2 damaged site**. Both columns are **atomic %**. The 12 damaged-site maps give Ag 1.3–13.9 at.%; the 41 intact-dielectric maps give 0.0–0.7 at.% (one map 1.44). The conclusion is robust; the unit and the choice of map should be stated. | Minor |
 | 8 | Fig. 7, "discharge current from ~100 mA to ~250 mA", is not reproduced when captures at the same current scale (0.1 A/div) are compared: M2 251 → 272 mA (p = 0.25), M1 252 → 213 mA (a decrease). | Moderate |
 | 9 | Some statements of the earlier verification report must be revised. The U_b decrease (p = 2×10⁻⁴) and the increase in the number of discharges (p = 6×10⁻⁴) also occur in M3, in the same direction (−38 V, p = 0.05; +2.7, p = 4×10⁻⁶), so they are not supported as damage indicators. See section 9. | Report revision |
-| 10 | The physics assumptions (Manley equivalent circuit, Paschen/Townsend breakdown) agree with the data. The discharge-phase slope C_d grows with the supply voltage, so it is an effective capacitance set by the discharging area, not the dielectric capacitance. The only independent damage signal is the V_rms drop against M3; eleven models, five of them newer than the thesis, do not beat V_rms alone, also with single periods and every capture weighted equally. See section 10. | Confirmed |
+| 10 | The physics assumptions (Manley equivalent circuit, Paschen/Townsend breakdown) agree with the data. The discharge-phase slope C_d grows with the supply voltage, so it is an effective capacitance set by the discharging area, not the dielectric capacitance. The only independent damage signal is the V_rms drop against M3; eleven models, five of them newer than the thesis, do not beat V_rms alone, also with single periods and every capture weighted equally. The V_rms drop is explained, including its size, by 'earlier discharge initiation → more discharge charge → the power-supply voltage drops', and its effect-to-noise ratio is more than twice that of any other feature (10.5). An equivalent-circuit simulation calibrated on healthy data supports an exposed electrode lowering the burning voltage (10.6). See section 10. | Confirmed |
 
 **What holds.**
 - The surface damage itself is real. The burn marks in the M1 and M2 micrographs and the Ag increase in EDS agree.
@@ -315,7 +315,7 @@ Measured at 20 h with different supply-input voltages (8.5 V = the 20 h enduranc
 
 ## 8. The example of Fig. 7 [Moderate]
 
-The thesis states that after surface damage "the discharge current rose sharply from about 100 mA to about 250 mA" and "the discharge onset voltage fell from about 500 V to 400 V". Comparing captures at the same current scale (0.1 A/div):
+The thesis states that after surface damage "the discharge current rose sharply from about 100 mA to about 250 mA" and "the discharge initiation voltage fell from about 500 V to 400 V". Comparing captures at the same current scale (0.1 A/div):
 
 | Device | Peak current, normal → degraded | p | V_min, normal → degraded | p |
 |---|---|---|---|---|
@@ -323,7 +323,7 @@ The thesis states that after surface damage "the discharge current rose sharply 
 | M1 | 252 ± 62 → 213 ± 39 mA | 0.002 (decrease) | 821 → 556 V | 4×10⁻⁵ |
 
 - The normal peak current is already about 250 mA. The 2.5-fold increase is not reproduced; Fig. 7 is an unrepresentative single example (0.04 A/div captures give low peaks of about 150 mA).
-- The decrease of the onset voltage is significant for M1 only.
+- The decrease of the discharge initiation voltage is significant for M1 only.
 
 ---
 
@@ -347,17 +347,17 @@ These revisions have been applied to the [verification report](thesis-review.md)
 Without new experiments, this archive alone was used to check whether the physical assumptions, the measured results and the machine-learning results of the thesis point the same way. How many of the 126 pairs discharge is unknown, so every comparison is a statistical comparison over many captures and sessions. Two captures whose period detection failed (M1 10 h, M3 10 h; half or double the period) are left out.
 
 - Every feature is computed for each full period of a capture and then averaged. A 10 ns capture holds 2 periods and a 20 ns capture 4, so the 498 endurance captures give 1,493 periods.
-- The three devices ran from the same mains (KEPCO) on separate power strips, each with its own DC power supply and source (confirmed by the experimenter). Each device's voltage therefore follows its own load, and the session effects common to all three come from the shared mains or the room environment.
+- The three devices ran from the same mains (KEPCO) on separate power strips, each on its own driving power supply behind a DC power supply (confirmed by the experimenter). Each device's voltage therefore follows its own load, and the session effects common to all three come from the shared mains or the room environment.
 
 ![Consistency of physics, statistics and ML](img/consistency_check.png)
 
-*(a) The two slopes of a Q–V loop (b) Discharge-phase slope against supply voltage (c) U_b against the Paschen range, and the thesis V_b (d) Damage effect against M3 (e) Thesis protocol: accuracy and false alarms on M3 (f) Cross-device AUC with features referenced to M3 (g) Single periods: shuffled, a session held out, relative to M3 on the other device*
+*(a) The two slopes of a Lissajous graph (b) Discharge-phase slope against supply voltage (c) U_b against the Paschen range, and the thesis V_b (d) Damage effect against M3 (e) Thesis protocol: accuracy and false alarms on M3 (f) Cross-device AUC with features referenced to M3 (g) Single periods: shuffled, a session held out, relative to M3 on the other device*
 
 ### 10.1 Physical assumptions and the data
 
 | Assumption | Data | Verdict |
 |---|---|---|
-| During the discharge the gas voltage is clamped at U_b (Manley equivalent circuit) | In all 498 captures from 5 h on, the discharge-phase slope exceeds the no-discharge slope (Fig. a). Two independent U_b estimates agree within 3 % (onset 828–860 V, geometry 842–882 V). The measured energy per cycle is 1.17 times the ideal Manley value | Agrees |
+| During the discharge the air-gap voltage stays at the burning voltage U_b (Manley equivalent circuit) | In all 498 captures from 5 h on, the discharge-phase slope exceeds the no-discharge slope (Fig. a). Two independent U_b estimates agree within 3 % (discharge initiation point 828–860 V, geometry 842–882 V). The measured energy per cycle is 1.17 times the ideal Manley value | Agrees |
 | Breakdown follows Paschen's law | The Paschen voltage of a 100 µm air gap is 718–865 V (γ = 0.1–0.01); the interquartile range of the measured U_b is 773–888 V (Fig. c) | Agrees |
 | Mechanism: Townsend or streamer | At the measured U_b, αd = 3.2–5.0, far below the streamer (Meek) criterion αd ≈ 18–20. The Townsend condition γ(e^{αd} − 1) = 1 then needs γ = 0.007–0.045, typical of dielectric surfaces | Townsend suffices |
 | Not all 126 pairs discharge | In the 20 h supply sweep the discharge-phase slope rises from 8.5 V to 14 V input: M1 37.6 → 48.9, M2 41.4 → 56.7, M3 39.6 → 58.3 pF (Fig. b). A fixed dielectric capacitance would not change. The discharging area grows with voltage (partial surface discharging; Peeters & van de Sanden, *Plasma Sources Sci. Technol.* 24, 015016, 2015) | Agrees |
@@ -374,7 +374,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 | Feature | M1 | M2 | Verdict |
 |---|---|---|---|
 | V_rms | −3.5 % (p 0.19) | −3.5 % (p 0.017) | Same size in both devices |
-| Applied voltage at discharge onset, V_on | −33 % (p 0.020) | −23 % (p 0.38) | Same direction |
+| Discharge initiation voltage V_on (thesis V_min) | −33 % (p 0.020) | −23 % (p 0.38) | Same direction |
 | ΔQ | +1.2 % (p 0.95) | +2.0 % (p 0.75) | Direction only |
 | C_total | +2.3 % (p 0.83) | +1.0 % (p 0.66) | Direction only |
 | C_d (discharge-phase slope) | −3.6 % (p 0.87) | +4.6 % (p 0.54) | Opposite directions |
@@ -384,7 +384,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 
 - After removing the dependence on V_max found in the healthy captures (all of M3, and M1 and M2 at 5–10 h), no feature remains significant (all p ≥ 0.14).
 - The only independent electrical signal of damage is, in effect, the applied voltage.
-- The V_on decrease points the way expected if damaged cells ignite first, but it is not significant once its voltage dependence is removed.
+- The decrease of the discharge initiation voltage V_on (the thesis' V_min) points the way expected if damaged cells start discharging first, but it is not significant once its voltage dependence is removed.
 
 ### 10.3 ML re-check: the six thesis models and five newer ones
 
@@ -415,7 +415,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
   - Every capture, session and sampling setting (10/20 ns) therefore weighs the same.
   - Class sizes are handled by balanced accuracy and AUC.
   - The draw was repeated three times; the standard deviation of the results is at most 0.09.
-- Each device had its own DC power supply and source, so the drive frequency differs between devices (M1 46.99, M2 46.54, M3 46.30 kHz).
+- Each device had its own driving power supply, so the drive frequency differs between devices (M1 46.99, M2 46.54, M3 46.30 kHz).
 
 | Protocol | Guards against | 11 models | V_rms alone |
 |---|---|---|---|
@@ -427,7 +427,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 - **In E2 the models use V_rms and the drive frequency.**
   - The top permutation importances are V_rms 0.175 and frequency 0.045 for RF, and V_rms 0.191 and frequency 0.074 for GB.
   - V_rms and frequency alone give a within-session AUC of 0.59–0.83 (RBF-SVM 0.83, with 4 % false alarms in the pre-damage sessions).
-  - The frequency is a fingerprint of each device's own source, so the models learn "V_rms drop, and not M3".
+  - The frequency is a fingerprint of each device's own driving power supply, so the models learn "V_rms drop, and not M3".
 - **In E4, V_rms alone is the best.** Its AUC averaged over both directions is 0.77, above the 0.58–0.68 of the 11 models.
 - **A single period is noisier than a capture mean.** The AUC of V_rms alone is lower than at the capture level (0.94 / 0.75); averaging periods makes the damage signal clearer.
 - **The conclusion does not change.** With single periods and every capture weighted equally, the only damage information that generalises is the V_rms drop relative to a healthy device in the same session.
@@ -438,13 +438,221 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 |---|---|---|---|
 | Discharge present, Paschen/Townsend breakdown | Agrees | — | — |
 | Partial surface discharging (C_d is effective) | Agrees (sweep) | — | — |
-| **V_rms drop of about 3.5 %** | Consistent with a damaged load pulling the supply voltage down | Same size in both devices (M2 p = 0.017) | The only information that carries over to another device |
-| V_on decrease | Consistent with damaged cells igniting first | Direction only | Small contribution |
+| **V_rms drop of about 3.5 %** | Consistent with a heavier load lowering the output voltage of the driving power supply | Same size in both devices (M2 p = 0.017) | The only information that carries over to another device |
+| Lower discharge initiation voltage | Consistent with damaged cells starting to discharge first | Direction only | Small contribution |
 | I_rms, number of discharges, n_e, T_e, V_b | Problems of settings, resolution or definition | Not significant | Used as confounders |
 
 - The one damage indicator that physics, statistics and ML point to together is the **V_rms drop relative to a healthy device in the same session**.
 - With two damaged devices, and with possibly damaged cells already in M1's pre-damage period (section 2.2), this is the most consistent clue, not an established result.
 - Limitations of this section: there is only one healthy device, and within a session the devices were measured in the order M1 → M2 → M3, 10–33 min apart.
+
+### 10.5 Physical interpretation and robustness of the V_rms drop
+
+> **Conclusion.** When damage occurs, the clearest electrical indicator is the **drop of the effective voltage V_rms**: 2.3–3.5 % more than the healthy device M3 in the same sessions.
+> - Its size matches, within 17 %, the prediction of the mechanism "earlier discharge initiation → more discharge charge → the voltage of the driving power supply drops", derived below from stated assumptions.
+> - An equivalent-circuit simulation calibrated on healthy data only (10.6) reproduces the changes of V_rms, ΔQ/V, the discharge initiation voltage and U_b together, in sign and size, when an exposed electrode lowers the burning voltage.
+> - V_rms stays in front when the random elements change: which sessions are pre-damage, the capture sample, the period draw and the choice of model.
+> - With two damaged devices this makes V_rms the most consistent indicator in these data, not a general diagnostic threshold.
+
+![Mechanism and robustness of the V_rms drop](img/vrms_mechanism.png)
+
+*(a) Discharge charge per volt when the power supply changes the voltage and when the load does (b) Earlier discharge initiation → more discharge charge → V_rms drop, predicted and observed (c) Discharge initiation voltage and V_rms per session (d) Effect-to-noise ratio per feature*
+
+#### Terms
+
+| Symbol | Term in this section | Relation to the thesis |
+|---|---|---|
+| C_d, C_g | Dielectric capacitance, air-gap capacitance | "dielectric capacitor", "air gap capacitor" of thesis Sec. 3.2.2 |
+| U_b | Burning voltage: the air-gap voltage while a cell discharges; a discharge starts when the air-gap voltage reaches it | Term of the erratum. The discharge voltage V_b of thesis Eq. (15) equals V_max and is not used |
+| V_on | Discharge initiation voltage: the applied voltage at which the discharge starts | The thesis' V_min (Sec. 3.1.1, 300–500 V) |
+| ΔQ | Discharge charge: the charge that flows during the discharge phase | The thesis' Q_max |
+| E, R | Open-circuit voltage and output impedance of the driving power supply | Each device runs on its own driving power supply behind a DC power supply |
+
+#### Assumptions
+
+| | Assumption | Basis |
+|---|---|---|
+| A1 | Each discharge cell is a dielectric capacitance C_d,i in series with an air-gap capacitance C_g,i (thesis Figs. 17–18). A discharge starts when the air-gap voltage reaches the burning voltage U_b, and the air-gap voltage stays at ±U_b while the cell discharges (Manley) | 10.1: two slopes in every Lissajous graph; two independent U_b estimates agree |
+| A2 | U_b is set by the air gap (100 µm of air; Townsend discharge) | 10.1: Paschen range, αd = 3–5 |
+| A3 | The 126 cell pairs are in parallel and start discharging independently; device quantities are sums over cells; not all cells discharge | Thesis Sec. 2.1.1; 10.1: discharge-phase slope rises in the sweep |
+| A4 | Each device runs on its own driving power supply. At the drive frequency the power supply is a Thévenin equivalent, open-circuit voltage E behind output impedance Z_s; with the supply input fixed (8.5 V), E is fixed | Confirmed by the experimenter: mains → a power strip per device → DC power supply → device |
+| A5 | Damage thins (erosion) or removes (exposed electrode) the dielectric of some cells, thickness t_i. An exposed Ag surface changes the secondary electron emission coefficient γ. The air gap is unchanged | Thesis Sec. 2.2; sections 2 (micrographs) and 7 (EDS: Ag 1.3–13.9 at.% at damaged sites) |
+| A6 | Session effects common to all devices (mains, room environment) cancel against M3 in the same session; damage changes are a few per cent, so linearisation holds | Section 3, 10.2 |
+
+#### Derivation
+
+**Step 1. Discharge initiation voltage and discharge charge of one cell (A1, A2).** The applied voltage divides between the dielectric and the air gap:
+
+$$v = \frac{Q}{C_d} + u_g \quad\Rightarrow\quad u_g = v - \frac{Q}{C_d}$$
+
+- Without discharge the slope of the Lissajous graph is $dQ/dv = C_t = C_dC_g/(C_d + C_g)$.
+- During the discharge $u_g = \pm U_b$, so $Q = C_d(v \mp U_b)$ and the slope is $C_d$.
+- At the peak applied voltage $Q_{max} = C_d(V_{max} - U_b)$. Then Q falls without discharge, $Q = Q_{max} - C_t(V_{max} - v)$, until the air-gap voltage reaches $u_g = -U_b$ and the next discharge starts.
+- Solving gives $V_{max} - v = 2U_bC_d/(C_d - C_t) = 2U_{min}$, and by symmetry of the half periods:
+
+$$V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \tag{1}$$
+
+$$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \tag{2}$$
+
+- $V_{on}$ is the thesis' discharge initiation voltage $V_{min}$, and (2) is Manley's equation.
+- Check with the measured values: $U_{min}$ = 1257–1289 V and $V_{max}$ ≈ 2.2 kV give $V_{on}$ ≈ 0.3 kV, the same size as the discharge initiation voltage measured on the Lissajous graphs (0.37–0.45 kV; thesis 300–500 V).
+
+**Step 2. Damaged cells start discharging earlier and carry more discharge charge (A3, A5).** Damage can lower $U_{min,i} = U_{b,i}(1 + C_{g,i}/C_{d,i})$ of a cell in two ways.
+
+*(a) Thinner dielectric.*
+- $C_{d,i} = \varepsilon_0\varepsilon_rA_i/t_i$, so erosion (smaller $t_i$) raises $C_{d,i}$.
+- Differentiating (1) and (2) with respect to $\ln C_{d,i}$:
+
+$$\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \tag{3}$$
+
+- In a cell whose dielectric is gone ($t_i \to 0$), $U_{min,i} \to U_b$: the earliest possible discharge initiation.
+
+*(b) Exposed electrode.* An exposed Ag electrode raises the secondary electron emission coefficient (Townsend's second coefficient) γ. From the Townsend condition $\gamma(e^{\alpha d} - 1) = 1$ with $\alpha = Ap\,e^{-Bp/E}$, the breakdown voltage of the air gap is (Paschen's law of thesis Ch. 1; the expression matched to the measured U_b in 10.1)
+
+$$U_b = \frac{B\,pd}{\ln\!\left(A\,pd\,/\,\ln(1 + 1/\gamma)\right)} \tag{3b}$$
+
+- For 100 µm of air ($pd$ = 7.6 Torr·cm), γ from 0.01 to 0.1 lowers $U_b$ from 865 to 718 V, a factor of 0.83.
+- Differentiating (1) and (2) with respect to $\ln U_{b,i}$:
+
+$$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \tag{3c}$$
+
+- A cell with a lower burning voltage starts discharging earlier and carries more discharge charge.
+
+*What the two paths share and where they differ.*
+- For the whole device (A3), $\Delta Q = \sum_i \Delta Q_i$ grows and discharge initiation moves earlier.
+- They differ in the measured $U_b$: unchanged for (a), lower for (b).
+- In the simulation of 10.6, only (b) moves the discharge initiation point of the Lissajous graph ($V_{on}/V_{max}$) as far as in the data. Path (a) changes a few cells and hardly moves an initiation point set by the majority of cells.
+- **Predictions:** $V_{on}/V_{max}$ falls, $\Delta Q/V_{max}$ rises, and $U_b$ stays (a) or falls (b).
+
+**Step 3. A heavier load lowers the output voltage of the driving power supply (A4).** At the drive frequency the voltage across the device is
+
+$$V = \frac{E}{1 + Z_sY_L} \tag{4}$$
+
+where $Y_L$ is the device admittance, the current per volt, proportional at the drive frequency to the discharge charge per volt. For small changes (A6):
+
+$$\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \operatorname{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \tag{5}$$
+
+An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer to a current source, the closer $S$ is to 1.
+
+**Step 4. S is measured on the healthy device (A6).**
+- When the supply input is changed in the sweep (the power supply changes the voltage), $d\ln(\Delta Q/V_{max})/d\ln V$ = +2.7 to +8.2. Partial surface discharging makes charge per volt follow V.
+- When M3's sessions vary with the supply input fixed (the load changes the voltage), the value is −1.92: the opposite direction (Fig. a).
+- This sign difference is the evidence that the load path of (4) is real. It gives $S = 1/1.92 = 0.52$.
+- The value is a measured closed-loop response that already includes the feedback of partial discharging, so it applies to damage through the same path.
+
+**Step 5. Predicted and observed size (against M3, session medians).**
+
+| | Discharge initiation voltage $V_{on}/V_{max}$ | Discharge charge $\Delta Q/V_{max}$ | V_rms predicted $-S\,\delta\ln(\Delta Q/V_{max})$ | V_rms observed |
+|---|---|---|---|---|
+| M1 | −33.3 % | +6.6 % | −3.4 % | −2.9 % |
+| M2 | −31.0 % | +5.1 % | −2.6 % | −2.3 % |
+
+- All three steps have the same sign in both devices; predicted and observed V_rms agree within 17 % (Fig. b).
+- $U_b$ falls 13.6 % in M1 (p 0.10) and 1.3 % in M2. The simulated value of the exposed-electrode path (−8.5 %, 10.6) lies between them.
+
+**Step 6. The link holds session by session.**
+- In the device-minus-M3 differences, the sessions whose discharge starts earlier than in M3 are the sessions whose V_rms drops more (13 sessions, Spearman +0.75, p = 0.003; Fig. c).
+- In 7 of the 9 damaged sessions the discharge starts earlier than in M3.
+
+#### Why V_rms is the clearest indicator
+
+- **The cause is local and noisy.** The discharge initiation voltage and the discharge charge are the cause, but their within-session noise is 24 % (V_on/V_max) and 7.1 % (ΔQ/V_max).
+- **The consequence is global and precise.** The driving power supply turns the load change of all 126 cell pairs into one voltage, and the voltage channel's within-session noise is 0.5 %.
+- **The effect-to-noise ratio of V_rms is therefore 4.3–5.4**, more than twice that of every other feature; the next is the drive frequency at 2.0–2.2 (Fig. d).
+- The drive frequency also falls by 0.6 % in both devices, the direction expected when a heavier capacitive load pulls the operating point of the power supply down.
+
+#### Other scenarios
+
+| Scenario | Prediction | Data | Verdict |
+|---|---|---|---|
+| A change on the power-supply side | V and ΔQ/V fall together (as in the sweep) | Damaged devices: V falls, ΔQ/V rises | Rejected |
+| Measurement order and time gap | V difference correlates with the time gap | Spearman +0.50 (p 0.39), +0.12 (p 0.78) | Rejected |
+| More discharge power (heating) | E/V² and P rise | Opposite directions in the two devices | Not supported |
+| Dielectric thinning alone | Earlier discharge initiation, U_b unchanged | 10.6 simulation: V_rms and ΔQ/V match, but the initiation point of the Lissajous graph does not move | Not enough on its own |
+| Exposed electrode (higher γ) lowering the burning voltage | Earlier discharge initiation, U_b falls | U_b M1 −13.6 %, M2 −1.3 %. The 10.6 simulation reproduces V_rms, ΔQ/V, V_on/V_max and U_b together | Supported (simulation) |
+
+#### Robustness to random elements
+
+| Random element | Check | V_rms | For comparison |
+|---|---|---|---|
+| Which sessions are pre-damage (label placement) | Exact permutation test, 280 placements over both devices | p = 0.039 | V_on/V_max 0.029, ΔQ/V 0.26, C_total 0.56, E 0.56 |
+| Capture sample | 300 bootstrap resamples, rank of the univariate AUC against M3 | First in 60 % (AUC 0.84) | I_rms 26 % (confounded by scope settings, 10.3), V_on/V_max 8 % |
+| Within-session noise | Effect-to-noise ratio | 4.3–5.4 | Next: drive frequency 2.0–2.2 |
+| Choice of model (11) | Features relative to M3, other damaged device | V_rms alone AUC 0.94 / 0.75 | 11 models 0.38–0.84 |
+| Period draw (3 draws) | Same test on single periods | V_rms alone AUC 0.80 / 0.74 | 11 models 0.58–0.68 on average; SD ≤ 0.09 |
+| Importance inside the models | Permutation importance | First for RF (captures) and for RF and GB (periods) | Second for HistGB on captures (I_rms first) |
+
+#### Limitations and falsification
+
+- **Few devices.** There are two damaged devices and one healthy device. With only 10 (M1) and 28 (M2) possible placements, the per-device permutation tests are not significant on their own (M1 p 0.10, M2 p 0.18).
+- **S comes from the session variation of one healthy device.**
+- **The mechanism is wrong if any of these appears:**
+  - V falls together with ΔQ/V in damaged sessions (a cause on the power-supply side).
+  - V falls without any change in the discharge initiation voltage (V_on/V_max) (no earlier-initiation path).
+  - Two healthy devices differ by the same amount (not a damage signal).
+
+### 10.6 Equivalent-circuit simulation: does the hypothesis reproduce the values and trends?
+
+Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed, about 11 min).
+
+![Equivalent-circuit simulation, results](img/vrms_simulation.png)
+
+*(a) Model fitted to healthy data (b) Predictions of each damage path against the data (c) Changes against the share of cells with an exposed electrode (d) Effect-to-noise ratio under random discharge initiation and power-supply fluctuation*
+
+![Simulated equivalent circuit and mechanism](img/vrms_simulation_model.png)
+
+*(a) Simulated equivalent circuit (b) Mechanism tested by the simulation (c) Air-gap voltage of one cell, healthy and with an exposed electrode (d) Lissajous graphs of the healthy and the damaged device*
+
+**How to read the schematic**
+- **(a) Equivalent circuit.** On the left is the device's own driving power supply: an open-circuit voltage $E\sin\omega t$ (≈ 4.2 kV) behind an output impedance R (≈ 213 kΩ). The measurement points are the voltage V (high-voltage probe) and the current I (current probe) at the device terminals. On the right are the 126 discharge cells in parallel. Each cell is a dielectric capacitance C_d,i in series with an air-gap capacitance C_g,i (thesis Fig. 18), and the air gap has a "±U_b,i" element alongside it that holds the air-gap voltage at the burning voltage ±U_b,i while the cell discharges. The orange cell has an exposed electrode, so its burning voltage is lower by the factor 0.83.
+- **(b) Mechanism.** The causal chain the simulation tests. Under each step is its support: the evidence for exposure (EDS), the size of the lower burning voltage (Townsend equation), and the simulated and measured values of the discharge initiation voltage, the discharge charge, the power-supply sensitivity and V_rms.
+- **(c) Air-gap voltage of one cell.** The same cell is traced in the healthy and the damaged device. Its air-gap voltage rises until it reaches the burning voltage (dotted line, the moment of discharge initiation); from then on the cell discharges and the voltage stays there. With an exposed electrode (orange) it stays at a lower voltage and the discharge starts earlier. The thick grey and the dashed lines are the applied voltage, slightly lower in the damaged device.
+- **(d) Lissajous graphs.** The corner of the graph is where the discharge starts. In the damaged device (blue) the corner comes earlier and the charge at the tip is larger: the discharge charge per cycle grows.
+
+**Model.** It implements assumptions A1–A4 of 10.5 as stated.
+- Each of the 126 discharge cells is a Manley equivalent circuit: C_d,i in series with C_g,i; while a cell discharges, its air-gap voltage stays at its burning voltage U_b,i. U_b,i is spread over the cells (log-normal).
+- Each device runs on its own driving power supply: an open-circuit voltage $E\sin\omega t$ behind an output impedance R. The charge at the device terminals is conserved through each discharge, so discharges pull the voltage down.
+- The simulated waveforms go through the same chain as the measured data (60 MHz probe, 10 ns sampling, 8-bit ADC, `features.extract`).
+
+**1. Fitted to healthy data only.**
+- The targets are eight medians of the healthy captures (5–10 h) and S = 0.52 measured on the healthy M3.
+- All but the energy match within 6 %; the energy is 11 % low (results figure, a).
+- The fitted equivalent circuit is C_d 34.9 pF, C_g 16.7 pF and U_b 898 V, close to the thesis' equivalent circuit (34.2 pF, 16.9 pF, 900 V). The driving power supply is E ≈ 4.2 kV behind R ≈ 213 kΩ.
+- An ideal voltage source gives V_rms/V_max = 0.707. The data give 0.655 and the model 0.70, so the distortion of the applied voltage by the discharges is only partly reproduced.
+
+**2. Damage predicted.** No damage data were used to fit. Model: change against the healthy model; data: against M3 (%).
+
+| Case | V_rms | ΔQ/V_max | V_on/V_max | U_b | C_total | C_d | E |
+|---|---|---|---|---|---|---|---|
+| Thinner dielectric, 8 cells at half thickness | −3.0 | +5.8 | −1.0 | −1.9 | +2.3 | +5.5 | +1.5 |
+| Thinner dielectric, all cells −5 % | −2.3 | +4.3 | +1.8 | −0.2 | +1.7 | +5.2 | +1.4 |
+| Exposed electrode (U_b × 0.83), 16 cells | −0.7 | +2.0 | −13.4 | −3.6 | +0.9 | −0.2 | −0.6 |
+| Exposed electrode, 32 cells | −1.6 | +4.9 | −24.0 | −6.4 | +1.3 | −0.5 | −1.4 |
+| **Exposed electrode, 48 cells (38 %)** | **−2.4** | **+7.9** | **−36.5** | **−8.5** | **+1.3** | **+0.2** | **−1.8** |
+| Exposed electrode, 64 cells | −3.2 | +10.1 | −50.8 | −9.4 | +1.0 | +1.2 | −1.7 |
+| Data M1 | −2.8 | +6.6 | −33.3 | −13.6 | +2.4 | −4.0 | −15.6 |
+| Data M2 | −2.3 | +5.1 | −31.0 | −1.3 | −1.4 | +2.6 | +7.4 |
+
+- **A thinner dielectric alone is not enough.** V_rms and ΔQ/V match, but the discharge initiation point of the Lissajous graph (V_on/V_max) hardly moves.
+- **An exposed electrode reproduces the four indicators together.** This holds when about a third of the cells (48) have their burning voltage lowered by the Townsend factor of (3b), 0.83 (γ 0.01 → 0.1).
+  - V_rms −2.4 %, ΔQ/V +7.9 %, discharge initiation voltage −36.5 % and U_b −8.5 % match the data (M1, M2) in sign and size.
+  - C_total, C_d and E, whose changes have opposite signs in the two devices, are close to zero in the model as well.
+  - With 32–64 cells (25–51 %), V_rms falls by 1.6–3.2 %, a range that contains the data (results figure, c).
+- **Interpretation:** an exposed electrode lowers the burning voltage of the damaged cells, so their discharge starts earlier and the discharge charge per cycle grows, and the output voltage of the driving power supply drops. This reproduces the values and the trends together.
+
+**3. V_rms stays first with random elements.**
+- The burning voltage was jittered by 5 % at every discharge (random discharge initiation) and the open-circuit voltage of the power supply by 0.5 % from run to run.
+- The effect-to-noise ratios are V_rms 20.8, ΔQ/V 7.3, V_on/V_max 7.1, U_b 5.6, ΔQ 5.5 and I_rms 3.9 (results figure, d).
+- V_rms is also first in the data (4.3). The data's ratios are smaller because the real current measurement (settings, probe) and the power supply fluctuate more.
+
+**4. The supply sweep is reproduced only in part.**
+- The directions are right: ΔQ/V rises with the voltage (+1.48; data +2.7 to +8.2) and V_on/V_max falls (0.201 → 0.039; data 0.165 → 0.130).
+- The rise of the discharge-phase slope C_d of the Lissajous graph with the voltage (data +2.5) is not reproduced (−0.10). The model lacks the growth of the discharging area within a cell.
+
+**Limitations**
+- The share of cells with an exposed electrode (about a third) and the value of γ are an interpretation inside the model, not measurements. They do not contradict the micrographs and EDS (Ag 1.3–13.9 at.% at damaged sites).
+- The output impedance of the power supply is simplified to one resistance, and the change of the drive frequency (−0.6 %) is not modelled.
+- There are two damaged devices, and their U_b changes differ (M1 −13.6 %, M2 −1.3 %), so the degree of exposure may differ between them.
 
 ---
 

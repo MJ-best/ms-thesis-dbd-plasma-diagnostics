@@ -151,7 +151,7 @@
   - Re-analysis: the thesis formula gives 2246 ± 81 V, against V_max = 2284 ± 46 V.
 
 - **Cause.**
-  - The wall voltage at ignition is set by the charge **remaining at the onset** (Q_on), which was deposited in the previous half-cycle.
+  - The wall voltage at ignition is set by the charge **remaining at discharge initiation** (Q_on), which was deposited in the previous half-cycle.
   - The thesis instead uses the charge **transferred during** the current half-cycle (ΔQ).
 
 - **Correct relations** (Manley [42]; Pipa & Brandenburg [55]):

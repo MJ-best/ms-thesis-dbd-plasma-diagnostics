@@ -68,7 +68,7 @@ The thesis proposes to diagnose and predict this damage **from the voltage and c
 - Damage was confirmed by optical microscopy, SEM and EDS: Ag rose from 0.57 % to 13.86 % at the damaged site.
 
 **Analysis.**
-- Fourteen features are computed per capture, including V_rms, I_rms, energy, Lissajous capacitances, transferred charge, onset and breakdown voltage, number of discharges, n_e and T_e.
+- Fourteen features are computed per capture, including V_rms, I_rms, energy, Lissajous capacitances, discharge charge, discharge initiation voltage and discharge voltage, number of discharges, n_e and T_e.
 - LR, DT, RF, GB, SVM and kNN classifiers label each surface as **normal** or **degraded**.
 
 ## 2. Abstract (as published)
@@ -87,8 +87,8 @@ period split + offsets      waveform / electrical: every full period, then avera
  │
  ├─ electrical              V_rms, I_rms, energy per cycle E = ∫v·i dt, mean power P = E·f
  ├─ Lissajous (Q–V)          lissajous: C_total, C_dielectric, C_gas, transferred charge ΔQ,
- │                            discharge onset, burning voltage U_b, Manley energy
- ├─ discharge pulses         discharge: number of discharges, onset voltage (thesis + noise-referenced)
+ │                            discharge initiation point, burning voltage U_b, Manley energy
+ ├─ discharge pulses         discharge: number of discharges, discharge initiation voltage (thesis + noise-referenced)
  └─ plasma parameters        plasma: Paschen, E/N, mobility, n_e, T_e (D/μ table)
  ▼
 feature table (features.extract)   14 thesis features + corrected features
@@ -163,7 +163,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md). `python examples/consistency_check.py` with the same two folders and `docs/img` reproduces its section 10: whether the physics assumptions, the statistics and the ML (the six thesis models and five newer ones, on capture means and on single periods) agree.
+`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md). `python examples/consistency_check.py` with the same two folders and `docs/img` reproduces its section 10: whether the physics assumptions, the statistics and the ML (the six thesis models and five newer ones, on capture means and on single periods) agree, and why the V_rms drop is the clearest damage indicator. `python examples/vrms_simulation.py docs/img` tests that hypothesis with a circuit simulation and needs no raw data (section 10.6).
 
 Training and prediction on your own labelled data:
 
@@ -203,7 +203,7 @@ src/dbd_diagnostics/
   waveform.py    period detection, integer-period windows
   electrical.py  RMS, energy per cycle, power, offset-free charge integration
   lissajous.py   Q-V analysis, equivalent circuit, burning voltage, Manley energy
-  discharge.py   pulse detection (thesis + noise-referenced), number of discharges, onset voltage
+  discharge.py   pulse detection (thesis + noise-referenced), number of discharges, discharge initiation voltage
   plasma.py      Townsend/Paschen, E/N, mobility, n_e, T_e
   features.py    one-call feature extraction (thesis + corrected features)
   ml.py          classifiers, explicit metrics, group hold-out, baseline normalisation
@@ -213,7 +213,7 @@ src/dbd_diagnostics/
   data/          D/mu table digitised from thesis Fig. 15
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
-examples/        synthetic demo, re-analysis, raw-archive verification and consistency check
+examples/        synthetic demo, re-analysis, raw-archive verification, consistency check, circuit simulation
 tests/           25 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 

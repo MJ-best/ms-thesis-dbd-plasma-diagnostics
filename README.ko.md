@@ -79,29 +79,29 @@ Surface damage of the dielectric in a micro-electrode surface DBD source at atmo
 타운젠트 방전 이론은 이 과정을 두 계수로 설명한다. 전자가 단위 길이를 진행하는 동안 일으키는 이온화 횟수를 1차 타운젠트 방전계수 α라 하며, α는 기체의 종류, 압력, 온도에 따라 정해진다. 전자밀도 n\_e인 전자가 dx만큼 진행하며 dn\_e의 전자를 만든다면 다음과 같다.
 
 ```math
-\alpha = \frac{1}{n_e}\frac{dn_e}{dx} \tag{1}
+\alpha = \frac{1}{n_e}\frac{dn_e}{dx} \qquad (1)
 ```
 
 전극 거리가 d이고 초기 전자밀도가 n\_0이면, 음극에서 양극까지 간 전자밀도와 이온화로 새로 생긴 전자(즉 이온)의 밀도는 다음과 같다.
 
 ```math
-n_e(d) = n_0\,e^{\alpha d} \tag{2}
+n_e(d) = n_0\,e^{\alpha d} \qquad (2)
 ```
 
 ```math
-\Delta n = n_0\left(e^{\alpha d} - 1\right) \tag{3}
+\Delta n = n_0\left(e^{\alpha d} - 1\right) \qquad (3)
 ```
 
 전기장으로 가속된 이온이 음극에 충돌하거나 자외선 등이 음극 표면을 때려 방출되는 전자를 이차전자(secondary electron)라 한다. 이온 하나당 방출되는 이차전자 수를 이차전자 발생 계수 γ(2차 타운젠트 방전계수)라 하며, γ는 방전 유지에 중요한 역할을 한다. 이온이 음극에서 만드는 이차전자의 밀도는 다음과 같다.
 
 ```math
-n_\gamma = \gamma\,n_0\left(e^{\alpha d} - 1\right) \tag{4}
+n_\gamma = \gamma\,n_0\left(e^{\alpha d} - 1\right) \qquad (4)
 ```
 
 이차전자가 초기 전자만큼 생기면 외부의 전자 공급 없이 방전이 유지된다. 양변을 n\_0으로 나누면 자립 방전 조건(타운젠트 조건)을 얻는다.
 
 ```math
-\gamma\,n_0\left(e^{\alpha d} - 1\right) \ge n_0 \quad\Rightarrow\quad \gamma\left(e^{\alpha d} - 1\right) = 1 \tag{5}
+\gamma\,n_0\left(e^{\alpha d} - 1\right) \ge n_0 \quad\Rightarrow\quad \gamma\left(e^{\alpha d} - 1\right) = 1 \qquad (5)
 ```
 
 ##### 1.1.2 파센 법칙
@@ -109,13 +109,13 @@ n_\gamma = \gamma\,n_0\left(e^{\alpha d} - 1\right) \tag{4}
 Townsend의 반경험식에 따르면 α는 압력 p와 전기장 V/d에 대해 다음과 같다. A와 B는 기체마다 정해진 상수이다 \[49\].
 
 ```math
-\alpha = A\,p\,\exp\!\left(-\frac{B\,p\,d}{V}\right) \tag{6}
+\alpha = A\,p\,\exp\!\left(-\frac{B\,p\,d}{V}\right) \qquad (6)
 ```
 
 식 (6)을 식 (5)에 넣어 방전전압 V\_b에 대해 풀면 파센 법칙(Paschen's law)을 얻는다 \[5, 7\].
 
 ```math
-V_b = \frac{B\,pd}{\ln\left(A\,pd\right) - \ln\ln\left(1 + 1/\gamma\right)} \tag{7}
+V_b = \frac{B\,pd}{\ln\left(A\,pd\right) - \ln\ln\left(1 + 1/\gamma\right)} \qquad (7)
 ```
 
 식 (7)을 pd에 대해 그린 것이 파센 곡선이다(그림 1). 곡선 위쪽 조건에서는 방전에 충분한 전기장이 걸려 플라즈마가 생길 수 있다. 곡선 아래에서는 방전이 일어나지 않는다. pd가 최소점보다 크면 충돌이 잦아 전자가 이온화 에너지를 얻지 못하고, 작으면 충돌 자체가 부족하기 때문이다.
@@ -255,13 +255,13 @@ V_b = \frac{B\,pd}{\ln\left(A\,pd\right) - \ln\ln\left(1 + 1/\gamma\right)} \tag
 전압 실효값 V\_rms와 전류 실효값 I\_rms는 시스템 전체의 전기적 특성을 비교하는 데 쓰인다. 주기 T 동안의 제곱평균제곱근(RMS)으로 구한다.
 
 ```math
-V_{rms} = \sqrt{\frac{1}{T}\int_0^T v(t)^2\,dt}, \qquad I_{rms} = \sqrt{\frac{1}{T}\int_0^T i(t)^2\,dt} \tag{8}
+V_{rms} = \sqrt{\frac{1}{T}\int_0^T v(t)^2\,dt}, \qquad I_{rms} = \sqrt{\frac{1}{T}\int_0^T i(t)^2\,dt} \qquad (8)
 ```
 
 방전이 한 주기 동안 소모하는 에너지는 다음과 같다. 평균 전력은 이를 주기로 나눈 값이다.
 
 ```math
-E = \int_0^T v(t)\,i(t)\,dt \;\;[\mathrm{J/cycle}], \qquad P = \frac{E}{T} \tag{9}
+E = \int_0^T v(t)\,i(t)\,dt \;\;[\mathrm{J/cycle}], \qquad P = \frac{E}{T} \qquad (9)
 ```
 
 - V\_rms는 정상 1.50 ± 0.017 kV, 손상 1.40 ± 0.049 kV이다. 다만 손상 없는 M3도 같은 측정 시점들에서 V\_rms가 낮아졌다(예: 10 h 1502 V → 15 h 1369 V). 손상 고유의 감소는 약 48 V이며 4장에서 다룬다.
@@ -275,13 +275,13 @@ DBD의 유전체는 일종의 커패시터이다. 방전이 일어나면 플라�
 공기갭에 걸리는 전압은 다음과 같다. Q는 리사주 그래프의 전하, C\_d는 유전체 커패시턴스이다.
 
 ```math
-u_g(t) = v(t) - \frac{Q(t)}{C_d} \tag{10}
+u_g(t) = v(t) - \frac{Q(t)}{C_d} \qquad (10)
 ```
 
 방전이 진행되는 동안 u\_g는 **방전 유지 전압 U\_b**(burning voltage)로 거의 일정하게 유지된다 \[42, 55\]. 방전이 시작되는 순간 유전체에는 이전 반주기에 쌓인 벽전하 Q\_on이 남아 있고, 이에 따른 벽전압은 −Q\_on/C\_d이다. 따라서 방전 유지 전압은 다음과 같다.
 
 ```math
-U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac{V_{max} + V_{min}}{2} \tag{11}
+U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac{V_{max} + V_{min}}{2} \qquad (11)
 ```
 
 - 표 2의 평균값(C\_d 34.2 pF, C\_total 11.3 pF, V\_min 0.50 kV, V\_max 2.24 kV)을 넣으면 U\_b ≈ 0.92 kV이다. 식 (7)로 구한 100 µm 공기갭의 파센 방전전압(0.72–0.87 kV)과 맞는다.
@@ -306,7 +306,7 @@ U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac
 전자밀도는 방전 전류에 옴의 법칙을 적용해 구한다 \[43–48\]. 전류밀도 J는 피크 전류 i\_peak를 방전 면적 A로 나눈 값이고, 전기장은 방전 유지 전압을 전극 거리로 나눈 U\_b/d이다.
 
 ```math
-J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\,U_b} \tag{12}
+J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\,U_b} \qquad (12)
 ```
 
 - 전자 이동도는 대기압 상온에서 μ\_e = 592 cm²/Vs를 썼다. 이는 저전계 값이며, 수백 Td에서는 더 작다.
@@ -319,7 +319,7 @@ J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\
 전자온도는 아인슈타인 관계식으로 근사적으로 구한다 \[43, 47\]. D\_e/μ\_e는 특성 에너지(characteristic energy)이며, 전자에너지분포가 Maxwell 분포일 때 k\_B·T\_e/e와 같다. D\_e/μ\_e는 규격화 전기장 E/N의 함수로 주어진다(그림 10) \[48, 49\].
 
 ```math
-\frac{k_B T_e}{e} = \frac{D_e}{\mu_e}\left(\frac{E}{N}\right), \qquad \frac{E}{N} = \frac{U_b}{N\,d}, \qquad N = \frac{p}{k_B T} \tag{13}
+\frac{k_B T_e}{e} = \frac{D_e}{\mu_e}\left(\frac{E}{N}\right), \qquad \frac{E}{N} = \frac{U_b}{N\,d}, \qquad N = \frac{p}{k_B T} \qquad (13)
 ```
 
 - 기체 수밀도는 N = 2.50×10¹⁹ cm⁻³(1 atm, 20 °C)이다. U\_b를 쓰면 E/N ≈ 340 Td(1 Td = 10⁻¹⁷ V·cm²)이다.
@@ -338,7 +338,7 @@ J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\
 Manley는 전하–전압 그래프로 DBD의 방전전압과 방전 에너지를 계산했다 \[5, 42\]. 이를 리사주 그래프(Lissajous graph)라 하며, 닫힌 평행사변형 모양이다. 방전개시전압 V\_min 이후 방전으로 전하가 늘어 기울기가 급격히 커지고, 최대전압 V\_max에서 방전이 끝나며 기울기가 줄어든다(그림 11). 전하는 전류의 오프셋을 뺀 뒤 적분해 구한다.
 
 ```math
-Q(t) = \int_0^t i(t')\,dt' + Q_0 \tag{14}
+Q(t) = \int_0^t i(t')\,dt' + Q_0 \qquad (14)
 ```
 
 ![그림 11](docs/img/thesis/fig11_lissajous.jpg)
@@ -350,7 +350,7 @@ Q(t) = \int_0^t i(t')\,dt' + Q_0 \tag{14}
 방전 셀을 등가회로로 보면, 전극 사이의 유전체는 유전체 커패시터 C\_d, 전극 사이의 공기는 공기갭 커패시터 C\_g이다 \[50–62\]. 방전 전에는 두 커패시터가 직렬이고, 방전이 일어나면 공기갭이 전류를 흘려 C\_d만 남는다(그림 12). 방전 전 리사주 그래프의 기울기는 전체 커패시턴스 C\_total이고, 방전 중 기울기는 C\_d이다.
 
 ```math
-C_{total} = \frac{C_d\,C_g}{C_d + C_g} \tag{15}
+C_{total} = \frac{C_d\,C_g}{C_d + C_g} \qquad (15)
 ```
 
 ![그림 12](docs/img/thesis/fig12_equivalent_circuit.jpg)
@@ -380,7 +380,7 @@ C_{total} = \frac{C_d\,C_g}{C_d + C_g} \tag{15}
 방전 전하량은 방전개시전압 V\_min부터 최대전압 V\_max 사이에 이동한 전하이다(그림 11의 Q\_max).
 
 ```math
-Q_{max} = C_d\,(V_{max} - V_{min}) \tag{16}
+Q_{max} = C_d\,(V_{max} - V_{min}) \qquad (16)
 ```
 
 방전 전하량은 정상 59.4 ± 9.0 nC, 손상 61.7 nC이다(재분석 59.5 / 62.7 nC, p = 0.07). 이 논문의 뒤 장에서는 같은 값을 ΔQ로도 쓴다.
@@ -586,7 +586,7 @@ SEM으로 보면 손상된 유전체 표면은 불균일하고 곳곳이 움푸 
 로지스틱 회귀, SVM, kNN은 특성의 스케일 차이와 이상치에 민감하므로 \[63\], 각 특성을 평균 0, 표준편차 1로 표준화했다. 평균 μ와 표준편차 σ는 학습 데이터에서만 구했다.
 
 ```math
-z = \frac{x - \mu}{\sigma}, \qquad \mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\left(x_i - \mu\right)^2} \tag{17}
+z = \frac{x - \mu}{\sigma}, \qquad \mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\left(x_i - \mu\right)^2} \qquad (17)
 ```
 
 #### 5.3 데이터셋
@@ -614,7 +614,7 @@ z = \frac{x - \mu}{\sigma}, \qquad \mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \
 표면 손상을 양성으로 두고, TP는 실제 손상을 손상으로, TN은 실제 정상을 정상으로, FP는 실제 정상을 손상으로, FN은 실제 손상을 정상으로 예측한 경우이다 \[70\].
 
 ```math
-\mathrm{ACC} = \frac{TP + TN}{TP + TN + FP + FN}, \quad \mathrm{PRE} = \frac{TP}{TP + FP}, \quad \mathrm{REC} = \frac{TP}{TP + FN}, \quad F_1 = \frac{2\cdot\mathrm{PRE}\cdot\mathrm{REC}}{\mathrm{PRE} + \mathrm{REC}} \tag{18}
+\mathrm{ACC} = \frac{TP + TN}{TP + TN + FP + FN}, \quad \mathrm{PRE} = \frac{TP}{TP + FP}, \quad \mathrm{REC} = \frac{TP}{TP + FN}, \quad F_1 = \frac{2\cdot\mathrm{PRE}\cdot\mathrm{REC}}{\mathrm{PRE} + \mathrm{REC}} \qquad (18)
 ```
 
 AUC는 ROC 곡선 아래 면적이다. 완벽한 분류기는 1.0, 무작위 분류기는 0.5이다 \[71\].
@@ -735,11 +735,11 @@ AUC는 ROC 곡선 아래 면적이다. 완벽한 분류기는 1.0, 무작위 분
 - 이를 풀고 반주기 대칭을 쓰면 방전개시전압 V\_on(= V\_min)과 방전 전하량 ΔQ를 얻는다.
 
 ```math
-V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \tag{19}
+V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \qquad (19)
 ```
 
 ```math
-\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \tag{20}
+\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \qquad (20)
 ```
 
 식 (20)은 Manley 식이다 \[42\]. 측정값 U\_min = 1257–1289 V, V\_max ≈ 2.2 kV를 넣으면 V\_on ≈ 0.3 kV로, 리사주 그래프에서 재 방전개시전압 0.37–0.45 kV와 같은 크기다.
@@ -751,13 +751,13 @@ V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right
 **(가) 유전체가 얇아짐.** C\_d,i = ε₀ε\_r·A\_i/t\_i이므로 침식으로 t\_i가 줄면 C\_d,i가 커진다.
 
 ```math
-\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \tag{21}
+\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \qquad (21)
 ```
 
 **(나) 전극 노출.** 노출된 Ag 전극에서는 이차전자 발생 계수 γ가 커진다. 파센 법칙 식 (7)에서 100 µm 공기(pd = 7.6 Torr·cm)의 γ가 0.01에서 0.1로 커지면 U\_b는 865 V에서 718 V, 즉 0.83배가 된다.
 
 ```math
-\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \tag{22}
+\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \qquad (22)
 ```
 
 - 두 경로 모두 손상 셀의 방전개시를 앞당기고 방전 전하량을 늘린다. 소스 전체(A3)에서는 ΔQ = ΣΔQ\_i가 커진다.
@@ -769,11 +769,11 @@ V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right
 구동 주파수 성분에서 소스에 걸리는 전압은 다음과 같다. Y\_L은 소스의 어드미턴스(전압당 전류)이며, 구동 주파수에서 전압당 방전 전하량에 비례한다.
 
 ```math
-V = \frac{E}{1 + Z_s Y_L} \tag{23}
+V = \frac{E}{1 + Z_s Y_L} \qquad (23)
 ```
 
 ```math
-\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \operatorname{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \tag{24}
+\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \mathrm{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \qquad (24)
 ```
 
 이상적인 전압원은 S = 0(전압이 부하와 무관)이고, 전류원에 가까울수록 S는 1에 가까워진다. S는 정상 소스에서 잰다(A6).
@@ -930,7 +930,7 @@ V\_rms가 가장 뚜렷한 것은 구동전원이 126개 셀 쌍 전체의 부�
 11. N. K. Kaushik et al., "Cytotoxic macrophage-released tumour necrosis factor-alpha (TNF-α) as a killing mechanism for cancer cell death after cold plasma activation," *J. Phys. D: Appl. Phys.* 49, 084001 (2016).
 12. J.-H. Lee et al., "Selective killing effects of cold atmospheric pressure plasma with NO induced dysfunction of epidermal growth factor receptor in oral squamous cell carcinoma," *PLoS ONE* 11, e0150279 (2016).
 13. A. Ali, Z. Ashraf, N. Kumar, M. Rafiq, F. Jabeen, J.-H. Park, K.-H. Choi, S. Lee, S.-Y. Seo, E. H. Choi, P. Attri, "Influence of plasma-activated compounds on melanogenesis and tyrosinase activity," *Sci. Rep.* 6, 21779 (2016). 학위논문에서는 이 문헌의 저자 목록이 \[13\]과 \[14\]로 나뉘어 있다.
-14. &#91;13\]과 같은 문헌.
+14. \[13\]과 같은 문헌.
 15. N. Kumar et al., "The action of microsecond-pulsed plasma-activated media on the inactivation of human lung cancer cells," *J. Phys. D: Appl. Phys.* 49, 115401 (2016).
 16. J.-H. Lee et al., "Effect of non-thermal air atmospheric pressure plasma jet treatment on gingival wound healing," *J. Phys. D: Appl. Phys.* 49, 249501 (2016).
 17. S.-H. Ji et al., "Effects of high voltage nanosecond pulsed plasma and micro DBD plasma on seed germination, growth development and physiological activities in spinach," *Arch. Biochem. Biophys.* 605, 117–128 (2016).
@@ -941,7 +941,7 @@ V\_rms가 가장 뚜렷한 것은 구동전원이 126개 셀 쌍 전체의 부�
 22. N. K. Kaushik et al., "Biological and medical applications of plasma activated media, water and solutions," *Biol. Chem.* 400, 39–62 (2018).
 23. P. Shaw et al., "Bacterial inactivation by plasma treated water enhanced by reactive nitrogen species," *Sci. Rep.* 8, 1–10 (2018).
 24. T. Ono, D. Y. Sim, M. Esashi, "Micro-discharge and electric breakdown in a micro-gap," *J. Micromech. Microeng.* 10, 445–451 (2000).
-25. &#91;10\]과 같은 문헌(인용은 \[10\]으로 통합).
+25. \[10\]과 같은 문헌(인용은 \[10\]으로 통합).
 26. N. M. Houser, L. Gimeno, R. E. Hanson, T. Goldhawk, T. Simpson, P. Lavoie, "Microfabrication of dielectric barrier discharge plasma actuators for flow control," *Sens. Actuators A* 201, 101–104 (2013).
 27. R. E. Hanson, N. M. Houser, P. Lavoie, "Dielectric material degradation monitoring of dielectric barrier discharge plasma actuators," *J. Appl. Phys.* 115, 043301 (2014).
 28. D. Bian, Y. Wu, C. Long, B. Lin, "Effects of material degradation on electrical and optical characteristics of surface dielectric barrier discharge," *J. Appl. Phys.* 124, 183301 (2018).
@@ -992,7 +992,7 @@ V\_rms가 가장 뚜렷한 것은 구동전원이 126개 셀 쌍 전체의 부�
 73. F. Pedregosa et al., "Scikit-learn: Machine learning in Python," *J. Mach. Learn. Res.* 12, 2825–2830 (2011).
 74. B. Efron, "Bootstrap methods: another look at the jackknife," *Ann. Stat.* 7, 1–26 (1979).
 
-&#91;1\], \[59\]의 서지 사항과 \[72\]–\[74\]는 원문과 대조하지 않았으므로 제출 전에 확인이 필요하다.
+\[1\], \[59\]의 서지 사항과 \[72\]–\[74\]는 원문과 대조하지 않았으므로 제출 전에 확인이 필요하다.
 
 ---
 

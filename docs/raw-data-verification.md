@@ -490,9 +490,9 @@ $$v = \frac{Q}{C_d} + u_g \quad\Rightarrow\quad u_g = v - \frac{Q}{C_d}$$
 - At the peak applied voltage $Q_{max} = C_d(V_{max} - U_b)$. Then Q falls without discharge, $Q = Q_{max} - C_t(V_{max} - v)$, until the air-gap voltage reaches $u_g = -U_b$ and the next discharge starts.
 - Solving gives $V_{max} - v = 2U_bC_d/(C_d - C_t) = 2U_{min}$, and by symmetry of the half periods:
 
-$$V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \tag{1}$$
+$$V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \qquad (1)$$
 
-$$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \tag{2}$$
+$$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \qquad (2)$$
 
 - $V_{on}$ is the thesis' discharge initiation voltage $V_{min}$, and (2) is Manley's equation.
 - Check with the measured values: $U_{min}$ = 1257–1289 V and $V_{max}$ ≈ 2.2 kV give $V_{on}$ ≈ 0.3 kV, the same size as the discharge initiation voltage measured on the Lissajous graphs (0.37–0.45 kV; thesis 300–500 V).
@@ -503,18 +503,18 @@ $$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycl
 - $C_{d,i} = \varepsilon_0\varepsilon_rA_i/t_i$, so erosion (smaller $t_i$) raises $C_{d,i}$.
 - Differentiating (1) and (2) with respect to $\ln C_{d,i}$:
 
-$$\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \tag{3}$$
+$$\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \qquad (3)$$
 
 - In a cell whose dielectric is gone ($t_i \to 0$), $U_{min,i} \to U_b$: the earliest possible discharge initiation.
 
 *(b) Exposed electrode.* An exposed Ag electrode raises the secondary electron emission coefficient (Townsend's second coefficient) γ. From the Townsend condition $\gamma(e^{\alpha d} - 1) = 1$ with $\alpha = Ap\,e^{-Bp/E}$, the breakdown voltage of the air gap is (Paschen's law of thesis Ch. 1; the expression matched to the measured U_b in 10.1)
 
-$$U_b = \frac{B\,pd}{\ln\!\left(A\,pd\,/\,\ln(1 + 1/\gamma)\right)} \tag{3b}$$
+$$U_b = \frac{B\,pd}{\ln\!\left(A\,pd\,/\,\ln(1 + 1/\gamma)\right)} \qquad (3b)$$
 
 - For 100 µm of air ($pd$ = 7.6 Torr·cm), γ from 0.01 to 0.1 lowers $U_b$ from 865 to 718 V, a factor of 0.83.
 - Differentiating (1) and (2) with respect to $\ln U_{b,i}$:
 
-$$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \tag{3c}$$
+$$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \qquad (3c)$$
 
 - A cell with a lower burning voltage starts discharging earlier and carries more discharge charge.
 
@@ -526,11 +526,11 @@ $$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{
 
 **Step 3. A heavier load lowers the output voltage of the driving power supply (A4).** At the drive frequency the voltage across the device is
 
-$$V = \frac{E}{1 + Z_sY_L} \tag{4}$$
+$$V = \frac{E}{1 + Z_sY_L} \qquad (4)$$
 
 where $Y_L$ is the device admittance, the current per volt, proportional at the drive frequency to the discharge charge per volt. For small changes (A6):
 
-$$\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \operatorname{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \tag{5}$$
+$$\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \mathrm{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \qquad (5)$$
 
 An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer to a current source, the closer $S$ is to 1.
 

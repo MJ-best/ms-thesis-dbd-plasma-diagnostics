@@ -137,7 +137,7 @@
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 26개
+pytest                      # 테스트 24개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -170,7 +170,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다. `python examples/physics_worked_numbers.py`는 데이터 없이 [물리 기초 문서](docs/dbd-physics-primer.ko.md)의 숫자를 출력하고, `python examples/current_spectrum_check.py "<아카이브>/전류전압 측정"`은 그 3단계의 전류 스펙트럼과 전압 왜곡을 원시 파형으로 확인하며, `python examples/ati_aging_test.py "<노화 아카이브>/μ-DBD (large) Aging 데이터 모음" docs/img`는 [ATI 노화 시험](docs/ati-aging-test.ko.md)을 재현합니다. `python examples/field_test_ml.py "<아카이브>/M!M2M3실험데이터종합" "<노화 아카이브>/μ-DBD (large) Aging 데이터 모음" docs/img`는 [필드 테스트 ML](docs/field-test-ml.ko.md)을 재현합니다.
+**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다.
 
 **모델 학습과 예측**: 직접 라벨을 붙인 데이터로 분류기를 학습하고, 저장한 모델로 새 캡처를 판별합니다.
 
@@ -211,7 +211,6 @@ src/dbd_diagnostics/
   waveform.py    주기 검출, 정수 주기 구간
   electrical.py  실효값, 1주기 에너지, 전력, 오프셋을 제거한 전하 적분
   lissajous.py   리사주 분석, 등가회로, burning voltage, Manley 에너지
-  circuit_fit.py 다중 셀 등가회로 역추정 (C_d, C_g, U_b, 문턱 산포)
   discharge.py   펄스 검출(논문 방식 + 잡음 기준), 방전 횟수, 개시 전압
   plasma.py      Townsend/Paschen, E/N, 이동도, n_e, T_e
   features.py    특성 일괄 추출 (논문 특성 + 보정 특성)
@@ -222,10 +221,8 @@ src/dbd_diagnostics/
   data/          D/μ 표 (논문 그림 15를 디지타이즈)
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
-examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증, 물리 계산 예제, 전류 스펙트럼 확인, ATI 노화 시험, 필드 테스트 ML 스크립트
-paper/           논문 초안과 그림 스크립트
-portfolio/       데이터과학 사례 연구와 그림 스크립트
-tests/           테스트 26개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
+examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증 스크립트
+tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 
 ## 7. 문서
@@ -236,9 +233,6 @@ tests/           테스트 26개 (정답을 아는 등가회로로 각 식을 �
 | [docs/thesis-review.ko.md](docs/thesis-review.ko.md) · [EN](docs/thesis-review.md) | 학위논문 검증 보고서. 수식 (1)–(32), 수치, 측정 체인, 통계, 머신러닝, 참고문헌, 원본 코드 감사, 재분석 결과 |
 | [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 세션 효과, 오실로스코프 설정, 현미경 사진, EDS 출처 |
 | [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
-| [docs/dbd-physics-primer.ko.md](docs/dbd-physics-primer.ko.md) | DBD 물리 단계별 정리: 방전 개시 조건, 변위전류, Manley 모델, 전원과 부하, 플라즈마 변수, 가설과 검출 한계, 가정 목록. 단계마다 실제 값으로 계산 |
-| [docs/ati-aging-test.ko.md](docs/ati-aging-test.ko.md) | 방전이 멈출 때까지 측정한 ATI 3대로 노화 가설 시험. 대조군이 없어 논문 데이터와 분리 |
-| [docs/field-test-ml.ko.md](docs/field-test-ml.ko.md) | 같은 셀 구조의 손상 판정 모델. 실험실 장치(M1–M3)로 만들고 ATI를 필드 테스트로 적용. 데이터를 합칠 때 도움이 되는 것과 안 되는 것 |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |
 

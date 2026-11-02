@@ -12,7 +12,7 @@
 - The references.
 - Whether the six original code repositories match the thesis.
 - A re-analysis of the original oscilloscope captures (devices m1, m2).
-- A check against the complete raw-data archive, using a third device (m3) that ran in parallel without visible damage as a control (section J).
+- A check against the complete raw-data archive, using a third device (m3), discharged alongside under the same conditions and not damaged, as a control (section J).
 
 **Methods.**
 1. Re-derivation of each equation.

@@ -105,7 +105,7 @@ All equations are in [docs/methods.md](docs/methods.md).
 
 ## 4. Key results and verification
 
-The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. The complete raw-data archive was then checked against a third device, m3, which ran in parallel without visible damage and serves as a control. Full details are in the **[verification report](docs/thesis-review.md)** and the **[raw-data verification](docs/raw-data-verification.md)**.
+The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. The complete raw-data archive was then checked against a third device, m3, which was discharged alongside them under the same conditions, was not damaged, and serves as the healthy comparison device. Full details are in the **[verification report](docs/thesis-review.md)** and the **[raw-data verification](docs/raw-data-verification.md)**.
 
 | | Thesis | Re-analysis / correction |
 |---|---|---|
@@ -131,7 +131,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 26 tests
+pytest                      # 24 tests
 ```
 
 Command-line tool:
@@ -163,7 +163,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md). `python examples/physics_worked_numbers.py` prints the numbers of the [physics primer](docs/dbd-physics-primer.ko.md) without any data, `python examples/current_spectrum_check.py "<archive>/전류전압 측정"` checks the current spectrum and voltage distortion quoted in its step 3, and `python examples/ati_aging_test.py "<aging archive>/μ-DBD (large) Aging 데이터 모음" docs/img` reproduces the [ATI aging test](docs/ati-aging-test.ko.md). `python examples/field_test_ml.py "<archive>/M!M2M3실험데이터종합" "<aging archive>/μ-DBD (large) Aging 데이터 모음" docs/img` reproduces the [field-test ML study](docs/field-test-ml.ko.md).
+`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md).
 
 Training and prediction on your own labelled data:
 
@@ -203,7 +203,6 @@ src/dbd_diagnostics/
   waveform.py    period detection, integer-period windows
   electrical.py  RMS, energy per cycle, power, offset-free charge integration
   lissajous.py   Q-V analysis, equivalent circuit, burning voltage, Manley energy
-  circuit_fit.py inverse fit of a multi-cell equivalent circuit (C_d, C_g, U_b, threshold spread)
   discharge.py   pulse detection (thesis + noise-referenced), number of discharges, onset voltage
   plasma.py      Townsend/Paschen, E/N, mobility, n_e, T_e
   features.py    one-call feature extraction (thesis + corrected features)
@@ -214,10 +213,8 @@ src/dbd_diagnostics/
   data/          D/mu table digitised from thesis Fig. 15
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
-examples/        synthetic demo, re-analysis, raw-archive verification, physics worked numbers, current spectrum check, ATI aging test, field-test ML
-paper/           draft manuscript and figure script
-portfolio/       data-science case study (Korean) and figure script
-tests/           26 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+examples/        synthetic demo, re-analysis, raw-archive verification
+tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation
@@ -228,9 +225,6 @@ tests/           26 tests: known-answer equivalent-circuit tests of every formul
 | [docs/thesis-review.md](docs/thesis-review.md) · [KO](docs/thesis-review.ko.md) | Verification report: Eqs. (1)–(32), numbers, measurement chain, statistics, ML, references, audit of the original code, re-analysis |
 | [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, session effects, oscilloscope settings, micrographs, EDS sources |
 | [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
-| [docs/dbd-physics-primer.ko.md](docs/dbd-physics-primer.ko.md) (Korean) | DBD physics step by step: breakdown conditions, displacement current, Manley model, supply–load coupling, plasma parameters, hypotheses and detection limits, list of assumptions, each with worked numbers |
-| [docs/ati-aging-test.ko.md](docs/ati-aging-test.ko.md) (Korean) | Test of the aging hypotheses on three ATI devices run until the discharge stopped. No control device; kept separate from the thesis data |
-| [docs/field-test-ml.ko.md](docs/field-test-ml.ko.md) (Korean) | Damage model for the thesis cell structure, built on the lab devices (M1–M3) and field-tested on the ATI devices; what pooling more data does and does not fix |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |
 

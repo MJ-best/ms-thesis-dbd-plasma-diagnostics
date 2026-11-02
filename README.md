@@ -72,29 +72,29 @@ A discharge starts with electrons accelerated by the electric field. An electron
 Townsend's theory describes this with two coefficients. The number of ionizations per unit length of electron travel is the first Townsend coefficient α, set by the gas, the pressure and the temperature. If electrons of density n_e create dn_e new electrons over dx:
 
 ```math
-\alpha = \frac{1}{n_e}\frac{dn_e}{dx} \tag{1}
+\alpha = \frac{1}{n_e}\frac{dn_e}{dx} \qquad (1)
 ```
 
 For an electrode distance d and an initial electron density n_0, the electron density at the anode and the density of new electrons (equal to the new ions) are:
 
 ```math
-n_e(d) = n_0\,e^{\alpha d} \tag{2}
+n_e(d) = n_0\,e^{\alpha d} \qquad (2)
 ```
 
 ```math
-\Delta n = n_0\left(e^{\alpha d} - 1\right) \tag{3}
+\Delta n = n_0\left(e^{\alpha d} - 1\right) \qquad (3)
 ```
 
 Electrons released from the cathode by ion impact or by UV light are secondary electrons. The number released per ion is the secondary electron emission coefficient γ (the second Townsend coefficient), which sustains the discharge. The density of secondary electrons produced by the ions is:
 
 ```math
-n_\gamma = \gamma\,n_0\left(e^{\alpha d} - 1\right) \tag{4}
+n_\gamma = \gamma\,n_0\left(e^{\alpha d} - 1\right) \qquad (4)
 ```
 
 When the secondary electrons replace the initial ones, the discharge sustains itself without external electrons. Dividing by n_0 gives the self-sustainment (Townsend) condition:
 
 ```math
-\gamma\,n_0\left(e^{\alpha d} - 1\right) \ge n_0 \quad\Rightarrow\quad \gamma\left(e^{\alpha d} - 1\right) = 1 \tag{5}
+\gamma\,n_0\left(e^{\alpha d} - 1\right) \ge n_0 \quad\Rightarrow\quad \gamma\left(e^{\alpha d} - 1\right) = 1 \qquad (5)
 ```
 
 ##### 1.1.2 Paschen's law
@@ -102,13 +102,13 @@ When the secondary electrons replace the initial ones, the discharge sustains it
 Townsend's semi-empirical formula gives α as a function of the pressure p and the field V/d, with gas constants A and B [49]:
 
 ```math
-\alpha = A\,p\,\exp\!\left(-\frac{B\,p\,d}{V}\right) \tag{6}
+\alpha = A\,p\,\exp\!\left(-\frac{B\,p\,d}{V}\right) \qquad (6)
 ```
 
 Substituting (6) into (5) and solving for the breakdown voltage V_b gives Paschen's law [5, 7]:
 
 ```math
-V_b = \frac{B\,pd}{\ln\left(A\,pd\right) - \ln\ln\left(1 + 1/\gamma\right)} \tag{7}
+V_b = \frac{B\,pd}{\ln\left(A\,pd\right) - \ln\ln\left(1 + 1/\gamma\right)} \qquad (7)
 ```
 
 Plotting (7) against pd gives the Paschen curve (Figure 1). Above the curve the field is strong enough for a discharge. Below it no discharge occurs: if pd is above the minimum, collisions are so frequent that electrons cannot gain the ionization energy; if pd is below it, there are too few collisions.
@@ -246,13 +246,13 @@ The current–voltage graph shows when the discharge occurs (Figure 8) [5, 42].
 The effective voltage V_rms and effective current I_rms compare the electrical behavior of the whole system. They are the root mean squares over a period T:
 
 ```math
-V_{rms} = \sqrt{\frac{1}{T}\int_0^T v(t)^2\,dt}, \qquad I_{rms} = \sqrt{\frac{1}{T}\int_0^T i(t)^2\,dt} \tag{8}
+V_{rms} = \sqrt{\frac{1}{T}\int_0^T v(t)^2\,dt}, \qquad I_{rms} = \sqrt{\frac{1}{T}\int_0^T i(t)^2\,dt} \qquad (8)
 ```
 
 The energy the discharge consumes per period, and the mean power:
 
 ```math
-E = \int_0^T v(t)\,i(t)\,dt \;\;[\mathrm{J/cycle}], \qquad P = \frac{E}{T} \tag{9}
+E = \int_0^T v(t)\,i(t)\,dt \;\;[\mathrm{J/cycle}], \qquad P = \frac{E}{T} \qquad (9)
 ```
 
 - V_rms is 1.50 ± 0.017 kV normal and 1.40 ± 0.049 kV damaged. The undamaged M3, however, also lost V_rms at the same time points (e.g. 1502 V at 10 h → 1369 V at 15 h). The damage-specific drop is about 48 V (Chapter 4).
@@ -266,13 +266,13 @@ The DBD dielectric is a capacitor. A discharge carries charge onto the dielectri
 The voltage across the air gap, with Q the charge of the Lissajous graph and C_d the dielectric capacitance:
 
 ```math
-u_g(t) = v(t) - \frac{Q(t)}{C_d} \tag{10}
+u_g(t) = v(t) - \frac{Q(t)}{C_d} \qquad (10)
 ```
 
 While the discharge runs, u_g stays nearly constant at the **burning voltage U_b** [42, 55]. At discharge onset the dielectric still holds the wall charge Q_on from the previous half period, with wall voltage −Q_on/C_d. The burning voltage is therefore:
 
 ```math
-U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac{V_{max} + V_{min}}{2} \tag{11}
+U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac{V_{max} + V_{min}}{2} \qquad (11)
 ```
 
 - With the means of Table 2 (C_d 34.2 pF, C_total 11.3 pF, V_min 0.50 kV, V_max 2.24 kV), U_b ≈ 0.92 kV, consistent with the Paschen breakdown voltage of a 100 µm air gap from (7) (0.72–0.87 kV).
@@ -297,7 +297,7 @@ U_b = V_{min} - \frac{Q_{on}}{C_d} = \left(1 - \frac{C_{total}}{C_d}\right)\frac
 The electron density follows from Ohm's law applied to the discharge current [43–48]. The current density J is the peak current i_peak divided by the discharge area A, and the field is the burning voltage over the electrode distance, U_b/d:
 
 ```math
-J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\,U_b} \tag{12}
+J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\,U_b} \qquad (12)
 ```
 
 - The electron mobility at room temperature and atmospheric pressure was taken as μ_e = 592 cm²/Vs, a low-field value; it is smaller at hundreds of Td.
@@ -310,7 +310,7 @@ J = n_e\,e\,\mu_e\,E \quad\Rightarrow\quad n_e = \frac{i_{peak}\,d}{e\,\mu_e\,A\
 The electron temperature is obtained approximately from the Einstein relation [43, 47]. D_e/μ_e is the characteristic energy; it equals k_B·T_e/e for a Maxwellian electron energy distribution. D_e/μ_e is a function of the reduced field E/N (Figure 10) [48, 49]:
 
 ```math
-\frac{k_B T_e}{e} = \frac{D_e}{\mu_e}\left(\frac{E}{N}\right), \qquad \frac{E}{N} = \frac{U_b}{N\,d}, \qquad N = \frac{p}{k_B T} \tag{13}
+\frac{k_B T_e}{e} = \frac{D_e}{\mu_e}\left(\frac{E}{N}\right), \qquad \frac{E}{N} = \frac{U_b}{N\,d}, \qquad N = \frac{p}{k_B T} \qquad (13)
 ```
 
 - The gas number density is N = 2.50×10¹⁹ cm⁻³ (1 atm, 20 °C). With U_b, E/N ≈ 340 Td (1 Td = 10⁻¹⁷ V·cm²).
@@ -329,7 +329,7 @@ The electron temperature is obtained approximately from the Einstein relation [4
 Manley computed the discharge voltage and energy of a DBD from the charge–voltage graph [5, 42], called the Lissajous graph: a closed parallelogram. After the discharge initiation voltage V_min the charge grows with the discharge and the slope rises sharply; at the peak voltage V_max the discharge ends and the slope drops (Figure 11). The charge is the integral of the current after removing its offset:
 
 ```math
-Q(t) = \int_0^t i(t')\,dt' + Q_0 \tag{14}
+Q(t) = \int_0^t i(t')\,dt' + Q_0 \qquad (14)
 ```
 
 ![Figure 11](docs/img/thesis/fig11_lissajous.jpg)
@@ -341,7 +341,7 @@ Q(t) = \int_0^t i(t')\,dt' + Q_0 \tag{14}
 In the equivalent circuit of a discharge cell, the dielectric between the electrodes is the dielectric capacitor C_d and the air between them is the air-gap capacitor C_g [50–62]. Before the discharge the two are in series; during the discharge the air gap conducts and only C_d remains (Figure 12). The slope of the Lissajous graph before the discharge is the total capacitance C_total, and during the discharge it is C_d:
 
 ```math
-C_{total} = \frac{C_d\,C_g}{C_d + C_g} \tag{15}
+C_{total} = \frac{C_d\,C_g}{C_d + C_g} \qquad (15)
 ```
 
 ![Figure 12](docs/img/thesis/fig12_equivalent_circuit.jpg)
@@ -371,7 +371,7 @@ Both slopes were obtained by fitting straight lines to the sides of the Lissajou
 The discharge charge is the charge moved between the discharge initiation voltage V_min and the peak voltage V_max (Q_max in Figure 11):
 
 ```math
-Q_{max} = C_d\,(V_{max} - V_{min}) \tag{16}
+Q_{max} = C_d\,(V_{max} - V_{min}) \qquad (16)
 ```
 
 It is 59.4 ± 9.0 nC normal and 61.7 nC damaged (reanalysis 59.5 / 62.7 nC, p = 0.07). Later chapters also write it ΔQ.
@@ -577,7 +577,7 @@ The inputs are not independent: C_g is computed from C_d and C_total, the electr
 Logistic regression, SVM and kNN are sensitive to feature scales and outliers [63], so every feature was standardized to mean 0 and standard deviation 1, with μ and σ taken from the training data only:
 
 ```math
-z = \frac{x - \mu}{\sigma}, \qquad \mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\left(x_i - \mu\right)^2} \tag{17}
+z = \frac{x - \mu}{\sigma}, \qquad \mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\left(x_i - \mu\right)^2} \qquad (17)
 ```
 
 #### 5.3 Datasets
@@ -605,7 +605,7 @@ The thesis trained and evaluated on M2 and validated on M1, labelling ≤ 10 h a
 With surface damage as the positive class, TP is actual damage predicted as damage, TN actual normal predicted as normal, FP actual normal predicted as damage, and FN actual damage predicted as normal [70]:
 
 ```math
-\mathrm{ACC} = \frac{TP + TN}{TP + TN + FP + FN}, \quad \mathrm{PRE} = \frac{TP}{TP + FP}, \quad \mathrm{REC} = \frac{TP}{TP + FN}, \quad F_1 = \frac{2\cdot\mathrm{PRE}\cdot\mathrm{REC}}{\mathrm{PRE} + \mathrm{REC}} \tag{18}
+\mathrm{ACC} = \frac{TP + TN}{TP + TN + FP + FN}, \quad \mathrm{PRE} = \frac{TP}{TP + FP}, \quad \mathrm{REC} = \frac{TP}{TP + FN}, \quad F_1 = \frac{2\cdot\mathrm{PRE}\cdot\mathrm{REC}}{\mathrm{PRE} + \mathrm{REC}} \qquad (18)
 ```
 
 The AUC is the area under the ROC curve: 1.0 for a perfect classifier, 0.5 for a random one [71].
@@ -726,11 +726,11 @@ When the electrode is exposed, the burning voltage of the damaged cells falls, t
 - Solving this with half-period symmetry gives the discharge initiation voltage V_on (= V_min) and the discharge charge ΔQ:
 
 ```math
-V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \tag{19}
+V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \qquad (19)
 ```
 
 ```math
-\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \tag{20}
+\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \qquad (20)
 ```
 
 Equation (20) is Manley's equation [42]. With the measured U_min = 1257–1289 V and V_max ≈ 2.2 kV, V_on ≈ 0.3 kV, the same size as the discharge initiation voltage of 0.37–0.45 kV measured on the Lissajous graphs.
@@ -742,13 +742,13 @@ Damage can lower U_min,i = U_b,i(1 + C_g,i/C_d,i) of a cell in two ways.
 **(a) Thinner dielectric.** C_d,i = ε₀ε_r·A_i/t_i, so erosion (smaller t_i) raises C_d,i:
 
 ```math
-\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \tag{21}
+\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \qquad (21)
 ```
 
 **(b) Exposed electrode.** An exposed Ag electrode raises the secondary electron emission coefficient γ. By Paschen's law (7), raising γ from 0.01 to 0.1 for 100 µm of air (pd = 7.6 Torr·cm) lowers U_b from 865 to 718 V, a factor of 0.83:
 
 ```math
-\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \tag{22}
+\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \qquad (22)
 ```
 
 - Both paths make damaged cells start discharging earlier and increase their discharge charge; for the whole source (A3) ΔQ = ΣΔQ_i grows.
@@ -760,11 +760,11 @@ Damage can lower U_min,i = U_b,i(1 + C_g,i/C_d,i) of a cell in two ways.
 At the drive frequency the voltage across the source is as follows, with Y_L the admittance of the source (current per volt), proportional at the drive frequency to the discharge charge per volt:
 
 ```math
-V = \frac{E}{1 + Z_s Y_L} \tag{23}
+V = \frac{E}{1 + Z_s Y_L} \qquad (23)
 ```
 
 ```math
-\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \operatorname{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \tag{24}
+\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \mathrm{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \qquad (24)
 ```
 
 An ideal voltage source has S = 0 (the voltage ignores the load); the closer to a current source, the closer S is to 1. S was measured on the healthy source (A6).

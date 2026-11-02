@@ -490,9 +490,9 @@ $$v = \frac{Q}{C_d} + u_g \quad\Rightarrow\quad u_g = v - \frac{Q}{C_d}$$
 - 인가전압이 최댓값일 때 $Q_{max} = C_d(V_{max} - U_b)$입니다. 그 뒤 방전 없이 $Q = Q_{max} - C_t(V_{max} - v)$로 내려오다가, 공기갭 전압이 $u_g = -U_b$가 되는 곳에서 다음 방전이 시작됩니다.
 - 이를 풀면 $V_{max} - v = 2U_bC_d/(C_d - C_t) = 2U_{min}$이고, 반주기 대칭으로 다음을 얻습니다.
 
-$$V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \tag{1}$$
+$$V_{on} = 2U_{min} - V_{max}, \qquad U_{min} = U_b\left(1 + \frac{C_g}{C_d}\right) \qquad (1)$$
 
-$$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \tag{2}$$
+$$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycle} = 2U_b\,\Delta Q = 4C_dU_b\,(V_{max} - U_{min}) \qquad (2)$$
 
 - $V_{on}$이 논문의 방전개시전압 $V_{min}$이고, (2)는 Manley 식입니다.
 - 측정값으로 확인하면 $U_{min}$ = 1257–1289 V, $V_{max}$ ≈ 2.2 kV이므로 $V_{on}$ ≈ 0.3 kV입니다. 리사주 그래프에서 잰 방전개시전압 0.37–0.45 kV(논문 300–500 V)와 같은 크기입니다.
@@ -503,18 +503,18 @@ $$\Delta Q = C_d\,(V_{max} - V_{on}) = 2C_d\,(V_{max} - U_{min}), \qquad E_{cycl
 - $C_{d,i} = \varepsilon_0\varepsilon_rA_i/t_i$이므로, 침식으로 $t_i$가 줄면 $C_{d,i}$가 커집니다.
 - (1), (2)를 $\ln C_{d,i}$로 미분하면 다음과 같습니다.
 
-$$\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \tag{3}$$
+$$\frac{\partial V_{on,i}}{\partial \ln C_{d,i}} = -2U_b\,\frac{C_{g,i}}{C_{d,i}} < 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln C_{d,i}} = 2C_{d,i}\,(V_{max} - U_b) > 0 \qquad (3)$$
 
 - 유전체가 완전히 없어진 셀($t_i \to 0$)에서는 $U_{min,i} \to U_b$가 되어, 방전개시가 가장 이릅니다.
 
 *(나) 전극 노출.* 노출된 Ag 전극에서는 이차전자 발생 계수(2차 타운젠트 방전계수) γ가 커집니다. 타운젠트 조건 $\gamma(e^{\alpha d} - 1) = 1$과 $\alpha = Ap\,e^{-Bp/E}$에서 공기갭의 방전전압은 다음과 같습니다(논문 1장의 파센 법칙; 10.1절에서 측정 U_b와 맞춘 식).
 
-$$U_b = \frac{B\,pd}{\ln\!\left(A\,pd\,/\,\ln(1 + 1/\gamma)\right)} \tag{3b}$$
+$$U_b = \frac{B\,pd}{\ln\!\left(A\,pd\,/\,\ln(1 + 1/\gamma)\right)} \qquad (3b)$$
 
 - 100 µm 공기($pd$ = 7.6 Torr·cm)에서 γ가 0.01 → 0.1이면 $U_b$는 865 → 718 V, 즉 0.83배가 됩니다.
 - (1), (2)를 $\ln U_{b,i}$로 미분하면 다음과 같습니다.
 
-$$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \tag{3c}$$
+$$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{\partial\,\Delta Q_i}{\partial \ln U_{b,i}} = -2C_{d,i}\,U_{min,i} < 0 \qquad (3c)$$
 
 - 방전 유지 전압이 낮아진 셀은 방전을 일찍 시작하고, 방전 전하량이 늘어납니다.
 
@@ -526,11 +526,11 @@ $$\frac{\partial V_{on,i}}{\partial \ln U_{b,i}} = 2U_{min,i} > 0, \qquad \frac{
 
 **3단계. 부하가 커지면 구동전원의 출력 전압이 떨어집니다 (A4).** 구동 주파수 성분에서 소스에 걸리는 전압은 다음과 같습니다.
 
-$$V = \frac{E}{1 + Z_sY_L} \tag{4}$$
+$$V = \frac{E}{1 + Z_sY_L} \qquad (4)$$
 
 $Y_L$은 소스의 어드미턴스, 즉 전압당 전류이며 구동 주파수에서 전압당 방전 전하량에 비례합니다. 작은 변화(A6)에서는 다음과 같습니다.
 
-$$\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \operatorname{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \tag{5}$$
+$$\delta\ln V = -S\,\delta\ln Y_L, \qquad S = \mathrm{Re}\frac{Z_sY_L}{1 + Z_sY_L} \approx -\frac{d\ln V}{d\ln(\Delta Q/V_{max})} \qquad (5)$$
 
 이상적인 전압원이면 $S = 0$(전압이 부하와 무관), 전류원에 가까울수록 $S \to 1$입니다.
 

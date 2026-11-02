@@ -53,6 +53,21 @@ def _periods(t: np.ndarray, v: np.ndarray) -> list[slice]:
 
 def extract(wf: Waveform, cfg: DeviceConfig = DeviceConfig()) -> dict:
     """Compute all features of one capture (averaged over its full periods)."""
+    rows = extract_periods(wf, cfg)
+    with warnings.catch_warnings():  # all-NaN columns (e.g. no pulses in an ideal waveform) stay NaN
+        warnings.simplefilter("ignore", RuntimeWarning)
+        out = {k: float(np.nanmean([row[k] for row in rows])) for k in rows[0]}
+    out["n_periods"] = len(rows)
+    for key in ("Time", "Vertical Scale", "Sampling Period"):
+        if key in wf.meta:
+            val = wf.meta[key]
+            out[f"meta_{key.lower().replace(' ', '_')}"] = val[1] if isinstance(val, tuple) else val
+    out["source_file"] = wf.meta.get("source_file", "")
+    return out
+
+
+def extract_periods(wf: Waveform, cfg: DeviceConfig = DeviceConfig()) -> list[dict]:
+    """Compute all features of every full period of one capture (one dict per period)."""
     periods = _periods(wf.t, wf.v)
     if not periods:
         raise ValueError("no full period in record")
@@ -109,13 +124,4 @@ def extract(wf: Waveform, cfg: DeviceConfig = DeviceConfig()) -> dict:
         ne_c = plasma.electron_density(idp, cfg.gap_cm, cfg.cell_area_cm2, L.U_b_onset, cfg.mobility_cm2_Vs)
         r["ne_corrected_mean"] = float(np.mean(ne_c))
         rows.append(r)
-    with warnings.catch_warnings():  # all-NaN columns (e.g. no pulses in an ideal waveform) stay NaN
-        warnings.simplefilter("ignore", RuntimeWarning)
-        out = {k: float(np.nanmean([row[k] for row in rows])) for k in rows[0]}
-    out["n_periods"] = len(rows)
-    for key in ("Time", "Vertical Scale", "Sampling Period"):
-        if key in wf.meta:
-            val = wf.meta[key]
-            out[f"meta_{key.lower().replace(' ', '_')}"] = val[1] if isinstance(val, tuple) else val
-    out["source_file"] = wf.meta.get("source_file", "")
-    return out
+    return rows

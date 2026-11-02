@@ -43,6 +43,14 @@ def test_extract_and_csv_roundtrip(tmp_path):
     assert r["u_b"] < r["v_max"] < r["v_breakdown"] * 1.2
 
 
+def test_extract_is_the_mean_of_the_periods():
+    wf = simulate.cells(seed=3, periods=3.3)
+    rows, r = features.extract_periods(wf), features.extract(wf)
+    assert len(rows) == r["n_periods"]
+    for k in ("v_rms", "energy", "c_dielectric", "u_b"):
+        assert r[k] == pytest.approx(np.mean([row[k] for row in rows]))
+
+
 def test_gwinstek_parser(tmp_path):
     header = ["Format,2.0A,", "Memory Length,4,Memory Length,4,", "Source,CH1,Source,CH2,",
               "Probe Ratio,1.000E+03,Probe Ratio,2.000E+00,", "Vertical Units,V,Vertical Units,A,",

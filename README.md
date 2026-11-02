@@ -131,7 +131,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 24 tests
+pytest                      # 25 tests
 ```
 
 Command-line tool:
@@ -163,7 +163,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md).
+`python examples/reanalyse_thesis_data.py <m1_data> <m2_data>` reproduces section H of the verification report. `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"` reproduces the control-device analysis of the [raw-data verification](docs/raw-data-verification.md). `python examples/consistency_check.py` with the same two folders and `docs/img` reproduces its section 10: whether the physics assumptions, the statistics and the ML (the six thesis models and five newer ones, on capture means and on single periods) agree.
 
 Training and prediction on your own labelled data:
 
@@ -213,8 +213,8 @@ src/dbd_diagnostics/
   data/          D/mu table digitised from thesis Fig. 15
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
-examples/        synthetic demo, re-analysis, raw-archive verification
-tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+examples/        synthetic demo, re-analysis, raw-archive verification and consistency check
+tests/           25 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation
@@ -223,7 +223,7 @@ tests/           24 tests: known-answer equivalent-circuit tests of every formul
 |---|---|
 | [docs/methods.md](docs/methods.md) · [KO](docs/methods.ko.md) | Every equation, its assumptions and the thesis equation it corresponds to |
 | [docs/thesis-review.md](docs/thesis-review.md) · [KO](docs/thesis-review.ko.md) | Verification report: Eqs. (1)–(32), numbers, measurement chain, statistics, ML, references, audit of the original code, re-analysis |
-| [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, session effects, oscilloscope settings, micrographs, EDS sources |
+| [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, session effects, oscilloscope settings, micrographs, EDS sources, and whether physics, statistics and ML agree |
 | [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |

@@ -137,7 +137,7 @@
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 24개
+pytest                      # 테스트 25개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -170,7 +170,7 @@ res = ml.group_holdout(df, ml.THESIS_FEATURES, label="label", group="device")
 print(ml.results_table(res))
 ```
 
-**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다.
+**원본 데이터 재분석**: `python examples/reanalyse_thesis_data.py <m1_data> <m2_data>`를 실행하면 검증 보고서 H절의 결과가 다시 만들어집니다. `python examples/verify_raw_archive.py "<아카이브>/전류전압 측정" "<아카이브>/전압에 따른 QV 변화/I 기준으로 계산"`은 [원본 데이터 검증](docs/raw-data-verification.ko.md)의 대조 장치 분석을 재현합니다. 같은 두 폴더와 `docs/img`로 `python examples/consistency_check.py`를 실행하면 그 문서의 10절, 즉 물리 가정·통계·ML(논문 모델 6개와 새 모델 5개, 캡처 평균과 주기 단위)이 같은 곳을 가리키는지에 대한 검증이 재현됩니다.
 
 **모델 학습과 예측**: 직접 라벨을 붙인 데이터로 분류기를 학습하고, 저장한 모델로 새 캡처를 판별합니다.
 
@@ -221,8 +221,8 @@ src/dbd_diagnostics/
   data/          D/μ 표 (논문 그림 15를 디지타이즈)
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
-examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증 스크립트
-tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
+examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증·일관성 검증 스크립트
+tests/           테스트 25개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
 ```
 
 ## 7. 문서
@@ -231,7 +231,7 @@ tests/           테스트 24개 (정답을 아는 등가회로로 각 식을 �
 |---|---|
 | [docs/methods.ko.md](docs/methods.ko.md) · [EN](docs/methods.md) | 단계별 수식, 가정, 논문 식 번호와의 대응 |
 | [docs/thesis-review.ko.md](docs/thesis-review.ko.md) · [EN](docs/thesis-review.md) | 학위논문 검증 보고서. 수식 (1)–(32), 수치, 측정 체인, 통계, 머신러닝, 참고문헌, 원본 코드 감사, 재분석 결과 |
-| [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 세션 효과, 오실로스코프 설정, 현미경 사진, EDS 출처 |
+| [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 세션 효과, 오실로스코프 설정, 현미경 사진, EDS 출처, 물리·통계·ML의 일관성 |
 | [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |

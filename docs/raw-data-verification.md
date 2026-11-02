@@ -123,7 +123,7 @@ For every micrograph (640×480), the largest connected region with luminance < 9
 
 - **M2** [OK]: no burn marks at 5 and 10 h; dark erosion marks in every session from 15 h on. This matches the thesis label boundary (≤ 10 h normal, ≥ 15 h degraded).
 - **M1** [Moderate]: dark erosion marks also start at 15 h. But `Snapshot000008` and `Snapshot000010` of the "5h" set show a **large melted blister** covering an electrode end. A similar melted region appears in 20 h `Snapshot000004`, and at 25 h the experimenter named a photograph `오른쪽 끝 결국 터짐` ("right end finally burst"), which suggests the same site was being tracked. Since these photographs predate the 10 h measurement, the M1 5 h and 10 h sessions that the thesis labels normal (0) — the 80 normal rows of the validation set — may already contain a damaged cell. Fig. 27 and Sec. 5.3 should say so, or the labelling rule should distinguish damage types (erosion vs melting/blistering).
-- **M3**: no burn marks up to 50 h. This matches Sec. 4.2 of the thesis ("surface damage was observed in two samples"). The micrographs show only a subset of the 126 cells, so "no visible damage" does not guarantee "no damage".
+- **M3**: no burn marks up to 50 h. This matches Sec. 4.2 of the thesis ("surface damage was observed in two samples"). M3 is the healthy comparison device, discharged alongside M1 and M2 under the same conditions; the experimenter confirmed that it was not damaged.
 
 ---
 
@@ -145,7 +145,7 @@ For every micrograph (640×480), the largest connected region with luminance < 9
 
 - Before damage (5 and 10 h) the three devices agree to within a few volts.
 - At 15 h all three drop **together**; the undamaged M3 drops by 133 V.
-- M3 falls to 1155 V at 45 and 50 h and recovers to 1454 V at 55 h, with no visible damage.
+- M3 falls to 1155 V at 45 and 50 h and recovers to 1454 V at 55 h, although it is not damaged.
 
 ### 3.2 Voltage jumps within a session
 
@@ -361,7 +361,7 @@ These revisions have been applied to the [verification report](thesis-review.md)
 
 ## 11. Limitations
 
-- **Damage state of M3.** Inferred from the micrographs (a subset of the 126 cells), EDS (12 of 13 maps ≤ 0.25 at.%) and the thesis' statement that two samples were damaged. Damage in cells outside the photographs cannot be excluded; in particular, the V_rms drop at 45–60 h might reflect small damage. The false positives at 15–40 h, however, occur while M3 shows no burn marks at all.
+- **One healthy comparison device.** M3 was discharged alongside M1 and M2 under the same conditions and was not damaged (confirmed by the experimenter; consistent with the micrographs and with 12 of 13 EDS maps ≤ 0.25 at.%). Every change of M3, including the V_rms drop at 45–60 h, is therefore a supply or environmental change. With only one healthy device, however, the spread between two healthy devices in the same session is unknown.
 - **Power.** The DiD works at the session level (2 sessions before, 3–6 after), so its power is low. "Not significant" does not mean "no effect".
 - **EDS values.** Read directly from the tables in the Bruker report images (no raw spectra are available). Some M1 and M2 maps of 31 July (1-2, 1-3, 1-4, 1-s, 2-s) have no site name and are left out of section 7.2; their Ag is 0.3–3.0 at.%.
 - **Identity of the M1 melted site.** That the 5 h and 25 h photographs show the same site is inferred from their appearance and file names.

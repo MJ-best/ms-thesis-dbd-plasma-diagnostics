@@ -105,7 +105,7 @@ All equations are in [docs/methods.md](docs/methods.md).
 
 ## 4. Key results and verification
 
-The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. The complete raw-data archive was then checked against a third device, m3, which ran in parallel without visible damage and serves as a control. Full details are in the **[verification report](docs/thesis-review.md)** and the **[raw-data verification](docs/raw-data-verification.md)**.
+The equations, numbers, statistics, ML protocol and references of the thesis were re-checked, and the raw captures of devices m1 and m2 were re-analysed with this package. The complete raw-data archive was then checked against a third device, m3, which was discharged alongside them under the same conditions, was not damaged, and serves as the healthy comparison device. Full details are in the **[verification report](docs/thesis-review.md)** and the **[raw-data verification](docs/raw-data-verification.md)**.
 
 | | Thesis | Re-analysis / correction |
 |---|---|---|
@@ -131,7 +131,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 26 tests
+pytest                      # 24 tests
 ```
 
 Command-line tool:
@@ -203,7 +203,6 @@ src/dbd_diagnostics/
   waveform.py    period detection, integer-period windows
   electrical.py  RMS, energy per cycle, power, offset-free charge integration
   lissajous.py   Q-V analysis, equivalent circuit, burning voltage, Manley energy
-  circuit_fit.py inverse fit of a multi-cell equivalent circuit (C_d, C_g, U_b, threshold spread)
   discharge.py   pulse detection (thesis + noise-referenced), number of discharges, onset voltage
   plasma.py      Townsend/Paschen, E/N, mobility, n_e, T_e
   features.py    one-call feature extraction (thesis + corrected features)
@@ -214,10 +213,8 @@ src/dbd_diagnostics/
   data/          D/mu table digitised from thesis Fig. 15
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
-examples/        synthetic demo, re-analysis and raw-archive verification scripts
-paper/           draft manuscript and figure script
-portfolio/       data-science case study (Korean) and figure script
-tests/           26 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+examples/        synthetic demo, re-analysis, raw-archive verification
+tests/           24 tests: known-answer equivalent-circuit tests of every formula, CLI and app
 ```
 
 ## 7. Documentation

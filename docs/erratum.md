@@ -46,7 +46,7 @@
 |---|---|---|---|
 | 10–11 | 11 | The HV probe is the **P6015A**; the current probe is the **P6021A**. | Correction · B1 |
 | 12 | 11–12 | Add the measurement limits: sampling 10 ns (some captures 20 ns), 5000 points (≈ 2.3 periods), 8 bit (40 V/LSB; 1.6–8 mA/LSB), current-probe bandwidth 60 MHz. As a result, pulse counts and peak currents are lower bounds. | Addition · B2 |
-| 59 | 12 | Add to Sec. 2.1.3: a third device (M3) was operated in parallel for 60 h and measured in the same sessions, without visible damage. It serves as a control for supply and environmental variations. | Addition · J |
+| 59 | 12 | Add to Sec. 2.1.3: a third device (M3) was operated in parallel for 60 h and measured in the same sessions, and was not damaged. It serves as a control for supply and environmental variations. | Addition · J |
 | 60 | 11–12 | Add: the current scale (0.04–0.4 A/div) and the sampling interval (10 / 20 ns) changed between and within sessions. Within a session, I_rms rises by 3.5 mA per doubling of A/div, and 20 ns sampling gives 6.6 fewer pulses. Compare I_rms, peak current, number of discharges and n_e only at fixed settings. | Addition · J |
 | 61 | 13 | Fig. 7, "the discharge current rose from about 100 mA to 250 mA": state that Fig. 7 is a single example. At the same current scale (0.1 A/div) the peak currents are 251 → 272 mA (M2, not significant) and 252 → 213 mA (M1). | Correction · J |
 

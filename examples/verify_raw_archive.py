@@ -4,8 +4,9 @@
 
 The archive holds every endurance session of the three devices that ran in parallel in July 2020
 (M1 0-25 h, M2 0-40 h, M3 0-60 h; 20 detail captures per session) and the supply-voltage sweep at
-20 h (8.5 / 9 / 10 / 14 V supply input). M3 showed no erosion in the micrographs and was not
-used in the thesis, so it serves as an undamaged control measured 10-33 min after M1 in every session.
+20 h (8.5 / 9 / 10 / 14 V supply input). M3 was discharged alongside M1 and M2 under the same
+conditions and was not damaged; the thesis did not use it, so it serves as an undamaged control measured
+10-33 min after M1 in every session.
 
 Prints the tables of docs/raw-data-verification.md:
   1. session means (common-mode V_rms changes)          4. features vs oscilloscope settings

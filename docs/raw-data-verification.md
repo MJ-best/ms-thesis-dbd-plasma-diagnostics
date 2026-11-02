@@ -617,7 +617,7 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 **1. Fitted to healthy data only.**
 - The targets are eight medians of the healthy captures (5–10 h) and S = 0.52 measured on the healthy M3.
 - All but the energy match within 6 %; the energy is 11 % low (results figure, a).
-- The fitted equivalent circuit is C_d 34.9 pF, C_g 16.7 pF and U_b 898 V, close to the thesis' equivalent circuit (34.2 pF, 16.9 pF, 900 V). The driving power supply is E ≈ 4.2 kV behind R ≈ 213 kΩ.
+- The fitted equivalent circuit is C_d 34.9 pF, C_g 16.7 pF and U_b 898 V, close to the equivalent circuit from the means of thesis Table 2 (34.2 pF, 16.9 pF, 0.92 kV). The driving power supply is E ≈ 4.2 kV behind R ≈ 213 kΩ.
 - An ideal voltage source gives V_rms/V_max = 0.707. The data give 0.655 and the model 0.70, so the distortion of the applied voltage by the discharges is only partly reproduced.
 
 **2. Damage predicted.** No damage data were used to fit. Model: change against the healthy model; data: against M3 (%).

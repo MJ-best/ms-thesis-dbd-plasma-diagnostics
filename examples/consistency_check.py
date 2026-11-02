@@ -361,7 +361,7 @@ def figure_mechanism(mk, out):
     m3 = np.log(mk["m3"])
     base = m3.loc[:10].mean()
     a.plot(100 * (m3.v_rms - base.v_rms), 100 * (m3.q_per_v - base.q_per_v), "D", color=AQUA, mfc="white", mew=1.2, ms=5,
-           label="M3 sessions, supply fixed")
+           label="M3 time points, supply fixed")
     a.axhline(0, color=INK, lw=.6); a.axvline(0, color=INK, lw=.6)
     a.set(xlabel="change of V_rms [%]", ylabel="change of charge per volt ΔQ/V_max [%]",
           title=f"(a) Load-driven V changes run opposite (S = {mk['S']:.2f})")
@@ -382,7 +382,7 @@ def figure_mechanism(mk, out):
     a.legend(loc="upper right")
     a.grid(axis="x", visible=False)
 
-    a = ax[1, 0]  # (c) session by session
+    a = ax[1, 0]  # (c) time point by time point
     r = mk["r"]
     for dev in ("m1", "m2"):
         c, m, lab = DEV[dev]
@@ -402,14 +402,15 @@ def figure_mechanism(mk, out):
         a.text(v + .08, y, f"noise {100 * mk['noise'][k]:.1f} %" + (f"; first in {mk['first'].get(k, 0):.0%} of resamples" if mk['first'].get(k, 0) > 0 else ""),
                va="center", fontsize=6.6, color=INK)
     a.set_yticks(range(len(sc)), [MECH[k] for k in sc.index])
-    a.set(xlim=(0, 8.5), xlabel="damage effect / within-session noise (smaller of M1, M2)",
+    a.set(xlim=(0, 8.5), xlabel="damage effect / noise within a time point (smaller of M1, M2)",
           title="(d) V_rms has by far the largest effect relative to its noise")
     a.grid(axis="y", visible=False)
-    fig.text(.01, .004, "Session medians; M3 (healthy, same sessions) removes the session effects. (a) relative to 8.5 V input "
-             "(sweep) or to M3's 5-10 h (sessions). (b) predicted = -S·ΔQ/V_max. (c) filled: damaged sessions.\n(d) 0 for features whose change has opposite "
+    fig.text(.01, .004, "Medians per time point (all sources at the same discharge time, same measurement conditions); M3 (healthy) "
+             "removes the effects shared by all sources.\n(a) relative to 8.5 V input (sweep) or to M3's 5-10 h (time points). "
+             "(b) predicted = -S·ΔQ/V_max. (c) filled: time points after damage.\n(d) 0 for features whose change has opposite "
              "signs in M1 and M2; 'first' = share of 300 capture resamples in which the feature has the highest AUC against M3.",
              fontsize=6.2, color=INK)
-    fig.tight_layout(rect=(0, .04, 1, 1))
+    fig.tight_layout(rect=(0, .055, 1, 1))
     fig.savefig(Path(out) / "vrms_mechanism.png", bbox_inches="tight")
 
 
@@ -427,7 +428,7 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
     gs = fig.add_gridspec(4, 2)
     ax = np.array([[fig.add_subplot(gs[r, c]) for c in range(2)] for r in range(3)])
 
-    a = ax[0, 0]  # (a) Lissajous graph of the M3 10 h capture closest to the session median
+    a = ax[0, 0]  # (a) Lissajous graph of the M3 10 h capture closest to the median of its time point
     s = d[(d.kind == "endurance") & (d.device == "m3") & (d.hours == 10) & (d.dt_ns == 10)]
     t, v, i, q, L = plots.one_period(io.load_csv(qv / s.loc[(s.c_dielectric - s.c_dielectric.median()).abs().idxmin(), "file"]))
     a.plot(v / 1e3, q * 1e9, color=INK, lw=.8)
@@ -486,7 +487,7 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
     a.set_yticks(range(len(feats)), feats)
     a.set(xlabel="change after damage minus M3's change [%]", xlim=(-40, 26),
           title="(d) Against M3, only V_rms drops alike in both devices")
-    a.legend(loc="lower right", title="filled: p < 0.05 (session level)", title_fontsize=6.5, frameon=True,
+    a.legend(loc="lower right", title="filled: p < 0.05 (time-point level)", title_fontsize=6.5, frameon=True,
              facecolor="white", edgecolor="none", framealpha=1)
     a.grid(axis="y", visible=False)
 
@@ -525,13 +526,13 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
         a.plot([xx, xx], [lo, hi], color=GREY, lw=2.5, zorder=1)
     a.plot(x, ps.E1_auc, "o", color="#eda100", ms=6.5, mec="white", mew=.7, label="E1 periods shuffled at random (5-fold)")
     a.plot(x, ps.E2_within_session_auc, "s", color=INK, ms=5.5, mec="white", mew=.7,
-           label="E2 a session held out (damaged vs M3 within the session)")
+           label="E2 a time point held out (damaged vs M3 within the time point)")
     a.plot(x, e4, "D", color=BLUE, ms=5.5, mec="white", mew=.7, label="E4 relative to M3, the other damaged device")
     a.axhline(.5, color=INK, lw=.8, ls=":")
     a.set_xticks(x, [f"{n}{' *' if n in THESIS_MODELS else ''}".replace(" only (LR)", " alone") for n in ps.index],
                  rotation=25, ha="right")
     a.set(ylim=(.3, 1.02), ylabel="AUC",
-          title="(g) Single periods, two per capture: shuffling looks excellent; held-out sessions and devices do not")
+          title="(g) Single periods, two per capture: shuffling looks excellent; held-out time points and devices do not")
     a.legend(loc="lower left", frameon=True, facecolor="white", edgecolor="none", framealpha=1)
     a.grid(axis="x", visible=False)
 

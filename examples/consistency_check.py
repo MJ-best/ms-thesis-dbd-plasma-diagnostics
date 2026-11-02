@@ -11,8 +11,11 @@ Prints the tables of section 10 of docs/raw-data-verification.md:
   2. damage effect per feature against M3 (session-level difference-in-differences)
   3. ML: the thesis protocol, M3 in training (leave one session out), features relative to M3
   4. ML on single periods, two from every capture: shuffled at random, a session held out, a device held out
-Writes consistency_check.png.
+  5. why V_rms: power supply-load coupling, the damage chain and its predicted size, effect-to-noise, permutation and
+     bootstrap checks
+Writes consistency_check.png and vrms_mechanism.png.
 """
+import itertools
 import sys
 import warnings
 from multiprocessing import Pool
@@ -43,7 +46,7 @@ from dbd_diagnostics.ml import THESIS_FEATURES as F  # noqa: E402
 
 # features whose value does not depend on the scope's A/div or sampling period (raw-data verification, sec. 5)
 ROBUST = ["v_rms", "frequency", "energy", "c_dielectric", "c_gas", "c_total", "q_max", "u_b", "v_on_lissajous"]
-DID = {"v_rms": "V_rms", "v_on_lissajous": "V_on (onset)", "q_max": "ΔQ", "c_total": "C_total",
+DID = {"v_rms": "V_rms", "v_on_lissajous": "V_on (discharge initiation)", "q_max": "ΔQ", "c_total": "C_total",
        "c_dielectric": "C_d (discharge slope)", "energy": "E per cycle", "i_rms": "I_rms", "n_discharges": "pulses"}
 S = lambda m: make_pipeline(StandardScaler(), m)  # noqa: E731
 MODELS = {  # the six thesis models (2023), then newer tabular methods
@@ -216,7 +219,7 @@ def periods_ml(p, seeds=(0, 1, 2)):
     caps = list(p.groupby(["device", "hours", "file"]).indices.values())
     models = dict(MODELS, **{"V_rms only (LR)": S(LogisticRegression())})
     print(f"\n4. ML on single periods: {len(p)} periods from {len(caps)} captures, two per capture, {len(seeds)} draws")
-    print("  drive frequency per device [kHz] (each device had its own source):",
+    print("  drive frequency per device [kHz] (each device had its own driving power supply):",
           (p.groupby("device").frequency.median() / 1e3).round(2).to_dict())
     rows = []
     for seed in seeds:
@@ -257,6 +260,159 @@ def periods_ml(p, seeds=(0, 1, 2)):
     return s
 
 
+MECH = {"v_rms": "V_rms", "frequency": "f", "v_max": "V_max", "i_rms": "I_rms", "energy": "E", "c_dielectric": "C_d",
+        "c_gas": "C_g", "c_total": "C_total", "q_max": "ΔQ", "q_per_v": "ΔQ/V_max", "von_frac": "V_on/V_max",
+        "u_b": "U_b", "n_discharges": "pulses", "ne_mean": "n_e", "te": "T_e", "v_min": "V_min (thesis)"}
+
+
+def vrms_mechanism(d, n_boot=300, seed=0):
+    """Why V_rms: power supply-load coupling, the damage chain, its size, effect-to-noise and randomisation checks."""
+    x = d.assign(q_per_v=d.q_max / d.v_max, von_frac=d.v_on_lissajous / d.v_max)
+    e = x[(x.kind == "endurance") & (x.hours >= 5)].reset_index(drop=True)
+    w = x[(x.kind == "sweep") | ((x.kind == "endurance") & (x.hours == 20))]
+    slope = lambda a, b: np.polyfit(np.log(a), np.log(b), 1)[0]  # noqa: E731
+    print("\n5. why V_rms: mechanism and robustness")
+    sw = w.groupby(["device", "supply_V"])[["v_rms", "q_per_v"]].median()
+    m3 = e[e.device == "m3"].groupby("hours")[["v_rms", "q_per_v"]].median()
+    sweep_el = {dev: slope(g.v_rms, g.q_per_v) for dev, g in sw.groupby("device")}
+    m3_el = slope(m3.v_rms, m3.q_per_v)
+    S = -1 / m3_el  # closed-loop sensitivity -dlnV/dln(ΔQ/V) of each driving power supply to its load, from the healthy device
+    print(f"  5a. dln(ΔQ/V)/dlnV when the SOURCE moves V (sweep): " + ", ".join(f"{k} {v:+.2f}" for k, v in sweep_el.items()) +
+          f"; when the LOAD moves V (healthy M3, sessions): {m3_el:+.2f} -> S = -dlnV/dln(ΔQ/V) = {S:.2f}")
+
+    lx = np.log(e[list(MECH)].abs()).assign(device=e.device, hours=e.hours)
+    s = lx.groupby(["device", "hours"])[list(MECH)].median()
+    diff = {dev: (s.loc[dev] - s.loc["m3"].loc[s.loc[dev].index]).loc[:last] for dev, last in (("m1", 25), ("m2", 40))}
+    did = pd.DataFrame({dev: dd.loc[15:].mean() - dd.loc[:10].mean() for dev, dd in diff.items()})
+    pred = -S * did.loc["q_per_v"]
+    print("  5b. damage chain against M3 (session medians, %): " +
+          "; ".join(f"{dev}: V_on/V_max {100 * did.loc['von_frac', dev]:+.1f}, ΔQ/V {100 * did.loc['q_per_v', dev]:+.1f}, "
+                    f"V_rms observed {100 * did.loc['v_rms', dev]:+.2f}, predicted -S·ΔQ/V {100 * pred[dev]:+.2f}" for dev in did))
+    r = pd.concat([(dd - dd.loc[:10].mean()).assign(device=dev) for dev, dd in diff.items()]).reset_index()
+    rho = stats.spearmanr(r.von_frac, r.v_rms)
+    print(f"  5c. per session (device minus M3, {len(r)} sessions): Spearman(V_on/V_max, V_rms) {rho.correlation:+.2f} (p {rho.pvalue:.3f});"
+          f" damaged sessions discharging earlier than M3: {int(((r.hours >= 15) & (r.von_frac < 0)).sum())}/{int((r.hours >= 15).sum())}")
+    t = e.assign(t=pd.to_datetime(e.meta_time, format="%d-%b-%y %H:%M:%S")).groupby(["device", "hours"]).t.median()
+    for dev, dd in diff.items():
+        gap = [(t.loc[("m3", h)] - t.loc[(dev, h)]).total_seconds() / 60 for h in dd.index]
+        g = stats.spearmanr(gap, dd.v_rms)
+        print(f"      measurement gap to M3 vs V_rms difference, {dev}: {min(gap):.0f}-{max(gap):.0f} min, Spearman {g.correlation:+.2f} (p {g.pvalue:.2f})")
+
+    noise = lx[lx.hours <= 10].groupby(["device", "hours"])[list(MECH)].std().median()  # within-session spread
+    en = did.div(noise, axis=0)
+    same = np.sign(did.m1) == np.sign(did.m2)
+    score = en.abs().min(axis=1).where(same, 0).sort_values(ascending=False)
+    print("  5d. effect / within-session noise (smaller of the two devices; 0 if the devices disagree in sign):")
+    print("      " + ", ".join(f"{MECH[k]} {score[k]:.1f} (noise {100 * noise[k]:.1f} %)" for k in score.index[:8]))
+
+    perm = {}
+    for k, sign in (("v_rms", -1), ("von_frac", -1), ("q_per_v", 1), ("c_total", 1), ("energy", 1)):
+        z = []
+        for dev, dd in diff.items():
+            st = lambda pre: sign * (dd[k].drop(list(pre)).mean() - dd[k].loc[list(pre)].mean())  # noqa: E731
+            null = np.array([st(c) for c in itertools.combinations(dd.index, 2)])
+            z.append(((st([5, 10]) - null.mean()) / null.std(), (null - null.mean()) / null.std()))
+        comb = np.add.outer(z[0][1], z[1][1]).ravel()
+        perm[k] = (comb >= z[0][0] + z[1][0] - 1e-12).mean()
+    print(f"  5e. exact permutation test over which sessions are pre-damage ({len(comb)} labelings, both devices): " +
+          ", ".join(f"{MECH[k]} p {v:.3f}" for k, v in perm.items()))
+
+    rng = np.random.default_rng(seed)
+    groups = list(lx.groupby(["device", "hours"]).indices.values())
+
+    def aucs(f):
+        med = f.groupby(["device", "hours"])[list(MECH)].median()
+        out = {}
+        for k in MECH:
+            a = []
+            for dev, last in (("m1", 25), ("m2", 40)):
+                g = f[(f.device == dev) & (f.hours <= last)]
+                a.append(roc_auc_score(g.hours >= 15, g[k].to_numpy() - med.loc["m3", k].loc[g.hours].to_numpy()))
+            a = np.array(a)
+            out[k] = max(a.mean(), 1 - a.mean()) if (a > .5).all() or (a < .5).all() else .5  # same direction in both
+        return pd.Series(out)
+    auc = aucs(lx)
+    first = pd.DataFrame([aucs(lx.iloc[np.concatenate([rng.choice(g, len(g)) for g in groups])]).rank(ascending=False) == 1
+                          for _ in range(n_boot)]).mean()
+    print(f"  5f. univariate AUC against M3 (mean of M1, M2): " + ", ".join(f"{MECH[k]} {v:.2f}" for k, v in auc.sort_values(ascending=False)[:6].items()))
+    print(f"      bootstrap over captures ({n_boot}): ranked first " + ", ".join(f"{MECH[k]} {v:.0%}" for k, v in first[first > 0].sort_values(ascending=False).items()))
+    return dict(sw=sw, m3=m3, sweep_el=sweep_el, m3_el=m3_el, S=S, did=did, pred=pred, r=r, rho=rho, score=score, noise=noise,
+                perm=perm, auc=auc, first=first)
+
+
+def figure_mechanism(mk, out):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    BLUE, ORANGE, AQUA, YELLOW, INK, GREY = "#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#52514e", "#e4e3df"
+    DEV = {"m1": (BLUE, "o", "M1"), "m2": (ORANGE, "s", "M2"), "m3": (AQUA, "D", "M3")}
+    plt.rcParams.update({"font.size": 8, "axes.titlesize": 8.5, "legend.fontsize": 6.8, "axes.edgecolor": INK,
+                         "xtick.color": INK, "ytick.color": INK, "axes.grid": True, "grid.color": GREY,
+                         "axes.spines.top": False, "axes.spines.right": False, "savefig.dpi": 200, "legend.frameon": False})
+    fig, ax = plt.subplots(2, 2, figsize=(8, 7))
+
+    a = ax[0, 0]  # (a) power supply moves V vs load moves V
+    for dev, g in mk["sw"].groupby("device"):
+        g = np.log(g.droplevel(0))
+        c, m, lab = DEV[dev]
+        a.plot(100 * (g.v_rms - g.v_rms.iloc[0]), 100 * (g.q_per_v - g.q_per_v.iloc[0]), m + "-", color=c, ms=5, mec="white", mew=.7,
+               lw=1, label=f"{lab}: supply input 8.5 → 14 V")
+    m3 = np.log(mk["m3"])
+    base = m3.loc[:10].mean()
+    a.plot(100 * (m3.v_rms - base.v_rms), 100 * (m3.q_per_v - base.q_per_v), "D", color=AQUA, mfc="white", mew=1.2, ms=5,
+           label="M3 sessions, supply fixed")
+    a.axhline(0, color=INK, lw=.6); a.axvline(0, color=INK, lw=.6)
+    a.set(xlabel="change of V_rms [%]", ylabel="change of charge per volt ΔQ/V_max [%]",
+          title=f"(a) Load-driven V changes run opposite (S = {mk['S']:.2f})")
+    a.legend(loc="upper right")
+
+    a = ax[0, 1]  # (b) the damage chain and the predicted size
+    steps = [("V_on/V_max", "von_frac"), ("ΔQ/V_max", "q_per_v"), ("V_rms\nobserved", "v_rms")]
+    xs = np.arange(len(steps) + 1)
+    for dev, dx in (("m1", -.12), ("m2", .12)):
+        c, m, lab = DEV[dev]
+        vals = [100 * mk["did"].loc[k, dev] for _, k in steps] + [100 * mk["pred"][dev]]
+        a.plot(xs + dx, vals, m, color=c, ms=6, mec="white", mew=.7, label=lab)
+    a.axhline(0, color=INK, lw=.8)
+    a.set_yscale("symlog", linthresh=5)
+    a.set_yticks([-30, -10, -5, -2, 0, 2, 5, 10], ["-30", "-10", "-5", "-2", "0", "2", "5", "10"])
+    a.set_xticks(xs, [s for s, _ in steps] + ["V_rms\npredicted"])
+    a.set(ylabel="damaged minus M3 [%] (symlog)", title="(b) Earlier discharge → more charge → supply voltage drops")
+    a.legend(loc="upper right")
+    a.grid(axis="x", visible=False)
+
+    a = ax[1, 0]  # (c) session by session
+    r = mk["r"]
+    for dev in ("m1", "m2"):
+        c, m, lab = DEV[dev]
+        for dmg, fill in ((False, "white"), (True, c)):
+            g = r[(r.device == dev) & ((r.hours >= 15) == dmg)]
+            a.plot(100 * g.von_frac, 100 * g.v_rms, m, color=c, mfc=fill, ms=6, mew=1.1,
+                   label=f"{lab} {'damaged' if dmg else 'before damage'}")
+    a.axhline(0, color=INK, lw=.6); a.axvline(0, color=INK, lw=.6)
+    a.set(xlabel="V_on/V_max, device minus M3 [%]", ylabel="V_rms, device minus M3 [%]",
+          title=f"(c) Earlier discharge, larger V_rms drop (Spearman {mk['rho'].correlation:+.2f}, p {mk['rho'].pvalue:.3f})")
+    a.legend(loc="upper left")
+
+    a = ax[1, 1]  # (d) effect-to-noise ranking
+    sc = mk["score"].iloc[:10][::-1]
+    a.barh(range(len(sc)), sc, color=[BLUE if k == "v_rms" else "#9ec3ee" for k in sc.index], height=.6)
+    for y, (k, v) in enumerate(sc.items()):
+        a.text(v + .08, y, f"noise {100 * mk['noise'][k]:.1f} %" + (f"; first in {mk['first'].get(k, 0):.0%} of resamples" if mk['first'].get(k, 0) > 0 else ""),
+               va="center", fontsize=6.6, color=INK)
+    a.set_yticks(range(len(sc)), [MECH[k] for k in sc.index])
+    a.set(xlim=(0, 8.5), xlabel="damage effect / within-session noise (smaller of M1, M2)",
+          title="(d) V_rms has by far the largest effect relative to its noise")
+    a.grid(axis="y", visible=False)
+    fig.text(.01, .004, "Session medians; M3 (healthy, same sessions) removes the session effects. (a) relative to 8.5 V input "
+             "(sweep) or to M3's 5-10 h (sessions). (b) predicted = -S·ΔQ/V_max. (c) filled: damaged sessions.\n(d) 0 for features whose change has opposite "
+             "signs in M1 and M2; 'first' = share of 300 capture resamples in which the feature has the highest AUC against M3.",
+             fontsize=6.2, color=INK)
+    fig.tight_layout(rect=(0, .04, 1, 1))
+    fig.savefig(Path(out) / "vrms_mechanism.png", bbox_inches="tight")
+
+
 def figure(d, qv, ph, dd, p1, p3, ps, out):
     import matplotlib
     matplotlib.use("Agg")
@@ -271,7 +427,7 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
     gs = fig.add_gridspec(4, 2)
     ax = np.array([[fig.add_subplot(gs[r, c]) for c in range(2)] for r in range(3)])
 
-    a = ax[0, 0]  # (a) Q-V loop of the M3 10 h capture closest to the session median
+    a = ax[0, 0]  # (a) Lissajous graph of the M3 10 h capture closest to the session median
     s = d[(d.kind == "endurance") & (d.device == "m3") & (d.hours == 10) & (d.dt_ns == 10)]
     t, v, i, q, L = plots.one_period(io.load_csv(qv / s.loc[(s.c_dielectric - s.c_dielectric.median()).abs().idxmin(), "file"]))
     a.plot(v / 1e3, q * 1e9, color=INK, lw=.8)
@@ -282,7 +438,7 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
                label=f"no discharge: C_total {L.C_total * 1e12:.1f} pF" if k == 0 else None)
         a.plot(sd / 1e3, (fd.slope * sd + sg * fd.intercept) * 1e9, "--", color=ORANGE, lw=1.4,
                label=f"discharge: C_d {L.C_dielectric * 1e12:.1f} pF" if k == 0 else None)
-    a.set(xlabel="applied voltage [kV]", ylabel="charge [nC]", title="(a) Every Q-V loop has two slopes: a discharge burns")
+    a.set(xlabel="applied voltage [kV]", ylabel="charge [nC]", title="(a) Two slopes in every Lissajous graph: the cells discharge")
     a.legend(loc="upper left")
     a.text(.98, .04, f"M3, 10 h; U_b = {L.U_b:.0f} V", transform=a.transAxes, ha="right", fontsize=6.8, color=INK)
 
@@ -306,9 +462,9 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
             a.plot([qq.iloc[0], qq.iloc[2]], [2 - y, 2 - y], color=c, lw=1.4)
             a.plot(qq.iloc[1], 2 - y, mk, color=c, mfc=fill, ms=6, mew=1.2)
         a.text(1.25, 2 - y, lab, va="center", ha="left", fontsize=6.8, color=INK)
-    a.text(.62, 2.65, "shade: Paschen, 100 µm air\nfilled: gas voltage U_b", ha="left", va="center", fontsize=6.8, color=INK)
+    a.text(.62, 2.65, "shade: Paschen, 100 µm air\nfilled: burning voltage U_b", ha="left", va="center", fontsize=6.8, color=INK)
     a.text(2.4, 2.65, "hollow: thesis V_b\n(Eq. 15) = V_max", ha="right", va="center", fontsize=6.8, color=INK)
-    a.text(2.4, -.55, "at U_b: alpha·d = 3-5, streamer needs ~18-20\n-> Townsend breakdown", ha="right", va="center",
+    a.text(2.4, -.55, "at U_b: alpha·d = 3-5, streamer needs ~18-20\n-> Townsend discharge", ha="right", va="center",
            fontsize=6.8, color=INK)
     a.set(xlim=(.6, 2.45), ylim=(-.85, 3.1), yticks=[], xlabel="voltage [kV]",
           title="(c) U_b sits in the Paschen range; thesis V_b is V_max")
@@ -407,6 +563,7 @@ def main(iv_dir, sweep_dir, out="."):
     ph, dd, p1, p3 = report(d)
     ps = periods_ml(load_periods(iv_dir, sweep_dir))
     figure(d, qv, ph, dd, p1, p3, ps, out)
+    figure_mechanism(vrms_mechanism(d), out)
 
 
 if __name__ == "__main__":

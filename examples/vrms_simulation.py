@@ -115,7 +115,7 @@ def truth(t, v, Q):
                 q_per_v=float((Q.max() - Q.min()) / 2 / np.max(np.abs(v))))
 
 
-def measure(t, v, Q, seed=2, bandwidth=60e6, adc_v=40.0, adc_i=8e-3, noise_i=2e-3, cap_len=5000):
+def measure(t, v, Q, seed=2, bandwidth=60e6, adc_v=40.0, adc_i=8e-3, noise_i=2e-3, cap_len=5000, sample=1e-8):
     """Scope chain of simulate.cells, 5000-point captures, then features.extract as for the measured data."""
     rng = np.random.default_rng(seed)
     dt = t[1] - t[0]
@@ -124,7 +124,7 @@ def measure(t, v, Q, seed=2, bandwidth=60e6, adc_v=40.0, adc_i=8e-3, noise_i=2e-
     for k in range(len(i)):
         acc = a * acc + (1 - a) * i[k]
         i[k] = acc
-    step = int(round(1e-8 / dt))
+    step = int(round(sample / dt))
     t, v, i = t[::step], v[::step], i[::step]
     i = np.round((i + noise_i * rng.standard_normal(len(i))) / adc_i) * adc_i
     v = np.round(v / adc_v) * adc_v

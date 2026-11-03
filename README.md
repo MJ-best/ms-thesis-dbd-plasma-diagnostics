@@ -1168,6 +1168,7 @@ tests/           25 tests: known-answer equivalent-circuit tests of every formul
 | [docs/thesis-review.md](docs/thesis-review.md) · [KO](docs/thesis-review.ko.md) | Verification report: Eqs. (1)–(32), numbers, measurement chain, statistics, ML, references, audit of the original code, re-analysis |
 | [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, shared external effects, oscilloscope settings, micrographs, EDS sources, and whether physics, statistics and ML agree |
 | [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
+| [docs/ati-addendum.md](docs/ati-addendum.md) · [KO](docs/ati-addendum.ko.md) | **Addendum, not part of the thesis:** the larger-area ATI sources. Does the V_rms mechanism (load → voltage of the driving power supply) hold there? Not used for any thesis conclusion |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |
 

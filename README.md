@@ -1169,6 +1169,7 @@ tests/           25 tests: known-answer equivalent-circuit tests of every formul
 | [docs/raw-data-verification.md](docs/raw-data-verification.md) · [KO](docs/raw-data-verification.ko.md) | Verification against the complete raw-data archive: control device m3, shared external effects, oscilloscope settings, micrographs, EDS sources, and whether physics, statistics and ML agree |
 | [docs/erratum.md](docs/erratum.md) · [KO](docs/erratum.ko.md) | Thesis erratum: page, location, correction. PDFs are in `thesis/` |
 | [docs/ati-addendum.md](docs/ati-addendum.md) · [KO](docs/ati-addendum.ko.md) | **Addendum, not part of the thesis:** the larger-area ATI sources. Does the V_rms mechanism (load → voltage of the driving power supply) hold there? Not used for any thesis conclusion |
+| [docs/cell-count-check.md](docs/cell-count-check.md) · [KO](docs/cell-count-check.ko.md) | **Addendum, not part of the thesis:** source 4 measured with all cells and with one cell discharging. Confirms by intervention that a smaller load raises V_rms; the size is about a third of what the 10.6 circuit predicts, so S = 0.52 is not confirmed |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | Step-by-step tutorial (runs in Colab) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | How the old algorithms map to the new modules, and which bugs were fixed |
 

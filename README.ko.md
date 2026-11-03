@@ -1186,6 +1186,7 @@ tests/           테스트 25개 (정답을 아는 등가회로로 각 식을 �
 | [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 공통 외부 요인, 오실로스코프 설정, 현미경 사진, EDS 출처, 물리·통계·ML의 일관성 |
 | [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
 | [docs/ati-addendum.ko.md](docs/ati-addendum.ko.md) · [EN](docs/ati-addendum.md) | **논문 외 추가 실험:** 면적이 넓은 ATI 소스에서도 V_rms 기전(부하 → 구동전원 전압)이 성립하는지 확인. 논문의 결론에는 쓰지 않음 |
+| [docs/cell-count-check.ko.md](docs/cell-count-check.ko.md) · [EN](docs/cell-count-check.md) | **논문 외 추가 실험:** 4번 소스를 전체 셀 방전과 셀 하나 방전으로 측정. 부하가 작아지면 V_rms가 오른다는 것을 조작 실험으로 확인. 크기는 10.6절 회로 예측의 약 1/3이라 S = 0.52는 확인되지 않음 |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |
 

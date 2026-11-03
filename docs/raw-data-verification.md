@@ -653,6 +653,7 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 - The share of cells with an exposed electrode (about a third) and the value of γ are an interpretation inside the model, not measurements. They do not contradict the micrographs and EDS (Ag 1.3–13.9 at.% at damaged sites).
 - The output impedance of the power supply is simplified to one resistance, and the change of the drive frequency (−0.6 %) is not modelled.
 - There are two damaged devices, and their U_b changes differ (M1 −13.6 %, M2 −1.3 %), so the degree of exposure may differ between them.
+- An addendum (not part of the thesis) tests the load path by intervention on source 4, with one of 126 cells left discharging. The direction holds, but this circuit predicts about three times the measured V_rms rise; the data fit S 0.16–0.18 ([cell-count-check.md](cell-count-check.md)).
 
 ---
 

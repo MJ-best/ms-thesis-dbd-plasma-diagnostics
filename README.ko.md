@@ -1089,7 +1089,7 @@ V\_rms가 가장 뚜렷한 것은 구동전원이 126개 셀 쌍 전체의 부�
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 테스트 25개
+pytest                      # 테스트 27개
 ```
 
 **명령줄 도구 `dbd-diag`**
@@ -1153,11 +1153,22 @@ streamlit run app/streamlit_app.py
 
 인터넷에 공개하려면 [Streamlit Community Cloud](https://streamlit.io/cloud)에서 이 저장소를 선택하고, main file을 `app/streamlit_app.py`로 지정하면 됩니다. 필요한 패키지는 `app/requirements.txt`에 적혀 있습니다.
 
+### 등가회로 시뮬레이터 (브라우저)
+
+[`app/circuit_simulator.html`](app/circuit_simulator.html)은 원본 데이터 검증 10.6절의 등가회로를 브라우저에서 풉니다. Manley 셀 126개를 구동전원이 구동하며, 구동전원은 개방 전압 E sin ωt와 출력 저항 R입니다. 파일을 내려받아 브라우저로 열면 되고, 설치할 것은 없습니다.
+
+- 구동전원, 소스, 손상(전극 노출, 얇아진 유전체), 방전하는 셀 수를 슬라이더로 바꿉니다.
+- 리사주 분석의 측정량, 인가 전압, 셀 하나의 공극 전압, 리사주 그래프를 기준과 나란히 보여 줍니다.
+- 프리셋마다 측정값을 함께 보여 줍니다: 건강한 소스, 전극 노출 48셀, 4번 소스의 셀 하나 방전 실험([셀 수 실험](docs/cell-count-check.ko.md)).
+- 한국어와 영어를 지원합니다.
+
+JavaScript로 옮긴 계산은 `examples/vrms_simulation.py`와 10⁻⁹ 이내로 같습니다. Node.js가 있으면 `tests/test_simulator_port.py`가 이를 확인합니다.
+
 ## 6. 저장소 구성
 
 ```
 thesis/                         학위논문 원문 PDF (CC BY-NC-ND 4.0), 정오표 PDF (한/영)
-app/                            Streamlit 웹 데모 앱
+app/                            Streamlit 웹 데모 앱, 등가회로 시뮬레이터(HTML 파일 하나)
 src/dbd_diagnostics/
   io.py          오실로스코프 CSV 읽기
   waveform.py    주기 검출, 정수 주기 구간
@@ -1174,7 +1185,7 @@ src/dbd_diagnostics/
 docs/            계산 방법·검증 보고서·정오표 (한/영), 기존 코드 대응표, 그림
 notebooks/       단계별 튜토리얼 (Colab)
 examples/        합성 데모, 원본 데이터 재분석·원본 아카이브 검증·일관성 검증·회로 시뮬레이션 스크립트
-tests/           테스트 25개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱 동작 확인)
+tests/           테스트 27개 (정답을 아는 등가회로로 각 식을 검증, CLI·앱·브라우저 시뮬레이터 동작 확인)
 ```
 
 ## 7. 문서

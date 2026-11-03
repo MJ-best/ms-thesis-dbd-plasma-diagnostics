@@ -1185,6 +1185,7 @@ tests/           테스트 25개 (정답을 아는 등가회로로 각 식을 �
 | [docs/thesis-review.ko.md](docs/thesis-review.ko.md) · [EN](docs/thesis-review.md) | 학위논문 검증 보고서. 수식 (1)–(32), 수치, 측정 체인, 통계, 머신러닝, 참고문헌, 원본 코드 감사, 재분석 결과 |
 | [docs/raw-data-verification.ko.md](docs/raw-data-verification.ko.md) · [EN](docs/raw-data-verification.md) | 원본 아카이브 전체 검증: 대조 장치 m3, 공통 외부 요인, 오실로스코프 설정, 현미경 사진, EDS 출처, 물리·통계·ML의 일관성 |
 | [docs/erratum.ko.md](docs/erratum.ko.md) · [EN](docs/erratum.md) | 학위논문 정오표: 쪽·위치·원문·수정. PDF는 `thesis/`에 있음 |
+| [docs/ati-addendum.ko.md](docs/ati-addendum.ko.md) · [EN](docs/ati-addendum.md) | **논문 외 추가 실험:** 면적이 넓은 ATI 소스에서도 V_rms 기전(부하 → 구동전원 전압)이 성립하는지 확인. 논문의 결론에는 쓰지 않음 |
 | [notebooks/tutorial.ipynb](notebooks/tutorial.ipynb) | 단계별 튜토리얼 (Colab에서 실행 가능) |
 | [docs/legacy-code-map.md](docs/legacy-code-map.md) | 기존 알고리즘과 새 모듈의 대응, 수정한 버그 목록 |
 

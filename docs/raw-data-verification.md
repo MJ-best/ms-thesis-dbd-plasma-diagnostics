@@ -8,18 +8,18 @@
 
 | Folder | Content |
 |---|---|
-| `전류전압 측정/1·2·3번소스` | Endurance sessions of M1 (0–25 h), M2 (0–40 h) and M3 (0–60 h). Each session has 20 detail captures (10 at 10 ns and 10 at 20 ns sampling) and one overview capture. |
+| `전류전압 측정/1·2·3번소스` | Endurance-test time points of M1 (0–25 h), M2 (0–40 h) and M3 (0–60 h). Each time point has 20 detail captures per device (10 at 10 ns and 10 at 20 ns sampling) and one overview capture. |
 | `전류전압 측정/4번소스` | 120-cell discharge, single-cell discharge, discharge with a clip contact (a separate device) |
 | `전압에 따른 QV 변화` | Supply-input voltage sweep at 20 h (8.5 / 9 / 10 / 14 V) |
-| `현미경사진`, `표면사진` | Optical micrographs and whole-device photographs taken at every session |
+| `현미경사진`, `표면사진` | Optical micrographs and whole-device photographs taken at every time point |
 | `SEM, EDS 데이터` | SEM metadata and Bruker EDS reports (images) for M1, M2, M3 and Ref |
-| `*.xlsx` | Per-session summaries computed in 2020 with the MATLAB code |
+| `*.xlsx` | Summaries per device and time point, computed in 2020 with the MATLAB code |
 
 **Methods.**
 1. Re-analysis with this package (`dbd_diagnostics`) of 600 endurance detail captures (500 from 5 h onward are analysed) and 70 sweep captures.
 2. Timestamps and dark-burn areas of all 242 micrographs.
 3. Every composition table in the EDS reports, compared with Table 3.
-4. **M3**, which the thesis did not use, serves as an **undamaged control device**. In every session it was measured on the same day as M1 and M2, 10–33 min after M1.
+4. **M3**, which the thesis did not use, serves as an **undamaged control device**. At every time point it was measured on the same day as M1 and M2, 10–33 min after M1. A time point is the set of data of the three devices measured one after another at the same cumulative discharge time (5, 10, 15 h …).
 
 Reproduce with `python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"`, which prints the numbers of sections 1–6. The numbers and the figure of section 10 are reproduced by `python examples/consistency_check.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산" docs/img` (about 8 min), which also writes the figure of section 10.5, `docs/img/vrms_mechanism.png`. The equivalent-circuit simulation of section 10.6 is reproduced by `python examples/vrms_simulation.py docs/img` (no raw data needed, about 11 min). Values read from photographs and EDS reports are recorded in the tables of this document.
 
@@ -31,11 +31,11 @@ Severity levels follow the [verification report](thesis-review.md): **[Major]** 
 
 | # | Finding | Verdict |
 |---|---|---|
-| 1 | The archive is the thesis dataset. The re-analysis numbers of section H of the verification report are reproduced to the last digit, and the 2020 MATLAB summaries agree (23 of 26 sessions within 1 % for V_rms and 5 % for energy). The 2020 summaries label the energy **"Energy per period"**, which confirms from the original records that "discharge energy per second" is a labelling error (review C1). | Confirmed |
+| 1 | The archive is the thesis dataset. The re-analysis numbers of section H of the verification report are reproduced to the last digit, and the 2020 MATLAB summaries agree (23 of the 26 device time points within 1 % for V_rms and 5 % for energy). The 2020 summaries label the energy **"Energy per period"**, which confirms from the original records that "discharge energy per second" is a labelling error (review C1). | Confirmed |
 | 2 | The 15 h label boundary matches the M2 micrographs. But the M1 "5h" micrographs (taken 2020-07-20 10:30, before the 10 h measurement) show a **large melted blister at an electrode end**. The "normal (0)" part of the validation set may already contain a damaged cell. | Moderate |
-| 3 | ★ The V_rms drop of the 15 h session (evening of 20 July) appears **equally in the undamaged M3** (−133 V against 10 h). Within that session V_rms jumps between ≈1150/1270, 1360 and 1460 V from one capture to the next, seconds apart. This is **switching of the supply's operating mode**, not gradual damage. A difference-in-differences against M3 gives a damage-specific V_rms change of **≈ −48 V** for both M1 and M2, about half of the naive change (−107 / −92 V). | Major |
-| 4 | ★ The thesis classifiers trained on M2 call **95–100 %** of the captures of the undamaged M3 at 15, 25 and 40 h, and **100 %** at 45–60 h, "degraded" (mean false-positive rate over 15–40 h: 57–86 %). The classifiers respond to the **applied-voltage level** more than to surface damage. After dividing each feature by the same-session M3 value, cross-device accuracy falls from 94–99 % to **65–78 % (DT/RF/GB; 64–89 % over all six models)**. | Major |
-| 5 | Within one session and one device, the oscilloscope settings change the values. Doubling the current A/div raises I_rms by **+3.5 mA** (p = 10⁻¹⁷). Going from 10 to 20 ns sampling raises I_rms by **+4.3 mA**, lowers the pulse count by **6.6**, and raises C_d by **3.0 pF** and U_b by **35 V**. The M2 degraded group has more 0.04 A/div captures (42 % vs 20 %). The claims "I_rms decreases, number of discharges and n_e increase" are confounded with the settings. | Major |
+| 3 | ★ The V_rms drop at the 15 h time point (evening of 20 July) appears **equally in the undamaged M3** (−133 V against 10 h). Within that time point V_rms jumps between ≈1150/1270, 1360 and 1460 V from one capture to the next, seconds apart. This is **switching of the supply's operating mode**, not gradual damage. A difference-in-differences against M3 gives a damage-specific V_rms change of **≈ −48 V** for both M1 and M2, about half of the naive change (−107 / −92 V). | Major |
+| 4 | ★ The thesis classifiers trained on M2 call **95–100 %** of the captures of the undamaged M3 at 15, 25 and 40 h, and **100 %** at 45–60 h, "degraded" (mean false-positive rate over 15–40 h: 57–86 %). The classifiers respond to the **applied-voltage level** more than to surface damage. After dividing each feature by the M3 value at the same time point, cross-device accuracy falls from 94–99 % to **65–78 % (DT/RF/GB; 64–89 % over all six models)**. | Major |
+| 5 | Within one time point and one device, the oscilloscope settings change the values. Doubling the current A/div raises I_rms by **+3.5 mA** (p = 10⁻¹⁷). Going from 10 to 20 ns sampling raises I_rms by **+4.3 mA**, lowers the pulse count by **6.6**, and raises C_d by **3.0 pF** and U_b by **35 V**. The M2 degraded group has more 0.04 A/div captures (42 % vs 20 %). The claims "I_rms decreases, number of discharges and n_e increase" are confounded with the settings. | Major |
 | 6 | In the supply-voltage sweep, the thesis V_b (Eq. 15) follows V_max with slope **0.87–1.08**, while the burning voltage U_b moves with slope 0.23–0.33 only. This is an independent **experimental confirmation** of review C5 (V_b ≡ V_max). | Confirmed |
 | 7 | Table 3 (EDS) is traced. The "Normal" column is the `0-X10000-2` map of the **Ref sample**; the "Degradation" column is the `2-1-1X10000-1` map of the **M2 damaged site**. Both columns are **atomic %**. The 12 damaged-site maps give Ag 1.3–13.9 at.%; the 41 intact-dielectric maps give 0.0–0.7 at.% (one map 1.44). The conclusion is robust; the unit and the choice of map should be stated. | Minor |
 | 8 | Fig. 7, "discharge current from ~100 mA to ~250 mA", is not reproduced when captures at the same current scale (0.1 A/div) are compared: M2 251 → 272 mA (p = 0.25), M1 252 → 213 mA (a decrease). | Moderate |
@@ -45,19 +45,19 @@ Severity levels follow the [verification report](thesis-review.md): **[Major]** 
 **What holds.**
 - The surface damage itself is real. The burn marks in the M1 and M2 micrographs and the Ag increase in EDS agree.
 - Both damaged devices lose about 48 V (≈ 3 %) more V_rms than the control. With V_rms referenced to M3, a single feature still gives AUC 0.99 (M1) and 0.83 (M2). A damage-specific signal exists.
-- Its size is, however, much smaller than the session-to-session supply variation (M3 alone ranges from 1155 to 1502 V between sessions). Interpreting V_rms changes measured without a control device as damage produces many false alarms.
+- Its size is, however, much smaller than the supply variation between time points (M3 alone ranges from 1155 to 1502 V between time points). Interpreting V_rms changes measured without a control device as damage produces many false alarms.
 
 ---
 
 ## 1. Archive and reproducibility
 
-### 1.1 Session layout
+### 1.1 Time-point layout
 
-- Each session has 20 detail captures. `ALL0001–0010` are sampled every 10 ns (about 2 periods), `ALL0011–0020` every 20 ns (about 4 periods). `ALL0021` is an overview capture at 0.2–0.4 ms per sample.
-- The voltage channel is at 1000 V/div in every endurance session. Only M3 45 and 50 h used 500 V/div; there a few peak samples (0.3 %) touch the ADC rail (1940 V), but a sine fit without those samples gives the same V_rms (1122 V vs 1126 V). The voltage drop of those two sessions is real.
-- The current channel changes between 0.04, 0.1, 0.2 and 0.4 A/div from session to session, and sometimes between the two blocks of one session (section 5).
-- There are two 0 h sessions (17 and 18 July), but the thesis starts at 5 h. The M3 0 h session of 18 July is corrupt (Δt = 0), as its folder name says.
-- In every session the order is M1 → M2 → M3, and all three devices were measured within 10–33 min (14 min at 15 h).
+- At each time point, every device has 20 detail captures. `ALL0001–0010` are sampled every 10 ns (about 2 periods), `ALL0011–0020` every 20 ns (about 4 periods). `ALL0021` is an overview capture at 0.2–0.4 ms per sample.
+- The voltage channel is at 1000 V/div at every endurance-test time point. Only M3 45 and 50 h used 500 V/div; there a few peak samples (0.3 %) touch the ADC rail (1940 V), but a sine fit without those samples gives the same V_rms (1122 V vs 1126 V). The voltage drop at those two time points is real.
+- The current channel changes between 0.04, 0.1, 0.2 and 0.4 A/div from one time point to the next, and sometimes between the two blocks of one time point (section 5).
+- There are two 0 h time points (17 and 18 July), but the thesis starts at 5 h. The M3 0 h data set of 18 July is corrupt (Δt = 0), as its folder name says.
+- At every time point the order is M1 → M2 → M3, and all three devices were measured within 10–33 min (14 min at 15 h).
 
 ### 1.2 Reproduction of the earlier re-analysis (M2, normal 5–10 h n = 40, degraded 15–40 h n = 120)
 
@@ -76,15 +76,15 @@ All values agree, so the data used in the earlier review (remote repository) and
 
 ### 1.3 Comparison with the 2020 MATLAB summaries
 
-The 26 per-session `*종합데이터.xlsx` workbooks (each the mean of 10 detail captures) were compared with the re-analysis of the same captures.
+The 26 `*종합데이터.xlsx` workbooks (one per device and time point, each the mean of 10 detail captures) were compared with the re-analysis of the same captures.
 
-| | Median difference | Sessions in agreement |
+| | Median difference | Time points in agreement |
 |---|---|---|
 | V_rms | +0.11 % | 23/26 within 1 % |
 | Energy per cycle | +0.25 % | 23/26 within 5 % |
 | I_rms | +0.9 % | 21/26 within 4 % |
 
-- The three mismatching sessions (M1 10 h, M2 15 h, one of two M3 60 h files) average a different block of captures. For example, the M2 15 h workbook value of 1375.6 V matches the `ALL0011–0020` block (1378.6 V).
+- The three mismatching time points (M1 10 h, M2 15 h, one of two M3 60 h files) average a different block of captures. For example, the M2 15 h workbook value of 1375.6 V matches the `ALL0011–0020` block (1378.6 V).
 - The 2020 workbooks name the energy row `Energy per period`. The original computation thus confirms review C1: the "discharge energy per second, 0.13 mJ" of Eq. (11) is an energy per cycle.
 - `20200724_M4_40h 종합데이터.xlsx` in the M2 folder is a file-name typo (M2, 40 h).
 
@@ -122,15 +122,15 @@ For every micrograph (640×480), the largest connected region with luminance < 9
 | 40 | – | 2/13 | 0/16 |
 | 45–60 | – | – | 1/82 (one 159 px speck at 55 h) |
 
-- **M2** [OK]: no burn marks at 5 and 10 h; dark erosion marks in every session from 15 h on. This matches the thesis label boundary (≤ 10 h normal, ≥ 15 h degraded).
-- **M1** [Moderate]: dark erosion marks also start at 15 h. But `Snapshot000008` and `Snapshot000010` of the "5h" set show a **large melted blister** covering an electrode end. A similar melted region appears in 20 h `Snapshot000004`, and at 25 h the experimenter named a photograph `오른쪽 끝 결국 터짐` ("right end finally burst"), which suggests the same site was being tracked. Since these photographs predate the 10 h measurement, the M1 5 h and 10 h sessions that the thesis labels normal (0) — the 80 normal rows of the validation set — may already contain a damaged cell. Fig. 27 and Sec. 5.3 should say so, or the labelling rule should distinguish damage types (erosion vs melting/blistering).
+- **M2** [OK]: no burn marks at 5 and 10 h; dark erosion marks at every time point from 15 h on. This matches the thesis label boundary (≤ 10 h normal, ≥ 15 h degraded).
+- **M1** [Moderate]: dark erosion marks also start at 15 h. But `Snapshot000008` and `Snapshot000010` of the "5h" set show a **large melted blister** covering an electrode end. A similar melted region appears in 20 h `Snapshot000004`, and at 25 h the experimenter named a photograph `오른쪽 끝 결국 터짐` ("right end finally burst"), which suggests the same site was being tracked. Since these photographs predate the 10 h measurement, the M1 5 h and 10 h time points that the thesis labels normal (0) — the 80 normal rows of the validation set — may already contain a damaged cell. Fig. 27 and Sec. 5.3 should say so, or the labelling rule should distinguish damage types (erosion vs melting/blistering).
 - **M3**: no burn marks up to 50 h. This matches Sec. 4.2 of the thesis ("surface damage was observed in two samples"). M3 is the healthy comparison device, discharged alongside M1 and M2 under the same conditions; the experimenter confirmed that it was not damaged.
 
 ---
 
-## 3. ★ M3 as a control: common-mode session effects [Major]
+## 3. ★ M3 as a control: shared external effects [Major]
 
-### 3.1 Session means of V_rms [V]
+### 3.1 Means of V_rms per time point [V]
 
 | Hours | M1 | M2 | M3 |
 |---|---|---|---|
@@ -148,9 +148,9 @@ For every micrograph (640×480), the largest connected region with luminance < 9
 - At 15 h all three drop **together**; the undamaged M3 drops by 133 V.
 - M3 falls to 1155 V at 45 and 50 h and recovers to 1454 V at 55 h, although it is not damaged.
 
-### 3.2 Voltage jumps within a session
+### 3.2 Voltage jumps within a time point
 
-V_rms [V] of the 15 h session in capture order (20 captures in about 4 min):
+V_rms [V] at the 15 h time point in capture order (20 captures in about 4 min):
 
 ```
 M2 15h  1457 1456 1149 1135 1459 1166 1147 1168 1153 1160 1359 1358 1469 1351 1358 1481 1364 1356 1340 1349
@@ -163,7 +163,7 @@ M1 15h  1274 1289 1273 1270 1277 1272 1274 1264 1272 1270 1275 1273 1280 1267 12
 
 ### 3.3 Difference-in-differences against M3
 
-The change from "before" (5–10 h) to "after" (15 h to the last session), minus the M3 change over the same sessions. p (M3) is a Welch test of the M3 change itself; p (DiD) tests the session-mean differences (2 sessions before, 3–6 after).
+The change from "before" (5–10 h) to "after" (15 h to the last time point), minus the M3 change over the same time points. p (M3) is a Welch test of the M3 change itself; p (DiD) tests the differences of the time-point means (2 time points before, 3–6 after).
 
 | Device | Feature | Naive change | M3 change | p (M3) | DiD | p (DiD) |
 |---|---|---|---|---|---|---|
@@ -182,7 +182,7 @@ The change from "before" (5–10 h) to "after" (15 h to the last session), minus
 
 - **V_rms**: both damaged devices drop about 48 V more than the control. The same sign and size in both devices make a damage-specific effect plausible, but it is about half of the naive comparison.
 - **Number of discharges** and **U_b** change significantly, in the same direction, in the undamaged M3. There is no evidence that they indicate damage.
-- The increases of C_d, C_total and Q_max point the right way relative to the control but are not significant at the session level (low power).
+- The increases of C_d, C_total and Q_max point the right way relative to the control but are not significant at the time-point level (low power).
 
 ---
 
@@ -201,13 +201,13 @@ Share [%] of M3 captures classified "degraded" by models trained on M2 (5–10 h
 | SVM | 5 | 20 | 100 | 40 | 100 | 60 | 70 | 100 | 100 | 100 | 100 | 100 |
 | kNN | 10 | 80 | 95 | 30 | 50 | 40 | 30 | 95 | 100 | 100 | 45 | 100 |
 
-- Of the 15–40 h captures of M3, which show no burn marks, 57–86 % (RF 62.5 %) are classified "degraded". The false positives concentrate in sessions with low V_rms (15, 25, 40, 45–60 h).
-- Even in the undamaged M3, V_rms alone separates the "≤ 10 h" and "≥ 15 h" sessions with AUC 0.90. Much of the classifiers' performance (V_rms alone: AUC 0.996) comes from this common-mode session effect.
+- Of the 15–40 h captures of M3, which show no burn marks, 57–86 % (RF 62.5 %) are classified "degraded". The false positives concentrate at time points with low V_rms (15, 25, 40, 45–60 h).
+- Even in the undamaged M3, V_rms alone separates the "≤ 10 h" and "≥ 15 h" time points with AUC 0.90. Much of the classifiers' performance (V_rms alone: AUC 0.996) comes from these shared external effects.
 - Training on M1 and M2 together gives nearly the same result.
 
 ### 4.2 Referencing to the control device
 
-Each feature was divided by the same-session M3 mean, which roughly removes the common-mode session effect, and the cross-device accuracy was recomputed:
+Each feature was divided by the M3 mean at the same time point, which roughly removes the shared external effects, and the cross-device accuracy was recomputed:
 
 | Setting | DT | RF | GB | LR | SVM | kNN |
 |---|---|---|---|---|---|---|
@@ -217,15 +217,15 @@ Each feature was divided by the same-session M3 mean, which roughly removes the 
 | Referenced to M3, M1 → M2 | 78.1 % | 68.8 % | 78.1 % | 71.9 % | 71.9 % | 63.8 % |
 
 - A signal survives the referencing: referenced V_rms alone gives AUC 0.99 (M1) and 0.83 (M2).
-- The M3 session means themselves contain mode jumps (section 3.2), so the referencing is a rough approximation. It does not change the conclusion that much of the "damage signal" was a session effect.
+- The M3 means per time point themselves contain mode jumps (section 3.2), so the referencing is a rough approximation. It does not change the conclusion that much of the "damage signal" came from shared external effects.
 
 ---
 
 ## 5. Dependence on measurement settings [Major for I_rms, number of discharges, n_e]
 
-### 5.1 Comparisons within a session
+### 5.1 Comparisons within a time point
 
-Effect of the oscilloscope settings, from a regression with session fixed effects (500 captures):
+Effect of the oscilloscope settings, from a regression with time-point fixed effects (500 captures):
 
 | Feature | Per doubling of A/div | p | 20 ns vs 10 ns | p |
 |---|---|---|---|---|
@@ -237,7 +237,7 @@ Effect of the oscilloscope settings, from a regression with session fixed effect
 | U_b | +45 V | 3×10⁻⁹ | +35 V | 3×10⁻¹³ |
 | V_rms | +19 V | 5×10⁻⁴ | −5 V | 0.13 |
 
-Examples: in the M2 10 h session, I_rms is 16.1 mA at 0.04 A/div and 22.9 mA at 0.1 A/div. At M2 40 h it is 24.3 mA at 0.1 A/div and 36.4 mA at 0.2 A/div.
+Examples: at the M2 10 h time point, I_rms is 16.1 mA at 0.04 A/div and 22.9 mA at 0.1 A/div. At M2 40 h it is 24.3 mA at 0.1 A/div and 36.4 mA at 0.2 A/div.
 
 ### 5.2 Causes
 
@@ -256,13 +256,13 @@ Settings in the two M2 groups:
 
 - The degraded group has more low-sensitivity captures (0.04 A/div). This composition partly explains the "I_rms decrease" (20.8 → 18.6 mA).
 - The number of discharges and the electron density change with the settings. Comparisons that do not fix the settings or include them as covariates cannot be read as damage effects.
-- Because the settings differ between sessions, these features also act as **session identifiers** (quantitative confirmation of review D5-3).
+- Because the settings differ between time points, these features also act as **time-point identifiers** (quantitative confirmation of review D5-3).
 
 ---
 
 ## 6. Supply-voltage sweep: experimental confirmation of V_b ≡ V_max
 
-Measured at 20 h with different supply-input voltages (8.5 V = the 20 h endurance session):
+Measured at 20 h with different supply-input voltages (8.5 V = the 20 h endurance-test time point):
 
 | Device | Supply [V] | V_rms | V_max | Thesis V_b (Eq. 15) | U_b | Thesis T_e [eV] |
 |---|---|---|---|---|---|---|
@@ -335,23 +335,23 @@ These revisions have been applied to the [verification report](thesis-review.md)
 |---|---|---|
 | C5, consequences | "The decrease of U_b with damage (p = 2×10⁻⁴) is itself a meaningful new indicator." | U_b also falls in M3, by 38 V (p = 0.05). The M2 DiD is −12 V (p = 0.80), so there is no evidence that U_b indicates damage. U_b also depends on the sampling setting (+35 V). |
 | D1, H | "Number of discharges (MAD 5σ) up, p = 6×10⁻⁴" | It also rises in M3 (+2.7, p = 4×10⁻⁶) and changes by 6.6 with the sampling interval. It cannot be read as a damage effect. |
-| D6, README | "V_rms alone gives AUC ≈ 1.0; damage → load change → sag of the supply output" | About half of the drop is a common-mode session effect that the undamaged M3 also shows. The "control experiment" requested in D6 already exists in the archive (M3). The damage-specific part is ≈ −48 V. |
-| D5-3 | "The current-probe scale changed between sessions, so resolution and noise floor encode session identity" (hypothesis) | Confirmed quantitatively (section 5). |
-| H, README | Cross-device accuracy DT/RF/GB 95–99 % | 65–78 % (DT/RF/GB; 64–89 % over all six models) after correcting for the common-mode session effect. False-positive rate on the undamaged M3: 57–86 % (15–40 h). |
-| README summary | "The V_rms decrease and C_total increase are significant." | V_rms still decreases relative to the control (≈ −48 V). The C_total increase is not significant against the control at the session level. |
+| D6, README | "V_rms alone gives AUC ≈ 1.0; damage → load change → sag of the supply output" | About half of the drop comes from shared external effects that the undamaged M3 also shows. The "control experiment" requested in D6 already exists in the archive (M3). The damage-specific part is ≈ −48 V. |
+| D5-3 | "The current-probe scale changed between time points, so resolution and noise floor encode the time point" (hypothesis) | Confirmed quantitatively (section 5). |
+| H, README | Cross-device accuracy DT/RF/GB 95–99 % | 65–78 % (DT/RF/GB; 64–89 % over all six models) after correcting for the shared external effects. False-positive rate on the undamaged M3: 57–86 % (15–40 h). |
+| README summary | "The V_rms decrease and C_total increase are significant." | V_rms still decreases relative to the control (≈ −48 V). The C_total increase is not significant against the control at the time-point level. |
 
 ---
 
 ## 10. Do the physics, the statistics and the ML agree? [Confirmed]
 
-Without new experiments, this archive alone was used to check whether the physical assumptions, the measured results and the machine-learning results of the thesis point the same way. How many of the 126 pairs discharge is unknown, so every comparison is a statistical comparison over many captures and sessions. Two captures whose period detection failed (M1 10 h, M3 10 h; half or double the period) are left out.
+Without new experiments, this archive alone was used to check whether the physical assumptions, the measured results and the machine-learning results of the thesis point the same way. How many of the 126 pairs discharge is unknown, so every comparison is a statistical comparison over many captures and time points. Two captures whose period detection failed (M1 10 h, M3 10 h; half or double the period) are left out.
 
 - Every feature is computed for each full period of a capture and then averaged. A 10 ns capture holds 2 periods and a 20 ns capture 4, so the 498 endurance captures give 1,493 periods.
-- The three devices ran from the same mains (KEPCO) on separate power strips, each on its own driving power supply behind a DC power supply (confirmed by the experimenter). Each device's voltage therefore follows its own load, and the session effects common to all three come from the shared mains or the room environment.
+- The three devices ran from the same mains (KEPCO) on separate power strips, each on its own driving power supply behind a DC power supply (confirmed by the experimenter). Each device's voltage therefore follows its own load, and the external effects common to all three come from the shared mains or the room environment.
 
 ![Consistency of physics, statistics and ML](img/consistency_check.png)
 
-*(a) The two slopes of a Lissajous graph (b) Discharge-phase slope against supply voltage (c) U_b against the Paschen range, and the thesis V_b (d) Damage effect against M3 (e) Thesis protocol: accuracy and false alarms on M3 (f) Cross-device AUC with features referenced to M3 (g) Single periods: shuffled, a session held out, relative to M3 on the other device*
+*(a) The two slopes of a Lissajous graph (b) Discharge-phase slope against supply voltage (c) U_b against the Paschen range, and the thesis V_b (d) Damage effect against M3 (e) Thesis protocol: accuracy and false alarms on M3 (f) Cross-device AUC with features referenced to M3 (g) Single periods: shuffled, a time point held out, relative to M3 on the other device*
 
 ### 10.1 Physical assumptions and the data
 
@@ -362,14 +362,14 @@ Without new experiments, this archive alone was used to check whether the physic
 | Mechanism: Townsend or streamer | At the measured U_b, αd = 3.2–5.0, far below the streamer (Meek) criterion αd ≈ 18–20. The Townsend condition γ(e^{αd} − 1) = 1 then needs γ = 0.007–0.045, typical of dielectric surfaces | Townsend suffices |
 | Not all 126 pairs discharge | In the 20 h supply sweep the discharge-phase slope rises from 8.5 V to 14 V input: M1 37.6 → 48.9, M2 41.4 → 56.7, M3 39.6 → 58.3 pF (Fig. b). A fixed dielectric capacitance would not change. The discharging area grows with voltage (partial surface discharging; Peeters & van de Sanden, *Plasma Sources Sci. Technol.* 24, 015016, 2015) | Agrees |
 | Thesis V_b and T_e | V_b/V_max = 0.984 ± 0.033; the correlation of T_e with V_b is 0.9999 | Not independent quantities |
-| Number of discharges | Within the same sessions, 10 ns → 20 ns sampling gives M1 12.9 → 6.0, M2 15.4 → 6.6, M3 12.8 → 9.6 | Set by the instrument's resolution |
+| Number of discharges | Within the same time points, 10 ns → 20 ns sampling gives M1 12.9 → 6.0, M2 15.4 → 6.6, M3 12.8 → 9.6 | Set by the instrument's resolution |
 
 - The thesis' C_dielectric is not the dielectric's own capacitance but an **effective capacitance set by the discharging area**.
 - Where the applied voltage changes at the same time, changes in C_dielectric, ΔQ and energy cannot be attributed to damage.
 
-### 10.2 Damage and the electrical features (against M3, per session)
+### 10.2 Damage and the electrical features (against M3, per time point)
 
-The change from before (5–10 h) to after (15 h to the end) minus M3's change over the same sessions. Values are differences of session means of the logarithm (%); p is a Welch test on the session means (2 before, 3–6 after).
+The change from before (5–10 h) to after (15 h to the end) minus M3's change over the same time points. Values are differences of the time-point means of the logarithm (%); p is a Welch test on the time-point means (2 before, 3–6 after).
 
 | Feature | M1 | M2 | Verdict |
 |---|---|---|---|
@@ -396,41 +396,41 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 | Protocol | Result |
 |---|---|
 | (a) Thesis protocol: raw features, train on M2, test on M1 | Accuracy on M1 0.90–0.99 (kNN 0.75), AUC 0.93–1.00 (kNN 0.78). The same models call 68–92 % of the healthy M3's captures at 15–60 h "degraded" (Fig. e) |
-| (b) Log ratios to each device's own 5–10 h, M3 in training as healthy, leave one session out | Within a session, damaged devices and M3 are separated with AUC 0.73–0.89 (best GB 0.89, HistGB 0.88). But the models also call 39–97 % of M1 and M2 in the pre-damage sessions (5 and 10 h) "degraded" |
-| (b′) Same, with the 9 features that do not depend on scope settings | Within-session AUC 0.64–0.81; false alarms in the pre-damage sessions 40–98 % |
-| (c) Features relative to M3 in the same session, train on one damaged device, test on the other | AUC of the 11 models: 0.38–0.84 (M2 → M1) and 0.59–0.74 (M1 → M2). **Logistic regression on V_rms alone gives 0.94 / 0.75**, equal to or better than every model (Fig. f) |
+| (b) Log ratios to each device's own 5–10 h, M3 in training as healthy, leave one time point out | Within a time point, damaged devices and M3 are separated with AUC 0.73–0.89 (best GB 0.89, HistGB 0.88). But the models also call 39–97 % of M1 and M2 at the pre-damage time points (5 and 10 h) "degraded" |
+| (b′) Same, with the 9 features that do not depend on scope settings | AUC within a time point 0.64–0.81; false alarms at the pre-damage time points 40–98 % |
+| (c) Features relative to M3 at the same time point, train on one damaged device, test on the other | AUC of the 11 models: 0.38–0.84 (M2 → M1) and 0.59–0.74 (M1 → M2). **Logistic regression on V_rms alone gives 0.94 / 0.75**, equal to or better than every model (Fig. f) |
 
 - **The important features in (b) are traces of the scope settings.**
   - The top permutation importances are V_rms, I_rms and the number of discharges for RF, and I_rms, V_rms and the number of discharges for HistGB.
   - I_rms and the number of discharges change with the scope settings (section 5).
   - The share of 0.04 A/div captures, which raise I_rms, grows in the damaged period (M1 10 → 33 %, M2 20 → 42 %, M3 0 → 15 %).
-- **The false alarms in the pre-damage sessions of (b) mean that the models partly learned "M1 or M2 versus M3".** With M3 as the only healthy device, damage cannot be fully separated from device differences, including the measurement order.
+- **The false alarms at the pre-damage time points of (b) mean that the models partly learned "M1 or M2 versus M3".** With M3 as the only healthy device, damage cannot be fully separated from device differences, including the measurement order.
 - **In (c), the more flexible the model, the more it overfits the training device** (RF, boosting, MLP, RBF-SVM).
-- **The newer models do not change the conclusion.** What recent ML practice changes is the evaluation rather than the model: grouped validation, a healthy control, checks for confounders and permutation importance. With these, the high thesis accuracy is seen to come from session effects and scope settings.
+- **The newer models do not change the conclusion.** What recent ML practice changes is the evaluation rather than the model: grouped validation, a healthy control, checks for confounders and permutation importance. With these, the high thesis accuracy is seen to come from shared external effects and scope settings.
 
 #### Single periods, every capture weighted equally
 
 - The checks above use, for each capture, the mean of its full periods computed one by one.
 - Here **one period is one row**, and **two periods are drawn from every capture** (498 captures, 996 periods).
-  - Every capture, session and sampling setting (10/20 ns) therefore weighs the same.
+  - Every capture, time point and sampling setting (10/20 ns) therefore weighs the same.
   - Class sizes are handled by balanced accuracy and AUC.
   - The draw was repeated three times; the standard deviation of the results is at most 0.09.
 - Each device had its own driving power supply, so the drive frequency differs between devices (M1 46.99, M2 46.54, M3 46.30 kHz).
 
 | Protocol | Guards against | 11 models | V_rms alone |
 |---|---|---|---|
-| E1. Periods shuffled at random, 5-fold cross-validation | Nothing | Balanced accuracy 0.83–0.95, AUC 0.88–0.99. False alarms 3–10 % on M3, 1–17 % in the pre-damage sessions | AUC 0.70 |
-| E2. A whole session held out | Leakage of the session's state | Within-session AUC 0.72–0.93. False alarms in the pre-damage sessions 5–43 % (RF 5 %, GB 6 %) | Within-session AUC 0.77 |
-| E4. Features relative to M3 in the same session, train on one damaged device, test on the other | Session effects and device differences | AUC 0.49–0.70 (M1), 0.57–0.72 (M2) | **AUC 0.80 (M1), 0.74 (M2)** |
+| E1. Periods shuffled at random, 5-fold cross-validation | Nothing | Balanced accuracy 0.83–0.95, AUC 0.88–0.99. False alarms 3–10 % on M3, 1–17 % at the pre-damage time points | AUC 0.70 |
+| E2. A whole time point held out | Leakage of the time point's state | AUC within a time point 0.72–0.93. False alarms at the pre-damage time points 5–43 % (RF 5 %, GB 6 %) | AUC within a time point 0.77 |
+| E4. Features relative to M3 at the same time point, train on one damaged device, test on the other | Shared external effects and device differences | AUC 0.49–0.70 (M1), 0.57–0.72 (M2) | **AUC 0.80 (M1), 0.74 (M2)** |
 
-- **The high E1 scores come from leakage.** The other periods of the same capture, and about 32 periods of the same session, are in the training set, so the model has already seen the state of the test session. This is the structure of the thesis split (half periods as separate rows, split at random; verification report D5) (Fig. g).
+- **The high E1 scores come from leakage.** The other periods of the same capture, and about 32 periods of the same time point, are in the training set, so the model has already seen the state of the test time point. This is the structure of the thesis split (half periods as separate rows, split at random; verification report D5) (Fig. g).
 - **In E2 the models use V_rms and the drive frequency.**
   - The top permutation importances are V_rms 0.175 and frequency 0.045 for RF, and V_rms 0.191 and frequency 0.074 for GB.
-  - V_rms and frequency alone give a within-session AUC of 0.59–0.83 (RBF-SVM 0.83, with 4 % false alarms in the pre-damage sessions).
+  - V_rms and frequency alone give an AUC within a time point of 0.59–0.83 (RBF-SVM 0.83, with 4 % false alarms at the pre-damage time points).
   - The frequency is a fingerprint of each device's own driving power supply, so the models learn "V_rms drop, and not M3".
 - **In E4, V_rms alone is the best.** Its AUC averaged over both directions is 0.77, above the 0.58–0.68 of the 11 models.
 - **A single period is noisier than a capture mean.** The AUC of V_rms alone is lower than at the capture level (0.94 / 0.75); averaging periods makes the damage signal clearer.
-- **The conclusion does not change.** With single periods and every capture weighted equally, the only damage information that generalises is the V_rms drop relative to a healthy device in the same session.
+- **The conclusion does not change.** With single periods and every capture weighted equally, the only damage information that generalises is the V_rms drop relative to a healthy device at the same time point.
 
 ### 10.4 Do the three lines of evidence agree?
 
@@ -442,21 +442,21 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 | Lower discharge initiation voltage | Consistent with damaged cells starting to discharge first | Direction only | Small contribution |
 | I_rms, number of discharges, n_e, T_e, V_b | Problems of settings, resolution or definition | Not significant | Used as confounders |
 
-- The one damage indicator that physics, statistics and ML point to together is the **V_rms drop relative to a healthy device in the same session**.
+- The one damage indicator that physics, statistics and ML point to together is the **V_rms drop relative to a healthy device at the same time point**.
 - With two damaged devices, and with possibly damaged cells already in M1's pre-damage period (section 2.2), this is the most consistent clue, not an established result.
-- Limitations of this section: there is only one healthy device, and within a session the devices were measured in the order M1 → M2 → M3, 10–33 min apart.
+- Limitations of this section: there is only one healthy device, and within a time point the devices were measured in the order M1 → M2 → M3, 10–33 min apart.
 
 ### 10.5 Physical interpretation and robustness of the V_rms drop
 
-> **Conclusion.** When damage occurs, the clearest electrical indicator is the **drop of the effective voltage V_rms**: 2.3–3.5 % more than the healthy device M3 in the same sessions.
+> **Conclusion.** When damage occurs, the clearest electrical indicator is the **drop of the effective voltage V_rms**: 2.3–3.5 % more than the healthy device M3 at the same time points.
 > - Its size matches, within 17 %, the prediction of the mechanism "earlier discharge initiation → more discharge charge → the voltage of the driving power supply drops", derived below from stated assumptions.
 > - An equivalent-circuit simulation calibrated on healthy data only (10.6) reproduces the changes of V_rms, ΔQ/V, the discharge initiation voltage and U_b together, in sign and size, when an exposed electrode lowers the burning voltage.
-> - V_rms stays in front when the random elements change: which sessions are pre-damage, the capture sample, the period draw and the choice of model.
+> - V_rms stays in front when the random elements change: which time points are pre-damage, the capture sample, the period draw and the choice of model.
 > - With two damaged devices this makes V_rms the most consistent indicator in these data, not a general diagnostic threshold.
 
 ![Mechanism and robustness of the V_rms drop](img/vrms_mechanism.png)
 
-*(a) Discharge charge per volt when the power supply changes the voltage and when the load does (b) Earlier discharge initiation → more discharge charge → V_rms drop, predicted and observed (c) Discharge initiation voltage and V_rms per session (d) Effect-to-noise ratio per feature*
+*(a) Discharge charge per volt when the power supply changes the voltage and when the load does (b) Earlier discharge initiation → more discharge charge → V_rms drop, predicted and observed (c) Discharge initiation voltage and V_rms per time point (d) Effect-to-noise ratio per feature*
 
 #### Terms
 
@@ -477,7 +477,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 | A3 | The 126 cell pairs are in parallel and start discharging independently; device quantities are sums over cells; not all cells discharge | Thesis Sec. 2.1.1; 10.1: discharge-phase slope rises in the sweep |
 | A4 | Each device runs on its own driving power supply. At the drive frequency the power supply is a Thévenin equivalent, open-circuit voltage E behind output impedance Z_s; with the supply input fixed (8.5 V), E is fixed | Confirmed by the experimenter: mains → a power strip per device → DC power supply → device |
 | A5 | Damage thins (erosion) or removes (exposed electrode) the dielectric of some cells, thickness t_i. An exposed Ag surface changes the secondary electron emission coefficient γ. The air gap is unchanged | Thesis Sec. 2.2; sections 2 (micrographs) and 7 (EDS: Ag 1.3–13.9 at.% at damaged sites) |
-| A6 | Session effects common to all devices (mains, room environment) cancel against M3 in the same session; damage changes are a few per cent, so linearisation holds | Section 3, 10.2 |
+| A6 | External effects shared by all devices (mains, room environment) cancel against M3 at the same time point; damage changes are a few per cent, so linearisation holds | Section 3, 10.2 |
 
 #### Derivation
 
@@ -536,11 +536,11 @@ An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer t
 
 **Step 4. S is measured on the healthy device (A6).**
 - When the supply input is changed in the sweep (the power supply changes the voltage), $d\ln(\Delta Q/V_{max})/d\ln V$ = +2.7 to +8.2. Partial surface discharging makes charge per volt follow V.
-- When M3's sessions vary with the supply input fixed (the load changes the voltage), the value is −1.92: the opposite direction (Fig. a).
+- When M3 varies between time points with the supply input fixed (the load changes the voltage), the value is −1.92: the opposite direction (Fig. a).
 - This sign difference is the evidence that the load path of (4) is real. It gives $S = 1/1.92 = 0.52$.
 - The value is a measured closed-loop response that already includes the feedback of partial discharging, so it applies to damage through the same path.
 
-**Step 5. Predicted and observed size (against M3, session medians).**
+**Step 5. Predicted and observed size (against M3, medians over time points).**
 
 | | Discharge initiation voltage $V_{on}/V_{max}$ | Discharge charge $\Delta Q/V_{max}$ | V_rms predicted $-S\,\delta\ln(\Delta Q/V_{max})$ | V_rms observed |
 |---|---|---|---|---|
@@ -550,14 +550,14 @@ An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer t
 - All three steps have the same sign in both devices; predicted and observed V_rms agree within 17 % (Fig. b).
 - $U_b$ falls 13.6 % in M1 (p 0.10) and 1.3 % in M2. The simulated value of the exposed-electrode path (−8.5 %, 10.6) lies between them.
 
-**Step 6. The link holds session by session.**
-- In the device-minus-M3 differences, the sessions whose discharge starts earlier than in M3 are the sessions whose V_rms drops more (13 sessions, Spearman +0.75, p = 0.003; Fig. c).
-- In 7 of the 9 damaged sessions the discharge starts earlier than in M3.
+**Step 6. The link holds time point by time point.**
+- In the device-minus-M3 differences, the time points at which the discharge starts earlier than in M3 are those at which V_rms drops more (13 time points of the two damaged devices, Spearman +0.75, p = 0.003; Fig. c).
+- In 7 of the 9 post-damage time points of the two devices the discharge starts earlier than in M3.
 
 #### Why V_rms is the clearest indicator
 
-- **The cause is local and noisy.** The discharge initiation voltage and the discharge charge are the cause, but their within-session noise is 24 % (V_on/V_max) and 7.1 % (ΔQ/V_max).
-- **The consequence is global and precise.** The driving power supply turns the load change of all 126 cell pairs into one voltage, and the voltage channel's within-session noise is 0.5 %.
+- **The cause is local and noisy.** The discharge initiation voltage and the discharge charge are the cause, but their noise within a time point is 24 % (V_on/V_max) and 7.1 % (ΔQ/V_max).
+- **The consequence is global and precise.** The driving power supply turns the load change of all 126 cell pairs into one voltage, and the voltage channel's noise within a time point is 0.5 %.
 - **The effect-to-noise ratio of V_rms is therefore 4.3–5.4**, more than twice that of every other feature; the next is the drive frequency at 2.0–2.2 (Fig. d).
 - The drive frequency also falls by 0.6 % in both devices, the direction expected when a heavier capacitive load pulls the operating point of the power supply down.
 
@@ -575,9 +575,9 @@ An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer t
 
 | Random element | Check | V_rms | For comparison |
 |---|---|---|---|
-| Which sessions are pre-damage (label placement) | Exact permutation test, 280 placements over both devices | p = 0.039 | V_on/V_max 0.029, ΔQ/V 0.26, C_total 0.56, E 0.56 |
+| Which time points are pre-damage (label placement) | Exact permutation test, 280 placements over both devices | p = 0.039 | V_on/V_max 0.029, ΔQ/V 0.26, C_total 0.56, E 0.56 |
 | Capture sample | 300 bootstrap resamples, rank of the univariate AUC against M3 | First in 60 % (AUC 0.84) | I_rms 26 % (confounded by scope settings, 10.3), V_on/V_max 8 % |
-| Within-session noise | Effect-to-noise ratio | 4.3–5.4 | Next: drive frequency 2.0–2.2 |
+| Noise within a time point | Effect-to-noise ratio | 4.3–5.4 | Next: drive frequency 2.0–2.2 |
 | Choice of model (11) | Features relative to M3, other damaged device | V_rms alone AUC 0.94 / 0.75 | 11 models 0.38–0.84 |
 | Period draw (3 draws) | Same test on single periods | V_rms alone AUC 0.80 / 0.74 | 11 models 0.58–0.68 on average; SD ≤ 0.09 |
 | Importance inside the models | Permutation importance | First for RF (captures) and for RF and GB (periods) | Second for HistGB on captures (I_rms first) |
@@ -585,9 +585,9 @@ An ideal voltage source has $S = 0$ (the voltage ignores the load); the closer t
 #### Limitations and falsification
 
 - **Few devices.** There are two damaged devices and one healthy device. With only 10 (M1) and 28 (M2) possible placements, the per-device permutation tests are not significant on their own (M1 p 0.10, M2 p 0.18).
-- **S comes from the session variation of one healthy device.**
+- **S comes from the variation of one healthy device between time points.**
 - **The mechanism is wrong if any of these appears:**
-  - V falls together with ΔQ/V in damaged sessions (a cause on the power-supply side).
+  - V falls together with ΔQ/V at post-damage time points (a cause on the power-supply side).
   - V falls without any change in the discharge initiation voltage (V_on/V_max) (no earlier-initiation path).
   - Two healthy devices differ by the same amount (not a damage signal).
 
@@ -660,7 +660,7 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 
 **Thesis and erratum.**
 1. State that about half of the V_rms change is a supply variation common to all three devices, and report the DiD against M3.
-2. Report the **false-positive rate on the undamaged M3** alongside the classification scores. Include M3 as an undamaged device in training and evaluation, or use features normalised by a same-session control device.
+2. Report the **false-positive rate on the undamaged M3** alongside the classification scores. Include M3 as an undamaged device in training and evaluation, or use features normalised by a control device at the same time point.
 3. Compare I_rms, peak current, number of discharges and n_e only between captures with the same settings (e.g. 0.1 A/div, 10 ns), or include the settings as covariates.
 4. Give Table 3 in at.%, with per-map ranges, and identify the Ref sample.
 5. Review the melted blister in the M1 5 h micrographs, and redefine or state the M1 labels of the validation set.
@@ -668,17 +668,17 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 7. Describe C_dielectric as the discharge-phase slope, an effective capacitance set by the discharging area, and compare it only between captures at the same applied voltage (section 10.1).
 
 **Future experiments.**
-1. Fix the oscilloscope settings (V/div, A/div, sampling) for all sessions.
+1. Fix the oscilloscope settings (V/div, A/div, sampling) for all time points.
 2. Log the supply input voltage and current and the room temperature and humidity.
 3. Always run a control device in parallel and measure it at the same time (as M3 was). Randomise the measurement order.
-4. Log V_rms continuously with timestamps, so that mode changes within a session become visible.
+4. Log V_rms continuously with timestamps, so that mode changes within a time point become visible.
 
 ---
 
 ## 12. Limitations
 
-- **One healthy comparison device.** M3 was discharged alongside M1 and M2 under the same conditions and was not damaged (confirmed by the experimenter; consistent with the micrographs and with 12 of 13 EDS maps ≤ 0.25 at.%). Every change of M3, including the V_rms drop at 45–60 h, is therefore a supply or environmental change. With only one healthy device, however, the spread between two healthy devices in the same session is unknown.
-- **Power.** The DiD works at the session level (2 sessions before, 3–6 after), so its power is low. "Not significant" does not mean "no effect".
+- **One healthy comparison device.** M3 was discharged alongside M1 and M2 under the same conditions and was not damaged (confirmed by the experimenter; consistent with the micrographs and with 12 of 13 EDS maps ≤ 0.25 at.%). Every change of M3, including the V_rms drop at 45–60 h, is therefore a supply or environmental change. With only one healthy device, however, the spread between two healthy devices at the same time point is unknown.
+- **Power.** The DiD works at the time-point level (2 time points before, 3–6 after), so its power is low. "Not significant" does not mean "no effect".
 - **EDS values.** Read directly from the tables in the Bruker report images (no raw spectra are available). Some M1 and M2 maps of 31 July (1-2, 1-3, 1-4, 1-s, 2-s) have no site name and are left out of section 7.2; their Ag is 0.3–3.0 at.%.
 - **Identity of the M1 melted site.** That the 5 h and 25 h photographs show the same site is inferred from their appearance and file names.
 - **Photograph times.** File modification times are used as capture times.

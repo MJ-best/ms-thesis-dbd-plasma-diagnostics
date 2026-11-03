@@ -2,14 +2,14 @@
 
     python examples/verify_raw_archive.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산"
 
-The archive holds every endurance session of the three devices that ran in parallel in July 2020
-(M1 0-25 h, M2 0-40 h, M3 0-60 h; 20 detail captures per session) and the supply-voltage sweep at
+The archive holds every endurance-test time point of the three devices that ran in parallel in July 2020
+(M1 0-25 h, M2 0-40 h, M3 0-60 h; 20 detail captures per device and time point) and the supply-voltage sweep at
 20 h (8.5 / 9 / 10 / 14 V supply input). M3 was discharged alongside M1 and M2 under the same
 conditions and was not damaged; the thesis did not use it, so it serves as an undamaged control measured
-10-33 min after M1 in every session.
+10-33 min after M1 at every time point.
 
 Prints the tables of docs/raw-data-verification.md:
-  1. session means (common-mode V_rms changes)          4. features vs oscilloscope settings
+  1. means per time point (shared V_rms changes)        4. features vs oscilloscope settings
   2. difference-in-differences against M3                5. supply-voltage sweep (V_b vs U_b)
   3. thesis classifiers applied to the undamaged M3
 """
@@ -46,7 +46,7 @@ def find_captures(iv_dir, sweep_dir):
                 jobs += [(f, meta) for f in sorted(d.glob("ALL*.CSV"))]
     for d in sorted(Path(sweep_dir).iterdir()):
         m = SWEEP.match(nfc(d.name))
-        if m and float(m.group(2)) != 8.5:  # 8.5 V is the 20 h endurance session itself
+        if m and float(m.group(2)) != 8.5:  # 8.5 V is the 20 h endurance-test time point itself
             meta = dict(kind="sweep", device=f"m{m.group(1)}", hours=20, supply_V=float(m.group(2)))
             jobs += [(f, meta) for f in sorted(d.glob("ALL*.CSV"))]
     m1_9v = Path(iv_dir) / "1번소스" / "20200721 M1 20시간" / "9V"
@@ -66,7 +66,7 @@ def extract(job):
 
 
 def did_table(e):
-    """Change after damage minus the change of the undamaged M3 over the same sessions (session means)."""
+    """Change after damage minus the change of the undamaged M3 over the same time points (means per time point)."""
     s = e[e.hours.between(5, 40)].groupby(["hours", "device"])[COLS].mean()
     rows = []
     for dev, last in (("m1", 25), ("m2", 40)):
@@ -81,12 +81,12 @@ def did_table(e):
                          "M3 change": cb.mean() - ca.mean(),
                          "p (M3)": stats.ttest_ind(ca, cb, equal_var=False).pvalue,
                          "DiD": post.mean() - pre.mean(),
-                         "p (DiD, sessions)": stats.ttest_ind(pre, post, equal_var=False).pvalue})
+                         "p (DiD, time points)": stats.ttest_ind(pre, post, equal_var=False).pvalue})
     return pd.DataFrame(rows)
 
 
 def settings_effect(e, y):
-    """Within-session (fixed-effect) OLS of y on log2(A/div) and the 20 ns sampling flag."""
+    """Fixed-effect OLS (one effect per device and time point) of y on log2(A/div) and the 20 ns sampling flag."""
     X = pd.get_dummies(e.device + e.hours.astype(str)).astype(float)
     X["log2_Adiv"] = np.log2(e.i_scale / 0.1)
     X["dt20"] = (e.dt_ns == 20).astype(float)
@@ -111,7 +111,7 @@ def main(iv_dir, sweep_dir):
     e["label"] = np.where(e.device == "m3", 0, (e.hours >= 15).astype(int))
     pd.set_option("display.width", 200)
 
-    print("1. V_rms session means [V] (all devices measured within ~15 min of each other)")
+    print("1. V_rms means per time point [V] (all devices measured within ~15 min of each other)")
     print(e.groupby(["hours", "device"]).v_rms.mean().unstack().round(0).to_string())
 
     print("\n2. difference-in-differences vs M3 (pre 5-10 h, post 15 h-end)")
@@ -125,7 +125,7 @@ def main(iv_dir, sweep_dir):
           for name, m in ml.thesis_models().items()}
     print(pd.DataFrame(fp).T.round(0).to_string())
 
-    print("\n4. within-session effect of oscilloscope settings")
+    print("\n4. effect of oscilloscope settings within a time point")
     print(pd.DataFrame([settings_effect(e, y) for y in ("i_mA", "n_discharges", "c_d_pF", "u_b", "v_rms")])
           .to_string(index=False, float_format=lambda x: f"{x:.3g}"))
 

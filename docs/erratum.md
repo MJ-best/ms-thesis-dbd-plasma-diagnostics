@@ -28,7 +28,7 @@
 | # | Location | Correction | Type · ref |
 |---|---|---|---|
 | 1, 3 | KO and EN abstract | Replace "discharge energy per second" with "**discharge energy per cycle**". | Correction · C1 |
-| 2, 4 | KO and EN abstract, sentence on changes due to damage | Replace with: "Surface damage lowered the effective voltage. Compared with an undamaged device measured in the same sessions, the damage-specific decrease was about 3 % (≈ 48 V); about half of the raw decrease was a supply variation common to all devices. The capacitances and the discharge charge tended to increase, but not significantly against the control. The effective current, the number of discharges and the electron density depended on the oscilloscope settings and showed no significant damage-specific change." | Correction · D1, J |
+| 2, 4 | KO and EN abstract, sentence on changes due to damage | Replace with: "Surface damage lowered the effective voltage. Compared with an undamaged device measured at the same time points, the damage-specific decrease was about 3 % (≈ 48 V); about half of the raw decrease was a supply variation common to all devices. The capacitances and the discharge charge tended to increase, but not significantly against the control. The effective current, the number of discharges and the electron density depended on the oscilloscope settings and showed no significant damage-specific change." | Correction · D1, J |
 
 ## Chapter 1
 
@@ -46,8 +46,8 @@
 |---|---|---|---|
 | 10–11 | 11 | The HV probe is the **P6015A**; the current probe is the **P6021A**. | Correction · B1 |
 | 12 | 11–12 | Add the measurement limits: sampling 10 ns (some captures 20 ns), 5000 points (≈ 2.3 periods), 8 bit (40 V/LSB; 1.6–8 mA/LSB), current-probe bandwidth 60 MHz. As a result, pulse counts and peak currents are lower bounds. | Addition · B2 |
-| 59 | 12 | Add to Sec. 2.1.3: a third device (M3) was operated in parallel for 60 h and measured in the same sessions, and was not damaged. It serves as a control for supply and environmental variations. | Addition · J |
-| 60 | 11–12 | Add: the current scale (0.04–0.4 A/div) and the sampling interval (10 / 20 ns) changed between and within sessions. Within a session, I_rms rises by 3.5 mA per doubling of A/div, and 20 ns sampling gives 6.6 fewer pulses. Compare I_rms, peak current, number of discharges and n_e only at fixed settings. | Addition · J |
+| 59 | 12 | Add to Sec. 2.1.3: a third device (M3) was operated in parallel for 60 h and measured at the same time points, and was not damaged. It serves as a control for supply and environmental variations. | Addition · J |
+| 60 | 11–12 | Add: the current scale (0.04–0.4 A/div) and the sampling interval (10 / 20 ns) changed between and within time points. Within a time point, I_rms rises by 3.5 mA per doubling of A/div, and 20 ns sampling gives 6.6 fewer pulses. Compare I_rms, peak current, number of discharges and n_e only at fixed settings. | Addition · J |
 | 61 | 13 | Fig. 7, "the discharge current rose from about 100 mA to 250 mA": state that Fig. 7 is a single example. At the same current scale (0.1 A/div) the peak currents are 251 → 272 mA (M2, not significant) and 252 → 213 mA (M1). | Correction · J |
 
 ## Chapter 3
@@ -56,7 +56,7 @@
 |---|---|---|---|
 | 13 | 16 | V_min is ≈ 300–700 V (mean 504.5 ± 168.8 V), not "300–500 V". | Notation · C3 |
 | 14, 16 | 16–17 | "Energy per second" → "**energy per cycle**": 0.13 ± 0.022 mJ (normal) and 0.13 ± 0.024 mJ (degraded). Add the mean power P = E·f ≈ **6.0 W**. | Correction · C1 |
-| 62 | 16 | V_rms "1.5 kV → 1.4 kV": add that the undamaged device M3 dropped in the same sessions (e.g. 1502 → 1369 V from 10 to 15 h). The damage-specific decrease is ≈ 48 V. | Addition · J |
+| 62 | 16 | V_rms "1.5 kV → 1.4 kV": add that the undamaged device M3 dropped at the same time points (e.g. 1502 → 1369 V from 10 to 15 h). The damage-specific decrease is ≈ 48 V. | Addition · J |
 | 15, 34 | 16, 32–33 | Write mean ± SD in a single unit: 1.50 ± 0.017 kV, 20.8 ± 4.0 mA, 34.2 ± 4.9 pF, 11.3 ± 1.2 pF, 17.3 ± 2.8 pF, 59.4 ± 9.0 nC, etc. | Notation · C10 |
 | 17 | 17 | Eq. (11) → **E = ∫₀ᵀ v i dt** [J/cycle] and P = E/T [W]. | Correction · C1 |
 | 18–20 | 19–21 | Replace Eqs. (13)–(15) with **text A** below. 55.6 nC / 30.5 pF = 1.82 kV, not 1.5 kV. The original Eq. (15) evaluates to V_max (2.1/2.0 kV). The burning voltage is U_b = 860 ± 68 V (normal) and 811 ± 75 V (degraded). | Correction · C4, C5 |
@@ -95,8 +95,8 @@
 | 42–44 | 49–50 | Precision = fraction of samples predicted *degraded* that are degraded. Recall = fraction of truly degraded samples that are predicted degraded. TP, TN, FP, FN refer to the classes degraded (positive) and normal (negative); **FN = degraded predicted as normal**. | Correction · D3 |
 | 45 | 51 | Table 6: precision and recall are **macro averages**; F1 is the **binary F1** of the degraded class. | Correction · D2 |
 | 46 | 51 | Add: on the validation set, LR and SVM reach AUC 0.99 but only 76.4 % accuracy. This is a threshold shift between devices, which per-device baseline normalisation removes. | Addition · D4 |
-| 47 | 52 | Add: V_rms alone almost separates the classes (AUC ≈ 1.0); the classifier mainly detects the drop of the applied voltage. About half of that drop also occurs in the undamaged device M3 measured in the same sessions. | Addition · D6, J |
-| 65 | 51–52 | Add: classifiers trained on M2 call 95–100 % of the undamaged M3's captures "degraded" in sessions with a low supply voltage. Report the false-positive rate on a control device together with the scores of Table 6. | Addition · J |
+| 47 | 52 | Add: V_rms alone almost separates the classes (AUC ≈ 1.0); the classifier mainly detects the drop of the applied voltage. About half of that drop also occurs in the undamaged device M3 measured at the same time points. | Addition · D6, J |
+| 65 | 51–52 | Add: classifiers trained on M2 call 95–100 % of the undamaged M3's captures "degraded" at time points with a low supply voltage. Report the false-positive rate on a control device together with the scores of Table 6. | Addition · J |
 | 48 | 53 | A random forest **averages** the votes of all 1000 trees; it does not select the best tree. Fig. 29 shows one tree. | Correction · D7 |
 | 49 | 55 | Tables 7–8 show no drop of the "normal" probability before damage (0.886 / 0.909; 0.816 / 0.818). The "≥ 10 % drop" precursor criterion is therefore not supported and should be stated as future work. | Correction · D8 |
 | 50 | 56 | "Fig. 32 (a)/(b)" → "Fig. 30 (a)/(b)". | Notation |

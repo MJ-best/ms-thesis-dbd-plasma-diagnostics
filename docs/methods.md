@@ -121,7 +121,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
 | `v_max` | Peak applied voltage |
 | `c_*_r2` | Fit quality |
 
-**Metadata.** `meta_vertical_scale` (the current V/div) is stored so that session confounds can be checked.
+**Metadata.** `meta_vertical_scale` (the current V/div) is stored so that confounds that differ between time points can be checked.
 
 ## 7. Machine learning (`ml`)
 
@@ -135,7 +135,7 @@ $$u_g(t)=v(t)-\frac{Q(t)}{C_d}.$$
 - **`evaluate`**
   - Reports the confusion matrix, accuracy, specificity and AUC.
   - Reports precision, recall and F1 both as `*_binary` (positive class = degraded) and as `*_macro`.
-- **`group_holdout`**: leave-one-device-out (or leave-one-session-out) evaluation.
+- **`group_holdout`**: leave-one-device-out (or leave-one-time-point-out) evaluation.
 - **`baseline_normalize`**
   - Divides each feature by its median over a device's own early, known-healthy captures.
   - This removes device-to-device offsets, which caused the LR/SVM/kNN false positives on the thesis validation device.

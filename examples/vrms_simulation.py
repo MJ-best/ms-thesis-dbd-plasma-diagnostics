@@ -30,14 +30,14 @@ from dbd_diagnostics import features
 from dbd_diagnostics.io import Waveform
 
 F0 = 46.8e3  # drive frequency of the healthy captures [Hz]
-# healthy 5-10 h captures of M1-M3 (10 ns sampling), medians; S from the healthy M3's sessions
+# healthy 5-10 h captures of M1-M3 (10 ns sampling), medians; S from the healthy M3 across time points
 HEALTHY = dict(v_rms=1494.0, v_max=2280.0, c_total=12.15e-12, c_dielectric=32.4e-12, q_per_v=25.3e-12, von_frac=0.199,
                u_b=855.0, energy=0.126e-3)
 S_HEALTHY = 0.52
-# damaged minus M3 in the same sessions, session medians, % (section 10.5): M1, M2
+# damaged minus M3 at the same time points, medians over time points, % (section 10.5): M1, M2
 DAMAGE = dict(v_rms=(-2.85, -2.31), q_per_v=(6.56, 5.08), von_frac=(-33.3, -31.0), u_b=(-13.6, -1.3),
               c_total=(2.36, -1.37), c_dielectric=(-4.05, 2.55), energy=(-15.6, 7.45))
-# effect / within-session noise in the data (section 10.5, 0 where M1 and M2 disagree in sign)
+# effect / noise within a time point in the data (section 10.5, 0 where M1 and M2 disagree in sign)
 DATA_EN = dict(v_rms=4.3, von_frac=1.3, i_rms=1.2, q_per_v=0.7, q_max=0.3, u_b=0.2, c_total=0.0, energy=0.0, c_dielectric=0.0)
 LAB = {"v_rms": "V_rms", "v_max": "V_max", "c_total": "C_total", "c_dielectric": "C_d", "q_per_v": "ΔQ/V_max",
        "von_frac": "V_on/V_max", "u_b": "U_b", "energy": "E", "i_rms": "I_rms", "q_max": "ΔQ", "S": "S"}

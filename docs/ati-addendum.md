@@ -122,6 +122,44 @@ The ML conclusion of the thesis is that V_rms separates damage best. Section 10.
 - **(c) Air-gap voltage.** With the capacitance increase alone (orange), the cell's air-gap voltage never reaches U_b,i, so the cell does not discharge. When the discharge initiation threshold falls with it (blue), the air-gap voltage stops at the lowered U_b,i and the discharge goes on.
 - **(d), (e) Lissajous graphs.** The larger capacitance makes the slopes steeper and the voltage span narrower. The measurement changed in the same direction. The measured parallelogram is wider than the model's because the model was calibrated on the operating point of ATI #2. The shapes of (d) and (e) are compared qualitatively only.
 
+### Why the slopes and the area of the Lissajous graph changed
+
+> The capacitance of the whole source roughly doubled, so both slopes became steeper. The driving power supply is close to a current source, so the discharge charge stayed nearly the same while the voltage span halved. That charge flowed at half the burning voltage, so the area (energy per cycle) halved too.
+
+ATI #3, medians of the first three and the last three dates after the setup change.
+
+| Element of the Lissajous graph | Quantity | First 3 dates | Last 3 dates | Ratio |
+|---|---|---|---|---|
+| Slope without discharge | C_total | 36.4 pF | 82.5 pF | ×2.26 |
+| Slope during discharge | C_d | 65.2 pF | 134.9 pF | ×2.07 |
+| Height | Discharge charge ΔQ | 78.4 nC | 86.4 nC | ×1.10 |
+| Width | V_max | 1,920 V | 994 V | ×0.52 |
+| | Burning voltage U_b | 557 V | 233 V | ×0.42 |
+| Area | Energy per cycle E | 103 µJ | 48 µJ | ×0.46 |
+| | Manley, 4C_dU_b(V_max − U_min) | 88 µJ | 42 µJ | ×0.48 |
+| | I_rms | 44.0 mA | 48.7 mA | ×1.11 |
+
+**Slopes: the capacitance of the whole source grew.**
+
+- The two slopes of the Lissajous graph are capacitances: C_total without discharge and C_d during discharge.
+- Both roughly doubled, and their ratio (C_total/C_d) stayed nearly the same, 0.56 → 0.61. So the dielectric and air-gap capacitances grew together, as if the effective area taking part in the discharge had doubled.
+- Local damage of some cells cannot change them this much (table above: an exposed electrode in every cell changes V_rms by −3 %).
+- A candidate is a conductive layer on the dielectric surface (deposits, sputtered electrode metal, moisture) that widens the electrodes. Electrical measurements alone cannot decide it.
+- Mounting and the measurement setup also change the slopes, as when C_total changed by about 30 pF at once in the May setup change. The increase after it, however, was not a single step but continued over months (05-20 36 pF, 07-27 49 pF, 08-10 68 pF, 10-22 82 pF, 11-13 98 pF).
+
+**Area: the same charge flowed at half the voltage.** The area is the energy per cycle, by Manley $E = 2U_b\,\Delta Q = 4C_dU_b(V_{max} - U_{min})$ (eq. (2) of section 10.5 of the verification).
+
+- **The height (ΔQ) is nearly the same.** The driving power supply is close to a current source (S 0.88), so the current sets the charge that flows in one period (I_rms ×1.11). C_d doubled and the voltage span of the discharge phase halved, so ΔQ = C_d(V_max − V_on) stays the same.
+- **The width halved.** The same charge on twice the capacitance gives half the voltage.
+- **The area halved.** The same charge flowed at half the air-gap voltage (U_b ×0.42), so the energy per cycle halved. The Manley value (×0.48) matches the measured area (×0.46).
+
+**Why U_b fell this far is not explained.**
+
+- For a 100 µm gap like that of the thesis sources, Paschen's law in nitrogen gives a burning voltage of 714–871 V for a secondary electron emission coefficient γ of 0.01–0.1 (A = 12, B = 342).
+- The U_b of ATI #3 was lower from the start (557 V) and ended at 233 V. A change of γ cannot explain a drop of this size.
+- Candidates are surface processes: memory charge left on the surface from the previous half period helping the next discharge, surface conduction, deposits. The short half periods at 108 kHz favour surface-charge memory.
+- Checking this needs the gap structure of ATI and surface analyses. The SEM folder has ATI data from August 2020 (`0819a`, `0826`); which source they belong to was not checked.
+
 ## 6. Same structure, larger area
 
 The circuit of the thesis sources calibrated in section 10.6 was widened (126 cells, C_d 34.9 pF, C_g 16.7 pF, U_b 898 V, R 213 kΩ).

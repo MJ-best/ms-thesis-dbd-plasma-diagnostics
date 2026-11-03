@@ -323,6 +323,17 @@ def main(root, out="."):
     k, u = last.c_total / first.c_total, last.u_min / first.u_min
     print(f"  ATI #3, first three vs last three dates after the setup step: C_total x{k:.2f}, discharge initiation level "
           f"U_min = (V_max + V_on)/2 {first.u_min:.0f} -> {last.u_min:.0f} V (x{u:.2f}), V_on/V_max {first.von_frac:.2f} -> {last.von_frac:.2f}")
+    # why the Lissajous graph changed: slopes (C_total, C_d), height (ΔQ), width (V_max), area (E = 2 U_b ΔQ, eq. (2))
+    manley = lambda x: 4 * x.c_dielectric * x.u_b * (x.v_max - x.u_min)  # noqa: E731
+    lq = pd.DataFrame({"first 3": first, "last 3": last}).loc[["c_total", "c_dielectric", "q_max", "v_max", "u_b", "energy", "i_rms"]]
+    lq.loc["energy (Manley, eq. 2)"] = [manley(first), manley(last)]
+    lq["ratio"] = lq["last 3"] / lq["first 3"]
+    unit = {"c_total": 1e12, "c_dielectric": 1e12, "q_max": 1e9, "energy": 1e6, "energy (Manley, eq. 2)": 1e6, "i_rms": 1e3}
+    for key, scale in unit.items():
+        lq.loc[key, ["first 3", "last 3"]] *= scale
+    print("  Lissajous graph of ATI #3 (pF, nC, V, µJ, mA):\n" + lq.round(2).to_string())
+    print("  Paschen burning voltage of a 100 µm gap in nitrogen (A 12, B 342): " + ", ".join(
+        f"γ {g}: {vs.paschen(g, A=12.0, B=342.0):.0f} V" for g in (0.01, 0.1)))
     cases = ati_cases(p, f0, k, u)
     cases.loc[len(cases)] = dict(case="data ATI #3", v_rms=100 * (last.v_rms / first.v_rms - 1), v_max=last.v_max / first.v_max,
                                  q_per_v=last.q_per_v / first.q_per_v, discharging=True)

@@ -1074,7 +1074,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 git clone https://github.com/MJ-best/ms-thesis-dbd-plasma-diagnostics.git
 cd ms-thesis-dbd-plasma-diagnostics
 pip install -e ".[dev]"     # numpy, scipy, pandas, scikit-learn (+ matplotlib, pytest)
-pytest                      # 25 tests
+pytest                      # 27 tests
 ```
 
 Command-line tool:
@@ -1136,11 +1136,22 @@ The app offers:
 
 To host it, select this repository on [Streamlit Community Cloud](https://streamlit.io/cloud) and set the main file to `app/streamlit_app.py`. The dependencies are listed in `app/requirements.txt`.
 
+### Circuit simulator in the browser
+
+[`app/circuit_simulator.html`](app/circuit_simulator.html) runs the equivalent circuit of section 10.6 of the raw-data verification in the browser: 126 Manley cells driven by E sin ωt behind the output resistance R of the driving power supply. Download the file and open it; nothing needs installing.
+
+- Sliders for the driving power supply, the source, damage (exposed electrode, thinner dielectric) and the number of discharging cells.
+- The quantities of the Lissajous analysis, the applied voltage, the air-gap voltage of one cell and the Lissajous graph, each compared with a reference.
+- Presets with the measured values beside them: the healthy source and an exposed electrode in 48 cells.
+- Korean and English.
+
+The JavaScript port gives the same numbers as `examples/vrms_simulation.py` to within 10⁻⁹; `tests/test_simulator_port.py` checks this when Node.js is installed.
+
 ## 6. Repository layout
 
 ```
 thesis/                         full thesis PDF (CC BY-NC-ND 4.0), erratum PDFs (EN/KO)
-app/                            Streamlit web demo
+app/                            Streamlit web demo, circuit simulator (one HTML file)
 src/dbd_diagnostics/
   io.py          oscilloscope CSV reader
   waveform.py    period detection, integer-period windows
@@ -1157,7 +1168,7 @@ src/dbd_diagnostics/
 docs/            methods, verification report, erratum (EN/KO), legacy-code map, figures
 notebooks/       step-by-step tutorial (Colab)
 examples/        synthetic demo, re-analysis, raw-archive verification, consistency check, circuit simulation
-tests/           25 tests: known-answer equivalent-circuit tests of every formula, CLI and app
+tests/           27 tests: known-answer equivalent-circuit tests of every formula, CLI, app and the browser simulator
 ```
 
 ## 7. Documentation

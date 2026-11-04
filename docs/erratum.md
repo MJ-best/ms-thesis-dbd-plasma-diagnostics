@@ -85,8 +85,8 @@
 | # | Page | Correction | Type · ref |
 |---|---|---|---|
 | 36 | 40 | "Degradaion" → "Degradation". | Notation |
-| 63 | 36, 46 | Add to Sec. 4.2 and Fig. 27 / Table 5: the M1 micrographs taken after 5 h (before the 10 h measurement) already show a melted blister at an electrode end. The M1 5 h and 10 h data labelled normal may contain a damaged cell. | Addition · J |
-| 64 | 38–40 | Figs. 23–24 "(a) normal discharge electrode" → "(a) reference sample (Ref)". Table 3: "[%]" → "**[at.%]**"; add that each column is a single 10,000× map, and give the range over all maps (damaged sites 1.3–13.9 at.% Ag, intact dielectric 0.0–0.7 at.%). | Correction · J |
+| 63 | 36, 46 | Add to Sec. 4.2 and Fig. 27 / Table 5: M1 had a cell defective from fabrication. It shows as a melted blister at an electrode end in the micrographs taken after 5 h (before the 10 h measurement). It is not discharge damage, so the normal labels of M1 at 5 h and 10 h stand. | Addition · J |
+| 64 | 38–40 | Figs. 23–24 "(a) normal discharge electrode" → "(a) new source, not discharged (Ref)". Table 3: "[%]" → "**[at.%]**"; add that each column is a single 10,000× map, and give the range over all maps (damaged sites 1.3–13.9 at.% Ag, intact dielectric 0.0–0.7 at.%). | Correction · J |
 | 37 | 43 | "Freqency" → "Frequency"; the unit of the electron-density SD is cm⁻³. | Notation |
 | 38 | 43 | Add: the features are not independent. C_gas follows from C_d and C_total; T_e and n_e follow from the breakdown voltage. | Addition · D9 |
 | 39 | 44–45 | Remove the references to a DNN (no results are reported). | Notation · D9 |

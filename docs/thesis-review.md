@@ -45,7 +45,7 @@
 | 10 | The probe models are swapped. The P6015A is the 1000× HV probe and the P6021A is the current probe, as the CSV headers confirm. | Minor |
 | 11 | ★ The undamaged device m3, measured at the same time points, shows the same V_rms drop (−133 V at 15 h). Within that time point the applied voltage jumps between discrete levels, i.e. the supply switches mode. Against m3, the damage-specific V_rms change is **≈ −48 V**, about half of the naive drop. Classifiers trained on m2 call **95–100 %** of m3's captures at its low-voltage time points "degraded". | Major |
 | 12 | Within one time point, the oscilloscope settings change the features: doubling the current A/div adds 3.5 mA to I_rms, and 20 ns sampling (instead of 10 ns) removes 6.6 pulses and adds 3.0 pF to C_d. I_rms, the pulse count and n_e are therefore confounded with the settings, which differ between the groups. | Major |
-| 13 | Table 3 gives **atomic %** from single 10,000× maps; its "Normal" column is the Ref sample. The 100 → 250 mA current increase of Fig. 7 is not reproduced when captures at the same current scale are compared. | Minor |
+| 13 | Table 3 gives **atomic %** from single 10,000× maps; its "Normal" column is the Ref sample, a new source that was never discharged. The 100 → 250 mA current increase of Fig. 7 is not reproduced when captures at the same current scale are compared. | Minor |
 
 **What holds.**
 - Re-analysing the raw captures reproduces the thesis' measured quantities:
@@ -445,6 +445,6 @@ The full archive of the July 2020 experiment contains a third device, m3. It ran
 | J4 | Number of discharges (+2.7), U_b (−38 V) and V_min (−98 V) also change in m3. They are not established as damage indicators. | Major |
 | J5 | Within a time point: I_rms +3.5 mA per doubling of A/div; 20 ns sampling gives 6.6 fewer pulses, +3.0 pF C_d and +35 V U_b. The m2 degraded group has more 0.04 A/div captures (42 % vs 20 %). | Major |
 | J6 | In the supply-voltage sweep at 20 h, the thesis V_b follows V_max with slope 0.87–1.08, while U_b moves with slope 0.23–0.33. Experimental confirmation of C5. | Confirmed |
-| J7 | The m1 micrographs filed as "5h" (taken before the 10 h measurement) show a large melted blister at an electrode end, so the m1 "normal" time points may contain a damaged cell. The m2 labels match the micrographs. | Moderate |
-| J8 | Table 3 = atomic %; "Normal" is the Ref sample's `0-X10000-2` map and "Degradation" the m2 site-2-1 map `2-1-1X10000-1`. Over all maps, damaged sites give Ag 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. | Minor |
+| J7 | The m1 micrographs filed as "5h" (taken before the 10 h measurement) show a large melted blister at an electrode end. The experimenter confirmed that it is a cell defective from fabrication, not discharge damage, so the m1 "normal" labels stand; the thesis should state the defect. The m2 labels match the micrographs. | Minor |
+| J8 | Table 3 = atomic %; "Normal" is the `0-X10000-2` map of the Ref sample, a new source that was never discharged, and "Degradation" the m2 site-2-1 map `2-1-1X10000-1`. Over all maps, damaged sites give Ag 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. | Minor |
 | J9 | Fig. 7 (100 → 250 mA): at the same current scale, m2 gives 251 → 272 mA (p = 0.25) and m1 252 → 213 mA. | Moderate |

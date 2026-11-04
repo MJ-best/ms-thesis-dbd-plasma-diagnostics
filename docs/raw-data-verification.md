@@ -32,12 +32,12 @@ Severity levels follow the [verification report](thesis-review.md): **[Major]** 
 | # | Finding | Verdict |
 |---|---|---|
 | 1 | The archive is the thesis dataset. The re-analysis numbers of section H of the verification report are reproduced to the last digit, and the 2020 MATLAB summaries agree (23 of the 26 device time points within 1 % for V_rms and 5 % for energy). The 2020 summaries label the energy **"Energy per period"**, which confirms from the original records that "discharge energy per second" is a labelling error (review C1). | Confirmed |
-| 2 | The 15 h label boundary matches the M2 micrographs. But the M1 "5h" micrographs (taken 2020-07-20 10:30, before the 10 h measurement) show a **large melted blister at an electrode end**. The "normal (0)" part of the validation set may already contain a damaged cell. | Moderate |
+| 2 | The 15 h label boundary matches the M2 micrographs. The M1 "5h" micrographs (taken 2020-07-20 10:30, before the 10 h measurement) show a **large melted blister at an electrode end**. The experimenter confirmed that it is **a cell defective from fabrication, not discharge damage**, so the "normal (0)" labels of M1 stand. M1 carried this defective cell from the start, which the thesis should state. | Minor |
 | 3 | ★ The V_rms drop at the 15 h time point (evening of 20 July) appears **equally in the undamaged M3** (−133 V against 10 h). Within that time point V_rms jumps between ≈1150/1270, 1360 and 1460 V from one capture to the next, seconds apart. This is **switching of the supply's operating mode**, not gradual damage. A difference-in-differences against M3 gives a damage-specific V_rms change of **≈ −48 V** for both M1 and M2, about half of the naive change (−107 / −92 V). | Major |
 | 4 | ★ The thesis classifiers trained on M2 call **95–100 %** of the captures of the undamaged M3 at 15, 25 and 40 h, and **100 %** at 45–60 h, "degraded" (mean false-positive rate over 15–40 h: 57–86 %). The classifiers respond to the **applied-voltage level** more than to surface damage. After dividing each feature by the M3 value at the same time point, cross-device accuracy falls from 94–99 % to **65–78 % (DT/RF/GB; 64–89 % over all six models)**. | Major |
 | 5 | Within one time point and one device, the oscilloscope settings change the values. Doubling the current A/div raises I_rms by **+3.5 mA** (p = 10⁻¹⁷). Going from 10 to 20 ns sampling raises I_rms by **+4.3 mA**, lowers the pulse count by **6.6**, and raises C_d by **3.0 pF** and U_b by **35 V**. The M2 degraded group has more 0.04 A/div captures (42 % vs 20 %). The claims "I_rms decreases, number of discharges and n_e increase" are confounded with the settings. | Major |
 | 6 | In the supply-voltage sweep, the thesis V_b (Eq. 15) follows V_max with slope **0.87–1.08**, while the burning voltage U_b moves with slope 0.23–0.33 only. This is an independent **experimental confirmation** of review C5 (V_b ≡ V_max). | Confirmed |
-| 7 | Table 3 (EDS) is traced. The "Normal" column is the `0-X10000-2` map of the **Ref sample**; the "Degradation" column is the `2-1-1X10000-1` map of the **M2 damaged site**. Both columns are **atomic %**. The 12 damaged-site maps give Ag 1.3–13.9 at.%; the 41 intact-dielectric maps give 0.0–0.7 at.% (one map 1.44). The conclusion is robust; the unit and the choice of map should be stated. | Minor |
+| 7 | Table 3 (EDS) is traced. The "Normal" column is the `0-X10000-2` map of the **Ref sample**, a new source that was never discharged; the "Degradation" column is the `2-1-1X10000-1` map of the **M2 damaged site**. Both columns are **atomic %**. The 12 damaged-site maps give Ag 1.3–13.9 at.%; the 41 intact-dielectric maps give 0.0–0.7 at.% (one map 1.44). The conclusion is robust; the unit and the choice of map should be stated. | Minor |
 | 8 | Fig. 7, "discharge current from ~100 mA to ~250 mA", is not reproduced when captures at the same current scale (0.1 A/div) are compared: M2 251 → 272 mA (p = 0.25), M1 252 → 213 mA (a decrease). | Moderate |
 | 9 | Some statements of the earlier verification report must be revised. The U_b decrease (p = 2×10⁻⁴) and the increase in the number of discharges (p = 6×10⁻⁴) also occur in M3, in the same direction (−38 V, p = 0.05; +2.7, p = 4×10⁻⁶), so they are not supported as damage indicators. See section 9. | Report revision |
 | 10 | The physics assumptions (Manley equivalent circuit, Paschen/Townsend breakdown) agree with the data. The discharge-phase slope C_d grows with the supply voltage, so it is an effective capacitance set by the discharging area, not the dielectric capacitance. The only independent damage signal is the V_rms drop against M3; eleven models, five of them newer than the thesis, do not beat V_rms alone, also with single periods and every capture weighted equally. The V_rms drop is explained, including its size, by 'earlier discharge initiation → more discharge charge → the power-supply voltage drops', and its effect-to-noise ratio is more than twice that of any other feature (10.5). An equivalent-circuit simulation calibrated on healthy data supports an exposed electrode lowering the burning voltage (10.6). See section 10. | Confirmed |
@@ -123,7 +123,7 @@ For every micrograph (640×480), the largest connected region with luminance < 9
 | 45–60 | – | – | 1/82 (one 159 px speck at 55 h) |
 
 - **M2** [OK]: no burn marks at 5 and 10 h; dark erosion marks at every time point from 15 h on. This matches the thesis label boundary (≤ 10 h normal, ≥ 15 h degraded).
-- **M1** [Moderate]: dark erosion marks also start at 15 h. But `Snapshot000008` and `Snapshot000010` of the "5h" set show a **large melted blister** covering an electrode end. A similar melted region appears in 20 h `Snapshot000004`, and at 25 h the experimenter named a photograph `오른쪽 끝 결국 터짐` ("right end finally burst"), which suggests the same site was being tracked. Since these photographs predate the 10 h measurement, the M1 5 h and 10 h time points that the thesis labels normal (0) — the 80 normal rows of the validation set — may already contain a damaged cell. Fig. 27 and Sec. 5.3 should say so, or the labelling rule should distinguish damage types (erosion vs melting/blistering).
+- **M1** [Minor]: dark erosion marks also start at 15 h. `Snapshot000008` and `Snapshot000010` of the "5h" set, taken before the 10 h measurement, show a **large melted blister** covering an electrode end. The experimenter confirmed that this is **a cell defective from fabrication, not discharge damage**. The M1 5 h and 10 h time points that the thesis labels normal (0), the 80 normal rows of the validation set, therefore stand: they contain no discharge damage. A similar melted region appears in 20 h `Snapshot000004`, and at 25 h the experimenter named a photograph `오른쪽 끝 결국 터짐` ("right end finally burst"), which suggests that the defective cell finally burst during discharge. M1 thus carried a defective cell from the start, a device difference from M2 and M3 that Sec. 4.2 and Fig. 27 should state.
 - **M3**: no burn marks up to 50 h. This matches Sec. 4.2 of the thesis ("surface damage was observed in two samples"). M3 is the healthy comparison device, discharged alongside M1 and M2 under the same conditions; the experimenter confirmed that it was not damaged.
 
 ---
@@ -289,7 +289,7 @@ Measured at 20 h with different supply-input voltages (8.5 V = the 20 h enduranc
 
 | Table 3 column | Original report | Sample | Matching column |
 |---|---|---|---|
-| Normal | `Ref SEM, EDS/Ref EDS/0-X10000-2` (2020-07-27) | Ref sample, 10,000× map | **Atom [%]**, all 10 elements (C 7.70, O 30.27, Na 9.19, Mg 2.48, Al 20.04, Si 13.60, Ca 2.41, Zn 7.09, Ag 0.57, Pb 6.65) |
+| Normal | `Ref SEM, EDS/Ref EDS/0-X10000-2` (2020-07-27) | Ref sample (a new source, never discharged), 10,000× map | **Atom [%]**, all 10 elements (C 7.70, O 30.27, Na 9.19, Mg 2.48, Al 20.04, Si 13.60, Ca 2.41, Zn 7.09, Ag 0.57, Pb 6.65) |
 | Degradation | `M2 SEM, EDS/20200727 M2 EDS/2-1/2-1-1X10000-1` | M2 damaged site, 10,000× map | **Atom [%]**, all 10 elements (C 7.22, O 27.69, Na 6.49, Mg 2.52, Al 15.54, Si 9.88, Ca 2.03, Zn 8.87, Ag 13.86, Pb 5.90) |
 
 - Table 3 gives the composition only as "[%]". It should say **atomic % (at.%)**. The same Ag 13.86 at.% is 31.05 wt.%.
@@ -309,7 +309,8 @@ Measured at 20 h with different supply-input voltages (8.5 V = the 20 h enduranc
 
 - Damaged sites (12 maps, 1.3–13.9 at.%) and intact dielectric (41 maps, mostly ≤ 0.7 at.%) separate clearly. The conclusion that the damaged dielectric exposes the electrode is robust.
 - Each Table 3 value is the maximum among the maps of its site (Normal 0.57 is the highest Ref map; Degradation 13.86 the highest 2-1 map). Ranges, or mean ± SD, would be more representative.
-- The "(a) normal discharge electrode" of Sec. 4.3 and Figs. 23–24 is in fact the **Ref sample**. The thesis should state whether Ref is a discharged or an unused electrode.
+- The "(a) normal discharge electrode" of Sec. 4.3 and Figs. 23–24 is in fact the **Ref sample**. The experimenter confirmed that Ref is **a new source that was never discharged**, and the caption should say so.
+- Table 3 therefore compares an undischarged source with a damaged site. The 35 maps of discharged but intact dielectric (M3, the intact M2 sites and the M1 dielectric) give the same low Ag (0.00–0.68 at.%, one M3 map 1.44), so the conclusion does not depend on Ref.
 
 ---
 
@@ -443,7 +444,7 @@ The change from before (5–10 h) to after (15 h to the end) minus M3's change o
 | I_rms, number of discharges, n_e, T_e, V_b | Problems of settings, resolution or definition | Not significant | Used as confounders |
 
 - The one damage indicator that physics, statistics and ML point to together is the **V_rms drop relative to a healthy device at the same time point**.
-- With two damaged devices, and with possibly damaged cells already in M1's pre-damage period (section 2.2), this is the most consistent clue, not an established result.
+- With only two damaged devices, and with M1 carrying a cell defective from fabrication (section 2.2), this is the most consistent clue, not an established result.
 - Limitations of this section: there is only one healthy device, and within a time point the devices were measured in the order M1 → M2 → M3, 10–33 min apart.
 
 ### 10.5 Physical interpretation and robustness of the V_rms drop
@@ -662,8 +663,8 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 1. State that about half of the V_rms change is a supply variation common to all three devices, and report the DiD against M3.
 2. Report the **false-positive rate on the undamaged M3** alongside the classification scores. Include M3 as an undamaged device in training and evaluation, or use features normalised by a control device at the same time point.
 3. Compare I_rms, peak current, number of discharges and n_e only between captures with the same settings (e.g. 0.1 A/div, 10 ns), or include the settings as covariates.
-4. Give Table 3 in at.%, with per-map ranges, and identify the Ref sample.
-5. Review the melted blister in the M1 5 h micrographs, and redefine or state the M1 labels of the validation set.
+4. Give Table 3 in at.%, with per-map ranges, and state that the Normal column (Ref) is a new source that was never discharged.
+5. State in Sec. 4.2 and Fig. 27 that M1 had a cell defective from fabrication, visible in the 5 h micrographs. It is not discharge damage, so the M1 labels stand.
 6. Replace Fig. 7 with representative values (mean ± SD at one scale), or mark it as a single example.
 7. Describe C_dielectric as the discharge-phase slope, an effective capacitance set by the discharging area, and compare it only between captures at the same applied voltage (section 10.1).
 
@@ -680,5 +681,5 @@ Reproduce with `python examples/vrms_simulation.py docs/img` (no raw data needed
 - **One healthy comparison device.** M3 was discharged alongside M1 and M2 under the same conditions and was not damaged (confirmed by the experimenter; consistent with the micrographs and with 12 of 13 EDS maps ≤ 0.25 at.%). Every change of M3, including the V_rms drop at 45–60 h, is therefore a supply or environmental change. With only one healthy device, however, the spread between two healthy devices at the same time point is unknown.
 - **Power.** The DiD works at the time-point level (2 time points before, 3–6 after), so its power is low. "Not significant" does not mean "no effect".
 - **EDS values.** Read directly from the tables in the Bruker report images (no raw spectra are available). Some M1 and M2 maps of 31 July (1-2, 1-3, 1-4, 1-s, 2-s) have no site name and are left out of section 7.2; their Ag is 0.3–3.0 at.%.
-- **Identity of the M1 melted site.** That the 5 h and 25 h photographs show the same site is inferred from their appearance and file names.
+- **Identity of the M1 defective cell.** That the 5 h and 25 h photographs show the same cell is inferred from their appearance and file names.
 - **Photograph times.** File modification times are used as capture times.

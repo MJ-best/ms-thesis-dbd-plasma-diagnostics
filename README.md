@@ -431,7 +431,7 @@ Dark burned areas were quantified in all 242 micrographs (Table 4). An image cou
 | 45–60 h | – | – | 1/82 (55 h, 159 px) |
 
 - **M2.** No burn marks at 5 and 10 h; dark erosion marks at every time point from 15 h, consistent with the label boundary (≤ 10 h normal, ≥ 15 h damaged).
-- **M1.** Erosion marks also appear from 15 h. But the 5 h photographs, taken before the 10 h measurement, show a large melted and bubbled spot at an electrode tip, so the M1 data labelled normal at 5 and 10 h may include damaged cells.
+- **M1.** Erosion marks also appear from 15 h. The 5 h photographs, taken before the 10 h measurement, show a large melted and bubbled spot at an electrode tip. The experimenter confirmed that it is a cell defective from fabrication, not discharge damage, so the normal labels at 5 and 10 h stand. M1 carried this defective cell from the start.
 - **M3.** No burn marks up to 50 h; only one small spot at 55 h.
 
 Under SEM the damaged dielectric surface is uneven and pitted (Figure 16).
@@ -884,7 +884,7 @@ V_rms is the clearest indicator because the driving power supply collects the lo
 #### 8.1 Limitations
 
 - **Number of sources.** The results come from two damaged sources and one healthy source and are not a general diagnostic threshold. The per-source permutation tests are not significant alone (M1 p 0.10, M2 p 0.18), and how much two healthy sources differ at the same time point is unknown.
-- **Labels.** The 5 h photographs of M1 already show a melted electrode tip, so the labels of the pre-damage period may be incomplete.
+- **Labels.** The melted electrode tip in the 5 h photographs of M1 is a cell defective from fabrication, not discharge damage, so the labels stand. M1 differs from M2 and M3 by this cell from the start.
 - **Measurement order.** The three sources were not measured simultaneously but in the order M1 → M2 → M3 within 10–33 min. The time gap did not correlate with the voltage difference (Table 18).
 - **Sensitivity S.** The load sensitivity S of the driving power supply was set from the variation of the single source M3 across time points.
 - **Exposure fraction and γ.** The fraction of exposed cells in the simulation (about a third) and the value of γ are interpretations within the model, not measurements. The U_b changes of M1 and M2 differ (−13.6 %, −1.3 %), so the degree of exposure may differ between sources.
@@ -1059,7 +1059,7 @@ The equations, numbers, statistics, ML protocol and references of the thesis wer
 | Changes after damage | Number of discharges ↑, n_e ↑, I_rms ↓ | Number of discharges and n_e are not significant on the thesis' own numbers (p = 0.89, 0.78). I_rms is not significant in the re-analysis (p = 0.27) and depends on the oscilloscope's A/div setting. Against the undamaged control m3, only the V_rms decrease (≈ −48 V, about half of the raw drop) holds for both damaged devices. |
 | Classification | RF: 96.9 % on the validation device | Cross-device evaluation: DT/RF/GB 95–99 %. Random splits are optimistic (100 %). **V_rms alone gives AUC ≈ 1.0.** But the models call 95–100 % of the undamaged m3's captures at its low-voltage time points "degraded"; referenced to m3, cross-device accuracy is 65–78 % (DT/RF/GB; 64–89 % over all six models). |
 | Precursor (Sec. 5.7) | A ≥ 10 % drop of the normal probability signals impending damage | Not supported: Tables 7–8 show 0.886 → 0.909 and 0.816 → 0.818. |
-| EDS (Table 3) | Ag 0.57 → 13.86 % | Reproduced exactly; the values are **at.%** from single 10,000× maps (normal = Ref sample). Over all maps, damaged sites give 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. |
+| EDS (Table 3) | Ag 0.57 → 13.86 % | Reproduced exactly; the values are **at.%** from single 10,000× maps (normal = Ref sample, a new source that was never discharged). Over all maps, damaged sites give 1.3–13.9 at.% and intact dielectric 0.0–0.7 at.%. |
 
 **Bottom line.** The damage is real and leaves a measurable electrical trace, but a weaker one than the thesis reports: about half of the V_rms drop is a supply variation shared with an undamaged device, so an alarm needs a control device or a reference from the same time point. Five points need correction:
 - the interpretation of V_b, T_e and n_e;

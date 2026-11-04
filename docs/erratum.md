@@ -4,7 +4,7 @@
 
 **Thesis.** Minjun Kim, *Electrical measurements and prediction of dielectric barrier surface damage in nonthermal atmospheric pressure dielectric barrier discharge plasma based on machine learning*, M.S. thesis, Kwangwoon University, 2023.
 
-**Date of this erratum.** 2026-11-01.
+**Date of this erratum.** 2026-11-01, revised 2026-11-04.
 
 **Basis.**
 - Each item refers to an entry of the [verification report](thesis-review.md), given by its ID (A1, C5, …).

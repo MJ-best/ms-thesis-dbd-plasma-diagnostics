@@ -2,15 +2,15 @@
 
     python examples/consistency_check.py "<archive>/전류전압 측정" "<archive>/전압에 따른 QV 변화/I 기준으로 계산" [docs/img]
 
-Uses the captures of examples/verify_raw_archive.py: the endurance sessions from 5 h and the 20 h supply
+Uses the captures of examples/verify_raw_archive.py: the endurance-test time points from 5 h and the 20 h supply
 sweep. M3 was discharged alongside M1 and M2 under the same conditions and was not damaged, so it is the
-healthy comparison device of every session.
+healthy comparison device at every time point.
 
 Prints the tables of section 10 of docs/raw-data-verification.md:
   1. physics: equivalent circuit, Paschen / Townsend, partial surface discharging, pulse counting
-  2. damage effect per feature against M3 (session-level difference-in-differences)
-  3. ML: the thesis protocol, M3 in training (leave one session out), features relative to M3
-  4. ML on single periods, two from every capture: shuffled at random, a session held out, a device held out
+  2. damage effect per feature against M3 (difference-in-differences at the time-point level)
+  3. ML: the thesis protocol, M3 in training (leave one time point out), features relative to M3
+  4. ML on single periods, two from every capture: shuffled at random, a time point held out, a device held out
   5. why V_rms: power supply-load coupling, the damage chain and its predicted size, effect-to-noise, permutation and
      bootstrap checks
 Writes consistency_check.png and vrms_mechanism.png.
@@ -119,7 +119,7 @@ def physics(d):
 
 
 def did(e):
-    """Change from 5-10 h to 15 h-end minus M3's change over the same sessions (session means of log x)."""
+    """Change from 5-10 h to 15 h-end minus M3's change over the same time points (means of log x per time point)."""
     lx, lv = np.log(e[list(DID)].abs()), np.log(e.v_max)
     h = (e.device == "m3") | (e.hours <= 10)  # healthy captures: their voltage dependence is removed in the adjusted test
     hv = lv[h] - lv[h].groupby(e.device[h]).transform("mean")
@@ -138,7 +138,7 @@ def did(e):
 
 
 def self_referenced(e, feats):
-    """log ratio to the device's own 5-10 h; a reference session is compared with the other one."""
+    """log ratio to the device's own 5-10 h; a reference time point is compared with the other one."""
     out = e[["device", "hours", "y"]].copy()
     for k in feats:
         lx, col = np.log(e[k].abs()), pd.Series(index=e.index, dtype=float)
@@ -156,7 +156,7 @@ def leave_one_session_out(L, model, feats):
         trn, tst = L[L.hours != h], L[L.hours == h]
         pr[tst.index] = proba(clone(model).fit(trn[feats], trn.y), tst[feats])
     within = [roc_auc_score(g.y, pr[g.index]) for _, g in L[L.hours.between(15, 40)].groupby("hours")]
-    return dict(within_session_auc=np.mean(within), detected=(pr[L.y == 1] > .5).mean(),
+    return dict(within_time_point_auc=np.mean(within), detected=(pr[L.y == 1] > .5).mean(),
                 M3_false_alarm=(pr[(L.device == "m3") & (L.hours >= 15)] > .5).mean(),
                 reference_false_alarm=(pr[L.hours <= 10] > .5).mean())
 
@@ -179,10 +179,10 @@ def ml(e):
     L = self_referenced(e, sorted(set(F) | set(ROBUST)))
     p2 = pd.DataFrame({name: leave_one_session_out(L, m, F) for name, m in MODELS.items()}).T
     p2r = pd.DataFrame({name: leave_one_session_out(L, m, ROBUST) for name, m in MODELS.items()}).T
-    print("  3b. self-referenced features, M3 in training as healthy, leave one session out")
+    print("  3b. self-referenced features, M3 in training as healthy, leave one time point out")
     print(p2.round(2).to_string())
-    print(f"      setting-robust features only: within-session AUC {p2r.within_session_auc.min():.2f}-"
-          f"{p2r.within_session_auc.max():.2f}, reference-session false alarms {p2r.reference_false_alarm.min():.0%}-"
+    print(f"      setting-robust features only: AUC within a time point {p2r.within_time_point_auc.min():.2f}-"
+          f"{p2r.within_time_point_auc.max():.2f}, false alarms at reference time points {p2r.reference_false_alarm.min():.0%}-"
           f"{p2r.reference_false_alarm.max():.0%}")
     share = e.assign(a004=e.i_scale < .05, period=np.where(e.hours <= 10, "5-10 h", "15 h+")).groupby(["device", "period"]).a004.mean()
     print("      share of 0.04 A/div captures:", {f"{d} {p}": f"{v:.0%}" for (d, p), v in share.items()})
@@ -206,13 +206,13 @@ def ml(e):
             r[f"auc_to_{test}"] = roc_auc_score(tst.y, proba(clone(m).fit(trn[feats], trn.y), tst[feats]))
         p3.append(r)
     p3 = pd.DataFrame(p3).set_index("model")
-    print("  3c. features relative to M3 in the same session, train one damaged device, test the other (AUC)")
+    print("  3c. features relative to M3 at the same time point, train one damaged device, test the other (AUC)")
     print(p3.round(2).to_string())
     return p1, p3
 
 
 def periods_ml(p, seeds=(0, 1, 2)):
-    """Single periods as rows, two from every capture, so every capture, session and sampling period weighs the same."""
+    """Single periods as rows, two from every capture, so every capture, time point and sampling period weighs the same."""
     warnings.filterwarnings("ignore")
     p = p[p.frequency.between(40e3, 55e3) & np.isfinite(p[F]).all(axis=1)].reset_index(drop=True)
     p = p.assign(y=((p.device != "m3") & (p.hours >= 15)).astype(int))
@@ -229,7 +229,7 @@ def periods_ml(p, seeds=(0, 1, 2)):
         c = b[b.device != "m3"].copy()
         for k in F:
             m = med3.loc[c.hours, k].to_numpy()
-            c[k] = (c[k] - m) / np.abs(m)  # relative to M3 in the same session (some single-period values are 0)
+            c[k] = (c[k] - m) / np.abs(m)  # relative to M3 at the same time point (some single-period values are 0)
         for name, model in models.items():
             feats = ["v_rms"] if "only" in name else F
             pr = pd.Series(index=b.index, dtype=float)  # E1: periods shuffled at random into 5 folds
@@ -238,13 +238,13 @@ def periods_ml(p, seeds=(0, 1, 2)):
             r = dict(seed=seed, model=name, E1_bal_acc=balanced_accuracy_score(b.y, pr > .5), E1_auc=roc_auc_score(b.y, pr),
                      E1_M3_false_alarm=(pr[(b.device == "m3") & (b.hours >= 15)] > .5).mean(),
                      E1_ref_false_alarm=(pr[b.hours <= 10] > .5).mean())
-            r.update({f"E2_{k}": v for k, v in leave_one_session_out(b, model, feats).items()})  # E2: a session held out
+            r.update({f"E2_{k}": v for k, v in leave_one_session_out(b, model, feats).items()})  # E2: a time point held out
             for dev in ("m1", "m2"):  # E4: relative to M3, trained on one damaged device, tested on the other
                 trn, tst = c[c.device != dev], c[c.device == dev]
                 r[f"E4_auc_{dev}"] = roc_auc_score(tst.y, proba(clone(model).fit(trn[feats], trn.y), tst[feats]))
             if "only" not in name:  # E2 with the voltage and the drive frequency alone
                 vf = leave_one_session_out(b, model, ["v_rms", "frequency"])
-                r["E2_vf_within_session_auc"], r["E2_vf_reference_false_alarm"] = vf["within_session_auc"], vf["reference_false_alarm"]
+                r["E2_vf_within_time_point_auc"], r["E2_vf_reference_false_alarm"] = vf["within_time_point_auc"], vf["reference_false_alarm"]
             rows.append(r)
         if seed == seeds[0]:
             for name in ("RF", "GB"):
@@ -254,7 +254,7 @@ def periods_ml(p, seeds=(0, 1, 2)):
                 top = pd.Series(np.mean(imp, axis=0), index=F).sort_values(ascending=False).head(4)
                 print(f"  E2 permutation importance {name}: " + ", ".join(f"{k} {v:.3f}" for k, v in top.items()))
     s = pd.DataFrame(rows).groupby("model").mean(numeric_only=True).drop(columns="seed").loc[list(models)]
-    print("  E1 shuffled periods (5-fold) | E2 a session held out | E4 relative to M3, the other damaged device; mean of draws")
+    print("  E1 shuffled periods (5-fold) | E2 a time point held out | E4 relative to M3, the other damaged device; mean of draws")
     print(s.round(2).to_string())
     print(f"  max sd over draws: {pd.DataFrame(rows).groupby('model').std(numeric_only=True).drop(columns='seed').max().max():.2f}")
     return s
@@ -278,31 +278,31 @@ def vrms_mechanism(d, n_boot=300, seed=0):
     m3_el = slope(m3.v_rms, m3.q_per_v)
     S = -1 / m3_el  # closed-loop sensitivity -dlnV/dln(ΔQ/V) of each driving power supply to its load, from the healthy device
     print(f"  5a. dln(ΔQ/V)/dlnV when the SOURCE moves V (sweep): " + ", ".join(f"{k} {v:+.2f}" for k, v in sweep_el.items()) +
-          f"; when the LOAD moves V (healthy M3, sessions): {m3_el:+.2f} -> S = -dlnV/dln(ΔQ/V) = {S:.2f}")
+          f"; when the LOAD moves V (healthy M3, time points): {m3_el:+.2f} -> S = -dlnV/dln(ΔQ/V) = {S:.2f}")
 
     lx = np.log(e[list(MECH)].abs()).assign(device=e.device, hours=e.hours)
     s = lx.groupby(["device", "hours"])[list(MECH)].median()
     diff = {dev: (s.loc[dev] - s.loc["m3"].loc[s.loc[dev].index]).loc[:last] for dev, last in (("m1", 25), ("m2", 40))}
     did = pd.DataFrame({dev: dd.loc[15:].mean() - dd.loc[:10].mean() for dev, dd in diff.items()})
     pred = -S * did.loc["q_per_v"]
-    print("  5b. damage chain against M3 (session medians, %): " +
+    print("  5b. damage chain against M3 (medians over time points, %): " +
           "; ".join(f"{dev}: V_on/V_max {100 * did.loc['von_frac', dev]:+.1f}, ΔQ/V {100 * did.loc['q_per_v', dev]:+.1f}, "
                     f"V_rms observed {100 * did.loc['v_rms', dev]:+.2f}, predicted -S·ΔQ/V {100 * pred[dev]:+.2f}" for dev in did))
     r = pd.concat([(dd - dd.loc[:10].mean()).assign(device=dev) for dev, dd in diff.items()]).reset_index()
     rho = stats.spearmanr(r.von_frac, r.v_rms)
-    print(f"  5c. per session (device minus M3, {len(r)} sessions): Spearman(V_on/V_max, V_rms) {rho.correlation:+.2f} (p {rho.pvalue:.3f});"
-          f" damaged sessions discharging earlier than M3: {int(((r.hours >= 15) & (r.von_frac < 0)).sum())}/{int((r.hours >= 15).sum())}")
+    print(f"  5c. per time point (device minus M3, {len(r)} device time points): Spearman(V_on/V_max, V_rms) {rho.correlation:+.2f} (p {rho.pvalue:.3f});"
+          f" post-damage time points discharging earlier than M3: {int(((r.hours >= 15) & (r.von_frac < 0)).sum())}/{int((r.hours >= 15).sum())}")
     t = e.assign(t=pd.to_datetime(e.meta_time, format="%d-%b-%y %H:%M:%S")).groupby(["device", "hours"]).t.median()
     for dev, dd in diff.items():
         gap = [(t.loc[("m3", h)] - t.loc[(dev, h)]).total_seconds() / 60 for h in dd.index]
         g = stats.spearmanr(gap, dd.v_rms)
         print(f"      measurement gap to M3 vs V_rms difference, {dev}: {min(gap):.0f}-{max(gap):.0f} min, Spearman {g.correlation:+.2f} (p {g.pvalue:.2f})")
 
-    noise = lx[lx.hours <= 10].groupby(["device", "hours"])[list(MECH)].std().median()  # within-session spread
+    noise = lx[lx.hours <= 10].groupby(["device", "hours"])[list(MECH)].std().median()  # spread within a time point
     en = did.div(noise, axis=0)
     same = np.sign(did.m1) == np.sign(did.m2)
     score = en.abs().min(axis=1).where(same, 0).sort_values(ascending=False)
-    print("  5d. effect / within-session noise (smaller of the two devices; 0 if the devices disagree in sign):")
+    print("  5d. effect / noise within a time point (smaller of the two devices; 0 if the devices disagree in sign):")
     print("      " + ", ".join(f"{MECH[k]} {score[k]:.1f} (noise {100 * noise[k]:.1f} %)" for k in score.index[:8]))
 
     perm = {}
@@ -314,7 +314,7 @@ def vrms_mechanism(d, n_boot=300, seed=0):
             z.append(((st([5, 10]) - null.mean()) / null.std(), (null - null.mean()) / null.std()))
         comb = np.add.outer(z[0][1], z[1][1]).ravel()
         perm[k] = (comb >= z[0][0] + z[1][0] - 1e-12).mean()
-    print(f"  5e. exact permutation test over which sessions are pre-damage ({len(comb)} labelings, both devices): " +
+    print(f"  5e. exact permutation test over which time points are pre-damage ({len(comb)} labelings, both devices): " +
           ", ".join(f"{MECH[k]} p {v:.3f}" for k, v in perm.items()))
 
     rng = np.random.default_rng(seed)
@@ -522,10 +522,10 @@ def figure(d, qv, ph, dd, p1, p3, ps, out):
     a = fig.add_subplot(gs[3, :])  # (g) single periods: shuffled vs held out
     x = np.arange(len(ps))
     e4 = ps[["E4_auc_m1", "E4_auc_m2"]].mean(axis=1)
-    for xx, lo, hi in zip(x, np.minimum(e4, ps.E2_within_session_auc), ps.E1_auc):
+    for xx, lo, hi in zip(x, np.minimum(e4, ps.E2_within_time_point_auc), ps.E1_auc):
         a.plot([xx, xx], [lo, hi], color=GREY, lw=2.5, zorder=1)
     a.plot(x, ps.E1_auc, "o", color="#eda100", ms=6.5, mec="white", mew=.7, label="E1 periods shuffled at random (5-fold)")
-    a.plot(x, ps.E2_within_session_auc, "s", color=INK, ms=5.5, mec="white", mew=.7,
+    a.plot(x, ps.E2_within_time_point_auc, "s", color=INK, ms=5.5, mec="white", mew=.7,
            label="E2 a time point held out (damaged vs M3 within the time point)")
     a.plot(x, e4, "D", color=BLUE, ms=5.5, mec="white", mew=.7, label="E4 relative to M3, the other damaged device")
     a.axhline(.5, color=INK, lw=.8, ls=":")
@@ -550,7 +550,7 @@ def report(d):
     ph = physics(d)
     e = d[(d.kind == "endurance") & (d.hours >= 5)].reset_index(drop=True)
     dd = did(e)
-    print("\n2. damage effect against M3 [%], session means, pre 5-10 h, post 15 h-end")
+    print("\n2. damage effect against M3 [%], means per time point, pre 5-10 h, post 15 h-end")
     t = dd.pivot_table(index="feature", columns=["adjusted", "device"], values=["did", "p"]).loc[list(DID.values())]
     print(t.round(3).to_string())
     print("   (adjusted: after removing the healthy dependence on V_max)")
